@@ -1,6 +1,6 @@
 displayName = Wikithis
 author = FoxXD_
-version = 2.1
+version = 2.2
 
 hideCode = false
 hideResources = true

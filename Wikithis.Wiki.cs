@@ -210,7 +210,7 @@ namespace Wikithis
 							continue;
 
 						string[] urls = url.Split('$');
-						string[] urls2 = url.Split('々');
+						string[] urls2 = url.Split('♛');
 						string result = $"https://{urls[0]}/wiki";
 						if (urls.Length >= 2)
 						{
