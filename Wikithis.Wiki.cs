@@ -210,7 +210,7 @@ namespace Wikithis
 							continue;
 
 						string[] urls = url.Split('$');
-						string[] urls2 = url.Split('%');
+						string[] urls2 = url.Split('々');
 						string result = $"https://{urls[0]}/wiki";
 						if (urls.Length >= 2)
 						{
@@ -237,65 +237,53 @@ namespace Wikithis
 			}
 		}
 
-		internal static async void OpenWikiPage(Mod mod, Item item)
+		internal static void OpenWikiPage(Mod mod, Item item)
 		{
-			if (await CheckNetworkConnection())
+			if (ItemToURL.ContainsKey(item.type) && CheckURLValid(ItemToURL[item.type]))
 			{
-				if (ItemToURL.ContainsKey(item.type) && CheckURLValid(ItemToURL[item.type]))
-				{
-					Utils.OpenToURL(AprilFools && !WikithisSystem.RickRolled ? RickRoll : ItemToURL[item.type]);
-					if (AprilFools && !WikithisSystem.RickRolled)
-						WikithisSystem.RickRolled = true;
-				}
-				else
-				{
-					Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.Error"), Color.OrangeRed);
-
-					bool bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(item.ModItem?.Mod, CultureLoaded));
-					if (!bl)
-						bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(item.ModItem?.Mod, GameCulture.CultureName.English));
-
-					mod.Logger.Error("Tried to get wiki page, but failed!");
-					mod.Logger.Info("Type: " + item.type.ToString());
-					mod.Logger.Info("Name: " + item.Name);
-					mod.Logger.Info("Vanilla: " + (item.ModItem == null).ToString());
-					mod.Logger.Info("Mod: " + item.ModItem?.Mod.Name);
-					mod.Logger.Info("Domain in dictionary: " + (item.ModItem != null ? bl.ToString() : "False"));
-				}
+				Utils.OpenToURL(AprilFools && !WikithisSystem.RickRolled ? RickRoll : ItemToURL[item.type]);
+				if (AprilFools && !WikithisSystem.RickRolled)
+					WikithisSystem.RickRolled = true;
 			}
 			else
-				Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.NetworkFail"), Color.OrangeRed);
+			{
+				Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.Error"), Color.OrangeRed);
+
+				bool bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(item.ModItem?.Mod, CultureLoaded));
+				if (!bl)
+					bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(item.ModItem?.Mod, GameCulture.CultureName.English));
+
+				mod.Logger.Error("Tried to get wiki page, but failed!");
+				mod.Logger.Info("Type: " + item.type.ToString());
+				mod.Logger.Info("Name: " + item.Name);
+				mod.Logger.Info("Vanilla: " + (item.ModItem == null).ToString());
+				mod.Logger.Info("Mod: " + item.ModItem?.Mod.Name);
+				mod.Logger.Info("Domain in dictionary: " + (item.ModItem != null ? bl.ToString() : "False"));
+			}
 		}
 
-		internal static async void OpenWikiPage(Mod mod, NPC npc)
+		internal static void OpenWikiPage(Mod mod, NPC npc)
 		{
-			if (await CheckNetworkConnection())
+			if (NPCToURL.ContainsKey(npc.type) && CheckURLValid(NPCToURL[npc.type]))
 			{
-				if (NPCToURL.ContainsKey(npc.type) && CheckURLValid(NPCToURL[npc.type]))
-				{
-					Utils.OpenToURL(AprilFools && !WikithisSystem.RickRolled ? RickRoll : NPCToURL[npc.type]);
-					if (AprilFools && !WikithisSystem.RickRolled)
-						WikithisSystem.RickRolled = true;
-				}
-				else
-				{
-					Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.Error"), Color.OrangeRed);
-
-					bool bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(npc.ModNPC?.Mod, CultureLoaded));
-					if (!bl)
-						bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(npc.ModNPC?.Mod, GameCulture.CultureName.English));
-
-					mod.Logger.Error("Tried to get wiki page, but failed!");
-					mod.Logger.Info("Type: " + npc.type.ToString());
-					mod.Logger.Info("Name: " + npc.GivenOrTypeName);
-					mod.Logger.Info("Vanilla: " + (npc.ModNPC == null).ToString());
-					mod.Logger.Info("Mod: " + npc.ModNPC?.Mod.Name);
-					mod.Logger.Info("Domain in dictionary: " + (npc.ModNPC != null ? bl.ToString() : "False"));
-				}
+				Utils.OpenToURL(AprilFools && !WikithisSystem.RickRolled ? RickRoll : NPCToURL[npc.type]);
+				if (AprilFools && !WikithisSystem.RickRolled)
+					WikithisSystem.RickRolled = true;
 			}
 			else
 			{
-				Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.NetworkFail"), Color.OrangeRed);
+				Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.Error"), Color.OrangeRed);
+
+				bool bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(npc.ModNPC?.Mod, CultureLoaded));
+				if (!bl)
+					bl = ModToURL.ContainsKey(new ValueTuple<Mod, GameCulture.CultureName>(npc.ModNPC?.Mod, GameCulture.CultureName.English));
+
+				mod.Logger.Error("Tried to get wiki page, but failed!");
+				mod.Logger.Info("Type: " + npc.type.ToString());
+				mod.Logger.Info("Name: " + npc.GivenOrTypeName);
+				mod.Logger.Info("Vanilla: " + (npc.ModNPC == null).ToString());
+				mod.Logger.Info("Mod: " + npc.ModNPC?.Mod.Name);
+				mod.Logger.Info("Domain in dictionary: " + (npc.ModNPC != null ? bl.ToString() : "False"));
 			}
 		}
 	}
