@@ -1,0 +1,47 @@
+﻿[h1][url=https://discord.gg/rrxE78cyjm]Discord[/url][/h1]
+
+Wikithis allows you to check wiki of selected item/npc ingame!
+Works for [i]most vanilla items and npcs[/i] (errors might appear, report in discord server if you get an error!), modded items/npcs might require testing.
+
+Supports multiple different languages. (all languages Terraria supports)
+
+If you want to add support for this mod, then check lower!
+
+[h1]Adding crossmod support[/h1]
+It's fairly simple to add cross-mod support!
+
+First you SHOULD have wiki for your own mod, that's important!
+Then, add some code to your Mod class that invokes Mod.Call on the Wikithis mod. Make sure to follow the message format perfectly.
+[code]
+"AddModURL", Mod mod, string domain, [OPTIONAL] GameCulture.CultureName culture[/code]
+
+[code]
+public override void Load() // You can use any other loading method, doesn't matters.
+{
+    ModLoader.TryGetMod("Wikithis", out Mod wikithis);
+    if (wikithis != null && !Main.dedServ)
+    {
+        wikithis.Call("AddModURL", this, "examplemod.wiki.gg");
+        
+        // You can also use call ID for some calls!
+        wikithis.Call(0, this, "examplemod.wiki.gg");
+
+        // Alternatively, you can use this instead, if your wiki is on terrariamods.fandom.com
+        //wikithis.Call(0, this, "terrariamods.fandom.com$Example_Mod");
+        //wikithis.Call("AddModURL", this, "terrariamods.fandom.com$Example_Mod");
+
+        // If there wiki on other languages (such as russian, spanish, chinese, etch), then you can also call that:
+        //wikithis.Call(0, this, "examplemod.wiki.gg/zh", GameCulture.CultureName.Chinese)
+        // ... If you need 'translation mark' ("/zh" thing) to be in the end link, then you can:
+        //wikithis.Call(0, this, "examplemod.wiki.gg%zh", GameCulture.CultureName.Chinese)
+        
+        // If you want to replace default icon for your mod, then call this. Icon should be 30x30, either way it will be cut.
+        //wikithis.Call("AddWikiTexture", this, ModContent.Request<Texture2D>(pathToIcon));
+        //wikithis.Call(3, this, ModContent.Request<Texture2D>(pathToIcon));
+    }
+}[/code]
+
+[h1]Credits[/h1]
+Henrykado - brazilian portuguese translation
+
+The rest of translation files were translated using Google Translator. If you willing to re-translate those, please contact me in Discord server.

@@ -1,0 +1,7 @@
+Wikithis allows you to check wiki of selected item/npc ingame!
+
+Currently supports just english language.
+
+MULTILANGUAGE-SUPPORT IS CURRENTLY W.I.P.!
+
+(Doesn't supports mods initially, check Steam Workshop page if you want to know how to add support for your mod)

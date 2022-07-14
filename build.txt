@@ -1,0 +1,10 @@
+displayName = Wikithis
+author = FoxXD_
+version = 2.0
+
+hideCode = false
+hideResources = true
+includeSource = false
+side = Client
+
+homepage = https://discord.gg/rrxE78cyjm

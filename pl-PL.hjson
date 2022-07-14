@@ -1,0 +1,19 @@
+﻿Mods.Wikithis: {
+	CreationErrors: {
+		Item: "Nie udało się utworzyć łącza url dla elementu {0}"
+		NPC: "Nie udało się utworzyć łącza url dla NPC {0}"
+	}
+	Error: '''Strona Wiki nie istnieje lub jest nieprawidłowa! Zgłoś, jeśli uważasz, że to problem!'''
+	Click: "Naciśnij {0}, aby otworzyć stronę wiki!"
+	NoWiki: No wiki available!
+	WikithisInput:
+		'''
+		Zamień spacje w nazwie elementu/npc na podkreślniki
+		ROZRÓŻNIAMY WIELKOŚĆ LITER!
+		'''
+	WikithisDesc: Przekierowanie na stronę wiki elementu/NPC
+	NetworkFail: Nieudane połączenie z siecią! Upewnij się, że masz połączenie z WI-FI!
+	UnsupportedWarning: Grasz na innej platformie oprócz Windows! Możliwe oczekiwane zachowanie: błędy, zamarza, zawiesza się.
+	LoadingItem: "Konfigurowanie strony wiki dla {0}"
+	LoadingNPC: "Konfigurowanie strony wiki dla {0}"
+}

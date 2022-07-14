@@ -1,0 +1,19 @@
+﻿Mods.Wikithis: {
+	CreationErrors: {
+		Item: "Impossible de créer un lien URL pour l'élément {0}"
+		NPC: "Impossible de créer un lien URL pour le PNJ {0}"
+	}
+	Error: '''La page Wiki n'existe pas ou n'est pas valide! Signalez-le si vous pensez que c'est un problème!'''
+	Click: "Appuyez sur {0} pour ouvrir la page wiki!"
+	NoWiki: Pas de wiki disponible!
+	WikithisInput:
+		'''
+		Remplacer les espaces dans le nom de l'objet/pnj par des traits de soulignement
+		SENSIBLE À LA CASSE!
+		'''
+	WikithisDesc: Redirige vers la page wiki d'un objet/PNJ
+	NetworkFail: Échec de la connexion au réseau! Assurez-vous que vous êtes connecté au WI-FI!
+	UnsupportedWarning: Vous jouez sur une autre plate-forme que Windows! Comportement attendu possible: bugs, blocages, plantages.
+	LoadingItem: "Configuration de la page wiki pour {0}"
+	LoadingNPC: "Configuration de la page wiki pour {0}"
+}

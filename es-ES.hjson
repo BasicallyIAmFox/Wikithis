@@ -1,0 +1,19 @@
+﻿Mods.Wikithis: {
+	CreationErrors: {
+		Item: "Error al crear un enlace URL para el elemento {0}"
+		NPC: "Error al crear un enlace URL para NPC {0}"
+	}
+	Error: '''La página Wiki no existe o no es válida! ¡Informe si cree que es un problema!'''
+	Click: "Presione {0} para abrir la página wiki!"
+	NoWiki: No wiki disponible!
+	WikithisInput:
+		'''
+		Reemplace los espacios en el nombre del elemento/npc con guiones bajos
+		SENSIBLE A MAYÚSCULAS Y MINÚSCULAS!
+		'''
+	WikithisDesc: Redirige a la página wiki de un Objeto/PNJ
+	NetworkFail: Error de conexión a la red! Asegúrate de estar conectado a Wi-FI.
+	UnsupportedWarning: ¡Estás jugando en otra plataforma además de Windows! Posible comportamiento esperado: errores, bloqueos, bloqueos.
+	LoadingItem: "Configuración de la página wiki para {0}"
+	LoadingNPC: "Configuración de la página wiki para {0}"
+}

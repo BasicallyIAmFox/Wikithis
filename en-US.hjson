@@ -1,0 +1,19 @@
+﻿Mods.Wikithis: {
+	CreationErrors: {
+		Item: "Failed to create url link for item {0}"
+		NPC: "Failed to create url link for NPC {0}"
+	}
+	Error: '''Wiki page doesn't exists or invalid! Report if you think that's an issue!'''
+	Click: "Press {0} to open wiki page!"
+	NoWiki: No wiki available!
+	WikithisInput:
+		'''
+		Replace spaces in item/npc name with underscores
+		CASE SENSITIVE!
+		'''
+	WikithisDesc: Redirects to wiki page of an Item/NPC
+	NetworkFail: Failed connection to Network! Make sure that you connected to WI-FI!
+	UnsupportedWarning: You are playing on some other platform besides Windows! Possible expected behavior: bugs, freezes, crashes.
+	LoadingItem: "Setting up wiki page for {0}"
+	LoadingNPC: "Setting up wiki page for {0}"
+}
