@@ -5,6 +5,10 @@ Works for [i]most vanilla items and npcs[/i] (errors might appear, report in dis
 
 Supports multiple different languages. (all languages Terraria supports)
 
+Message for literally everyone who plays with Calamity:
+Stop saying that mod is bad because it doesnt supports Calamity.
+Calamity *will* support Wikithis in next update. Thanks and bye.
+
 If you want to add support for this mod, then check lower!
 
 [h1]Adding crossmod support[/h1]

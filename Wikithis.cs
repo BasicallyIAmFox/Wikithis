@@ -262,6 +262,21 @@ namespace Wikithis
 					ModToTexture.TryAdd(mod, texture);
 					return success;
 				}
+				else if (messageOverload.HasValue && messageOverload.Value == 4)
+				{
+				}
+				else if (messageOverload.HasValue && messageOverload.Value == 5)
+				{
+				}
+				else if (messageOverload.HasValue && messageOverload.Value == 6)
+				{
+				}
+				else
+				{
+#pragma warning disable CA2208
+					throw new ArgumentOutOfRangeException(nameof(messageOverload));
+#pragma warning restore CA2208
+				}
 			}
 			catch (Exception e)
 			{
@@ -351,6 +366,19 @@ namespace Wikithis
 			{
 				OverrideColor = !exists ? Color.LightGray : Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
 			});
+
+			ModLoader.TryGetMod("CalamityMod", out Mod calamity);
+			if (item.ModItem?.Mod.Name == calamity.Name && calamity.Version <= new Version(2, 0, 0, 3))
+			{
+				tooltips.Add(new(Mod, "Wikithis:WikiClam", "Stop saying that mod is bad because it doesnt supports Calamity.")
+				{
+					OverrideColor = Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
+				});
+				tooltips.Add(new(Mod, "Wikithis:WikiClam2", "Calamity *will* support Wikithis in next update. Thanks and bye.")
+				{
+					OverrideColor = Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
+				});
+			}
 		}
 	}
 
