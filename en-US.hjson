@@ -1,9 +1,20 @@
 ﻿Mods.Wikithis: {
+	Config: {
+		CanWikiNPCs: {
+			Label: Can Wiki NPCs
+			Tooltip: Want to know more about NPCs? Then click here to enable! (Default: False)
+		}
+		TooltipsEnabled: {
+			Label: Disable/Enabled Tooltip
+			Tooltip: '''Tired of seeing "Press something to open wiki page!"? Yes? Then click here to disable that! (Default: True)'''
+		}
+	}
+
 	CreationErrors: {
 		Item: "Failed to create url link for item {0}"
 		NPC: "Failed to create url link for NPC {0}"
 	}
-	Error: '''Wiki page doesn't exists or invalid! Report if you think that's an issue!'''
+	Error: '''Wiki page doesn't exist or invalid! Report if you think that's an issue!'''
 	Click: "Press {0} to open wiki page!"
 	NoWiki: No wiki available!
 	WikithisInput:

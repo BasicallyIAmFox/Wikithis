@@ -82,7 +82,7 @@ namespace Wikithis
 				c.Emit(OpCodes.Ldloc, 14);
 				c.EmitDelegate<Action<NPC, bool>>((npc, hovers) =>
 				{
-					if (hovers && WikithisSystem.WikiKeybind.JustPressed)
+					if (WikithisConfig.Config.CanWikiNPCs && hovers && WikithisSystem.WikiKeybind.JustPressed)
 					{
 						OpenWikiPage(this, npc);
 					}
@@ -323,9 +323,9 @@ namespace Wikithis
 	{
 		public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset)
 		{
+			bool exists = !ItemToURL.ContainsKey(item.type) || ItemToURL.ContainsKey(item.type) && !CheckURLValid(ItemToURL[item.type]);
 			if (line.Mod == Mod.Name && line.Name == "Wikithis:Wiki")
 			{
-				bool exists = !ItemToURL.ContainsKey(item.type) || ItemToURL.ContainsKey(item.type) && !CheckURLValid(ItemToURL[item.type]);
 				Asset<Texture2D> texture = TextureAssets.BestiaryMenuButton;
 				if (item.ModItem != null)
 				{
@@ -340,23 +340,25 @@ namespace Wikithis
 					texture = TextureAssets.Item[ItemID.WireCutter];
 				}
 
-				Vector2 scale = new(20f / 30f, 20f / 30f);
+				Vector2 scale = new(2f / 3f, 2f / 3f);
 				Vector2 origin = new(!exists ? 0f : -((30f - texture.Width()) / 2f), !exists ? 0f : -((TextureAssets.BestiaryMenuButton.Height() - texture.Height()) / 2f));
 
 				Main.spriteBatch.Draw(texture.Value, new Vector2(line.X, line.Y), new Rectangle(0, 0, exists ? texture.Width() : 30, texture.Height()), Color.White, 0f, origin, scale, 0, 0f);
 				Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.MouseText.Value, line.Text, line.X, line.Y, line.OverrideColor ?? line.Color, Color.Black, line.Origin);
-
-				if (!exists && WikithisSystem.WikiKeybind.JustPressed)
-				{
-					OpenWikiPage(Mod, item);
-				}
 				return false;
+			}
+			if (!exists && WikithisSystem.WikiKeybind.JustPressed && line.Mod == "Terraria" && line.Name == "ItemName")
+			{
+				OpenWikiPage(Mod, item);
 			}
 			return true;
 		}
 
 		public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
 		{
+			if (!WikithisConfig.Config.TooltipsEnabled)
+				return;
+
 			bool exists = !ItemToURL.ContainsKey(item.type) || ItemToURL.ContainsKey(item.type) && !CheckURLValid(ItemToURL[item.type]);
 			string text = Language.GetTextValue($"Mods.{Mod.Name}.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind));
 			if (exists)
@@ -367,14 +369,13 @@ namespace Wikithis
 				OverrideColor = !exists ? Color.LightGray : Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
 			});
 
-			ModLoader.TryGetMod("CalamityMod", out Mod calamity);
-			if (item.ModItem?.Mod.Name == calamity.Name && calamity.Version <= new Version(2, 0, 0, 3))
+			if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && item.ModItem?.Mod.Name == calamity?.Name && calamity?.Version <= new Version(2, 0, 0, 3))
 			{
 				tooltips.Add(new(Mod, "Wikithis:WikiClam", "Stop saying that mod is bad because it doesnt supports Calamity.")
 				{
 					OverrideColor = Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
 				});
-				tooltips.Add(new(Mod, "Wikithis:WikiClam2", "Calamity *will* support Wikithis in next update. Thanks and bye.")
+				tooltips.Add(new(Mod, "Wikithis:WikiClam2", "Calamity *will* support Wikithis in next update. Thanks.")
 				{
 					OverrideColor = Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
 				});
@@ -446,11 +447,16 @@ namespace Wikithis
 
 						if (npcType == 0)
 						{
-							Main.NewText(input + $" <-- Unknown NPC type!", Color.OrangeRed);
-							throw new UsageException("Unknown NPC: " + name);
+							Main.NewText($"{input} <-- Unknown NPC type!", Color.OrangeRed);
+							throw new UsageException($"Unknown NPC: {name}");
 						}
 					}
-
+					
+					if (npcType <= 0 || npcType >= NPCLoader.NPCCount)
+					{
+						Main.NewText($"{input} <-- Unknown NPC ID!", Color.OrangeRed);
+						throw new UsageException($"Unknown NPC ID: {npcType}");
+					}
 					OpenWikiPage(Mod, ContentSamples.NpcsByNetId[npcType]);
 				}
 				else if (type == "item" && args[1] is string name2)
@@ -474,24 +480,29 @@ namespace Wikithis
 
 						if (itemType == 0)
 						{
-							Main.NewText(input + $" <-- Unknown item type!", Color.OrangeRed);
-							throw new UsageException("Unknown item: " + name);
+							Main.NewText($"{input} <-- Unknown item type!", Color.OrangeRed);
+							throw new UsageException($"Unknown item: {name}");
 						}
 					}
 
+					if (itemType <= 0 || itemType >= ItemLoader.ItemCount)
+					{
+						Main.NewText($"{input} <-- Unknown item ID!", Color.OrangeRed);
+						throw new UsageException($"Unknown item ID: {itemType}");
+					}
 					OpenWikiPage(Mod, ContentSamples.ItemsByType[itemType]);
 				}
 				else if (type == "npc" && args[1] is null)
 				{
-					Main.NewText(input + $" <-- Unknown NPC name!", Color.OrangeRed);
+					Main.NewText($"{input} <-- Unknown NPC name!", Color.OrangeRed);
 				}
 				else if (type == "item" && args[1] is null)
 				{
-					Main.NewText(input + $" <-- Unknown item name!", Color.OrangeRed);
+					Main.NewText($"{input} <-- Unknown item name!", Color.OrangeRed);
 				}
 				else
 				{
-					Main.NewText(input + $" <-- Unknown type! Available types: [c/{Color.Yellow.Hex3()}:npc], [c/{Color.Yellow.Hex3()}:item].", Color.OrangeRed);
+					Main.NewText($"{input} <-- Unknown type! Available types: [c/{Color.Yellow.Hex3()}:npc], [c/{Color.Yellow.Hex3()}:item].", Color.OrangeRed);
 					throw new UsageException("Unknown type: " + type);
 				}
 			}

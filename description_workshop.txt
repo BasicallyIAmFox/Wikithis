@@ -7,7 +7,7 @@ Supports multiple different languages. (all languages Terraria supports)
 
 Message for literally everyone who plays with Calamity:
 Stop saying that mod is bad because it doesnt supports Calamity.
-Calamity *will* support Wikithis in next update. Thanks and bye.
+Calamity *will* support Wikithis in next update. Thanks.
 
 If you want to add support for this mod, then check lower!
 
@@ -48,5 +48,7 @@ public override void Load() // You can use any other loading method, doesn't mat
 
 [h1]Credits[/h1]
 Henrykado - brazilian portuguese translation
+[url=https://steamcommunity.com/id/somefafr]a piece of hedgehog[/url] - russian translation
+TheBrutalSkull ^-^ - french translation
 
 The rest of translation files were translated using Google Translator. If you willing to re-translate those, please contact me in Discord server.

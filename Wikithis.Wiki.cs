@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
@@ -20,10 +18,10 @@ namespace Wikithis
 			p.Invoke(i.GetValue(null), new object[] { text });
 		}
 
-		private static string GetInternalName<Tid, TType>(TType id) where Tid : class where TType : struct, IComparable, IComparable<TType>, IConvertible, IEquatable<TType>, ISpanFormattable, IFormattable
+		private static string GetInternalName(int id, bool npc = false)
 		{
-			FieldInfo field = typeof(Tid).GetFields(BindingFlags.Public | BindingFlags.Static).Where(x => x.GetValue(null).Equals(id)).FirstOrDefault();
-			return field?.Name;
+			if (npc) return NPCID.Search.GetName(id);
+			return ItemID.Search.GetName(id);
 		}
 
 		internal static void SetupWikiPages(Mod mod)
@@ -46,7 +44,8 @@ namespace Wikithis
 					if (item.ModItem?.Mod.Name == "ModLoader")
 						continue;
 
-					string n = Language.GetTextValue("ItemName." + GetInternalName<ItemID, short>((short)item.type));
+					//string n = Language.GetTextValue("ItemName." + GetInternalName<ItemID, short>((short)item.type));
+					string n = Language.GetTextValue("ItemName." + GetInternalName(item.type));
 
 					string name = item.type < ItemID.Count ? n : Language.GetTextValue($"Mods.{item.ModItem.Mod.Name}.ItemName.{item.ModItem.Name}");
 					if (ItemIdNameReplace.TryGetValue((item.type, CultureLoaded), out string name2))
@@ -155,7 +154,8 @@ namespace Wikithis
 					if (npc.ModNPC?.Mod.Name == "ModLoader")
 						continue;
 
-					string n = Language.GetTextValue("NPCName." + GetInternalName<NPCID, short>((short)npc.netID));
+					//string n = Language.GetTextValue("NPCName." + GetInternalName<NPCID, short>((short)npc.netID));
+					string n = Language.GetTextValue("NPCName." + GetInternalName(npc.netID, true));
 
 					string name = npc.netID < NPCID.Count ? n : Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}");
 					if (NpcIdNameReplace.TryGetValue((npc.netID, CultureLoaded), out string name2))

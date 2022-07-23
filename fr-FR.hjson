@@ -1,19 +1,19 @@
 ﻿Mods.Wikithis: {
 	CreationErrors: {
-		Item: "Impossible de créer un lien URL pour l'élément {0}"
-		NPC: "Impossible de créer un lien URL pour le PNJ {0}"
+		Item: "Échec de la création de l'URL pour l'objet {0}"
+		NPC: "Échec de la création de l'URL pour le PNJ {0}"
 	}
-	Error: '''La page Wiki n'existe pas ou n'est pas valide! Signalez-le si vous pensez que c'est un problème!'''
-	Click: "Appuyez sur {0} pour ouvrir la page wiki!"
-	NoWiki: Pas de wiki disponible!
+	Error: '''La page Wiki n'existe pas ou n'est pas valide! Signalez-le si vous croyez que c'est une erreur!''' 
+	Click: "Appuyez sur {0} pour ouvrir la page du Wiki!"
+	NoWiki: Aucun wiki n'est disponible!
 	WikithisInput:
 		'''
-		Remplacer les espaces dans le nom de l'objet/pnj par des traits de soulignement
-		SENSIBLE À LA CASSE!
+		Remplacer les espaces par des tirets du bas dans le nom de l'objet/PNJ 
+		SENSIBLE AUX MAJUSCULES ET AUX MINUSCULE!
 		'''
-	WikithisDesc: Redirige vers la page wiki d'un objet/PNJ
-	NetworkFail: Échec de la connexion au réseau! Assurez-vous que vous êtes connecté au WI-FI!
-	UnsupportedWarning: Vous jouez sur une autre plate-forme que Windows! Comportement attendu possible: bugs, blocages, plantages.
-	LoadingItem: "Configuration de la page wiki pour {0}"
-	LoadingNPC: "Configuration de la page wiki pour {0}"
+	WikithisDesc: Renvoie vers la page Wiki de l'objet/PNJ 
+	NetworkFail: Échec de la connexion! Vérifiez votre connexion au réseau Wi-Fi! 
+	UnsupportedWarning: Vous jouez présentement sur une plateforme différente de Windows! Possible cas : bugs, ralentissement, plantage.
+	LoadingItem: "Mise en place de la page Wiki de {0}" 
+	LoadingNPC: "Mise en place de la page Wiki de {0}"
 }
