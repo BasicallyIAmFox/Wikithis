@@ -1,19 +1,30 @@
 ﻿Mods.Wikithis: {
-	CreationErrors: {
-		Item: "URL-Link für Element {0} konnte nicht erstellt werden"
-		NPC: "URL-Link für NPC {0} konnte nicht erstellt werden"
+	Config: {
+		CanWikiNPCs: {
+			Label: Zeige Wiki für NPCs
+			Tooltip: Du möchtest mehr über NPCs wissen? Dann klick hier um das Wiki auch für NPCs zu aktivieren! (Standard: AUS)
+		}
+		TooltipsEnabled: {
+			Label: Zeige Schnellinformationen
+			Tooltip: '''Du willst "Drücke irgendwas um die Wiki-Seite zu öffnen!" nicht mehr sehen? Wirklich? Dann klicke hier um die Meldung zu deaktivieren! (Standard: AN)'''
+		}
 	}
-	Error: '''Wiki-Seite existiert nicht oder ungültig! Melde dich, wenn du denkst, dass das ein Problem ist!'''
-	Click: "Drücke {0}, um die Wiki-Seite zu öffnen!"
-	NoWiki: Kein Wiki verfügbar!
+
+	CreationErrors: {
+		Item: "Weblink für den Gegenstand {0} konnte nicht erstellt werden"
+		NPC: "Weblink für den NPC {0} konnte nicht erstellt werden"
+	}
+	Error: '''Wiki-Seite existiert nicht oder ist ungültig! Melde dies wenn du denkst, dass es ein Fehler ist!'''
+	Click: "Drücke {0} um die Wiki-Seite zu öffnen!"
+	NoWiki: Keine Wiki-Seite verfügbar!
 	WikithisInput:
 		'''
-		Leerzeichen im Gegenstands-/NPC-Namen durch Unterstriche ersetzen
-		GROß- UND KLEINSCHREIBUNG BEACHTEN!
+		Ersetze Leerzeichen im Namen des Gegenstandes/NPCs mit Unterstrichen
+		Groß-/Kleinschreibung beachten!
 		'''
-	WikithisDesc: Weiterleitungen zur Wiki-Seite eines Gegenstands / NPCs
-	NetworkFail: Verbindung zum Netzwerk fehlgeschlagen! Stellen Sie sicher, dass Sie mit WI-FI verbunden sind!
-	UnsupportedWarning: Sie spielen auf einer anderen Plattform als Windows! Mögliches erwartetes Verhalten: Fehler, Einfrieren, Abstürze.
-	LoadingItem: "Wiki-Seite für {0} einrichten"
-	LoadingNPC: "Wiki-Seite für {0} einrichten"
+	WikithisDesc: Verweist auf die Wiki-Seite des Gegenstandes/NPCs
+	NetworkFail: Keine Verbindung zum Netzwerk! Stelle sicher dass du mit dem Netzwerk/WLAN verbunden bist!
+	UnsupportedWarning: Du spielst nicht die Windows-Version! Mögliche erwartete Probleme: Fehler, einfrieren, Abstürze.
+	LoadingItem: "Richte Wiki-Seite für den Gegenstand {0} ein"
+	LoadingNPC: "Richte Wiki-Seite für den NPC {0} ein"
 }

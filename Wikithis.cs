@@ -510,12 +510,12 @@ namespace Wikithis
 	}
 
 	// crossplatform warning
-	internal class WikithisPlayer : ModPlayer
+	/*internal class WikithisPlayer : ModPlayer
 	{
 		public override void OnEnterWorld(Player player)
 		{
 			if (!Main.dedServ && !Platform.IsWindows)
 				Main.NewText(Language.GetTextValue("Mods.Wikithis.UnsupportedWarning"), Color.OrangeRed);
 		}
-	}
+	}*/
 }
