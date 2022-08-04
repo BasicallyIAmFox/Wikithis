@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Diagnostics;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -20,7 +19,7 @@ namespace Wikithis
 
 		internal static void SetupWikiPages()
 		{
-			AddEntries<Item>(ContentSamples.ItemsByType.Values, x => x.type.ToString(), x =>
+			AddEntries(ContentSamples.ItemsByType.Values, x => x.type.ToString(), x =>
 			{
 				string name = x.type < ItemID.Count ? Language.GetTextValue("ItemName." + GetInternalName(x.type)) : Language.GetTextValue($"Mods.{x.ModItem.Mod.Name}.ItemName.{x.ModItem.Name}");
 				if (ItemIdNameReplace.TryGetValue((x.type, CultureLoaded), out string name2))
@@ -30,7 +29,7 @@ namespace Wikithis
 			}, x => ItemID.Sets.Deprecated[x.type] || x.ModItem?.Mod.Name == "ModLoader",
 			(x => x.type, ItemIdNameReplace));
 
-			AddEntries<NPC>(ContentSamples.NpcsByNetId.Values, x => x.type.ToString(), x =>
+			AddEntries(ContentSamples.NpcsByNetId.Values, x => x.type.ToString(), x =>
 			{
 				string name = x.netID < NPCID.Count ? Language.GetTextValue("NPCName." + GetInternalName(x.netID, 1)) : Language.GetTextValue($"Mods.{x.ModNPC.Mod.Name}.NPCName.{x.ModNPC.Name}");
 				if (ItemIdNameReplace.TryGetValue((x.type, CultureLoaded), out string name2))

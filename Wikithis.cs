@@ -29,7 +29,6 @@ namespace Wikithis
 
 		internal static Dictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace { get; private set; }
 		internal static Dictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace { get; private set; }
-		internal static Dictionary<(int, GameCulture.CultureName), string> TileIdNameReplace { get; private set; }
 
 		internal static GameCulture.CultureName CultureLoaded { get; private set; }
 
@@ -40,7 +39,6 @@ namespace Wikithis
 
 			ItemIdNameReplace = new();
 			NpcIdNameReplace = new();
-			TileIdNameReplace = new();
 
 			AprilFools = DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
 		}
@@ -299,7 +297,6 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver -= NPCURL;
-			//On.Terraria.Main.DrawMouseOver -= TileURL;
 		}
 
 		internal static string TooltipHotkeyString(ModKeybind keybind)
@@ -307,7 +304,7 @@ namespace Wikithis
 			if (Main.dedServ || keybind == null)
 				return string.Empty;
 
-			List<string> assignedKeys = keybind.GetAssignedKeys(InputMode.Keyboard);
+			List<string> assignedKeys = keybind.GetAssignedKeys();
 			if (assignedKeys.Count == 0)
 				return "[NONE]";
 
