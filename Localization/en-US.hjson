@@ -27,4 +27,5 @@
 	UnsupportedWarning: You are playing on some other platform besides Windows! Possible expected behavior: bugs, freezes, crashes.
 	LoadingItem: "Setting up wiki page for {0}"
 	LoadingNPC: "Setting up wiki page for {0}"
+	WikiKeybind: Check wiki page on item/NPC
 }

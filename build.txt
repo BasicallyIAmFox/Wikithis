@@ -1,6 +1,6 @@
 displayName = Wikithis
 author = FoxXD_
-version = 2.4.5.1
+version = 2.4.5.2
 
 hideCode = false
 hideResources = true
@@ -8,3 +8,4 @@ includeSource = false
 side = Client
 
 homepage = https://discord.gg/rrxE78cyjm
+buildIgnore = *.csproj, *.csproj.user, *.json
