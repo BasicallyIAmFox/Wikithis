@@ -28,23 +28,29 @@ namespace Wikithis
 
 		internal static bool AprilFools { get; private set; }
 		internal static Dictionary<int, string> NPCToURL { get; private set; }
+		internal static Dictionary<int, string> TileToURL { get; private set; }
 		internal static Dictionary<int, string> ItemToURL { get; private set; }
 		internal static Dictionary<(Mod, GameCulture.CultureName), string> ModToURL { get; private set; }
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; }
 
 		internal static Dictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace { get; private set; }
 		internal static Dictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace { get; private set; }
+		internal static Dictionary<(int, GameCulture.CultureName), string> TileIdNameReplace { get; private set; }
 
 		internal static GameCulture.CultureName CultureLoaded { get; private set; }
 
 		public Wikithis()
 		{
-			NPCToURL = new();
-			ItemToURL = new();
 			ModToURL = new();
 			ModToTexture = new();
+
+			NPCToURL = new();
+			ItemToURL = new();
+			TileToURL = new();
+
 			ItemIdNameReplace = new();
 			NpcIdNameReplace = new();
+			TileIdNameReplace = new();
 
 			AprilFools = DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
 		}
@@ -65,6 +71,7 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver += NPCURL;
+			On.Terraria.Main.DrawMouseOver += TileURL;
 		}
 
 		private void NPCURL(ILContext il)
@@ -91,6 +98,24 @@ namespace Wikithis
 			catch (Exception e)
 			{
 				Logger.Error($"IL Error: {e.Message} {e.StackTrace}");
+			}
+		}
+
+		private void TileURL(On.Terraria.Main.orig_DrawMouseOver orig, Main self)
+		{
+			orig(self);
+
+			if (!WikithisConfig.Config.CanWikiTiles)
+				return;
+
+			Tile tile = Main.tile[(int)Main.MouseWorld.X / 16, (int)Main.MouseWorld.Y / 16];
+			if (!tile.HasTile)
+				return;
+
+			bool exists = !TileToURL.ContainsKey(tile.TileType) || TileToURL.ContainsKey(tile.TileType) && !CheckURLValid(TileToURL[tile.TileType]);
+			if (!exists && WikithisSystem.WikiKeybind.JustReleased)
+			{
+				OpenWikiPage(this, tile.TileType);
 			}
 		}
 
@@ -288,12 +313,17 @@ namespace Wikithis
 
 		public override void Unload()
 		{
+			ModToURL = null;
+			ModToTexture = null;
+
 			NPCToURL = null;
 			ItemToURL = null;
-			ModToURL = null;
+			TileToURL = null;
+
 			ItemIdNameReplace = null;
-			ModToTexture = null;
 			NpcIdNameReplace = null;
+			TileIdNameReplace = null;
+
 			AprilFools = false;
 			CultureLoaded = 0;
 
@@ -301,19 +331,23 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver -= NPCURL;
+			On.Terraria.Main.DrawMouseOver -= TileURL;
 		}
 
 		internal static string TooltipHotkeyString(ModKeybind keybind)
 		{
 			if (Main.dedServ || keybind == null)
 				return "";
+
 			List<string> assignedKeys = keybind.GetAssignedKeys(InputMode.Keyboard);
 			if (assignedKeys.Count == 0)
 				return "[NONE]";
+
 			StringBuilder stringBuilder = new(16);
 			stringBuilder.Append(assignedKeys[0]);
 			for (int index = 1; index < assignedKeys.Count; ++index)
 				stringBuilder.Append(" / ").Append(assignedKeys[index]);
+
 			return stringBuilder.ToString();
 		}
 	}
@@ -405,8 +439,7 @@ namespace Wikithis
 	{
 		public override string Command => "wikithis";
 
-		public override string Usage => "/wikithis <npc|item> [name of type]" +
-			"\n" + Language.GetTextValue($"Mods.{Mod.Name}.WikithisInput");
+		public override string Usage => $"/wikithis <npc|item> [name of type]\n{Language.GetTextValue($"Mods.{Mod.Name}.WikithisInput")}";
 
 		public override string Description => Language.GetTextValue($"Mods.{Mod.Name}.WikithisDesc");
 
@@ -437,9 +470,7 @@ namespace Wikithis
 						{
 							npc.SetDefaults(k);
 							if (getName != npc.GivenOrTypeName)
-							{
 								continue;
-							}
 
 							npcType = k;
 							break;
@@ -451,7 +482,7 @@ namespace Wikithis
 							throw new UsageException($"Unknown NPC: {name}");
 						}
 					}
-					
+
 					if (npcType <= 0 || npcType >= NPCLoader.NPCCount)
 					{
 						Main.NewText($"{input} <-- Unknown NPC ID!", Color.OrangeRed);
@@ -470,9 +501,7 @@ namespace Wikithis
 						{
 							item.SetDefaults(k, true);
 							if (getName != item.Name)
-							{
 								continue;
-							}
 
 							itemType = k;
 							break;

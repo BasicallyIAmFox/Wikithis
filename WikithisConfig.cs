@@ -18,5 +18,10 @@ namespace Wikithis
 		[Tooltip("$Mods.Wikithis.Config.CanWikiNPCs.Tooltip")]
 		[DefaultValue(false)]
 		public bool CanWikiNPCs;
+
+		[Label("$Mods.Wikithis.Config.CanWikiTiles.Label")]
+		[Tooltip("$Mods.Wikithis.Config.CanWikiTiles.Tooltip")]
+		[DefaultValue(false)]
+		public bool CanWikiTiles;
 	}
 }
