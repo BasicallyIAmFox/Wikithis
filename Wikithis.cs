@@ -339,8 +339,6 @@ namespace Wikithis
 				}
 
 				Vector2 scale = new(2f / 3f, 2f / 3f);
-				if (texture.Width() + texture.Height() > 60)
-					scale = new(20f / (exists ? texture.Width() : 30f), 20f / texture.Height());
 				Vector2 origin = new(!exists ? 0f : -((30f - texture.Width()) / 2f), !exists ? 0f : -((TextureAssets.BestiaryMenuButton.Height() - texture.Height()) / 2f));
 
 				Main.spriteBatch.Draw(texture.Value, new Vector2(line.X, line.Y), new Rectangle(0, 0, exists ? texture.Width() : 30, texture.Height()), Color.White, 0f, origin, scale, 0, 0f);
