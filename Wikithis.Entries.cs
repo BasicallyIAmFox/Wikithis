@@ -114,17 +114,10 @@ namespace Wikithis
 		/// </summary>
 		public readonly string Search;
 
-		/// <summary>
-		/// From what mod entry is.
-		/// </summary>
-		public readonly Mod Mod;
-
 		public WikiEntry(string fullName, string searchStr)
 		{
 			FullName = fullName;
 			Search = searchStr;
-
-			Mod = FullName?.Split('/').Length > 1 ? ModLoader.GetMod(FullName?.Split('/')[0]) : null;
 		}
 
 		public void OpenWikiPage(bool checkForKeybind = false)
