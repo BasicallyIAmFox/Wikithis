@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using ReLogic.Content;
-using ReLogic.OS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +19,11 @@ using static Wikithis.Wikithis;
 namespace Wikithis
 {
 	// TODO: UNDERSTAND THE CODEBASE; make it actually readable and organized?
-
-	// networking, wiki stuff, dictionaries, and a single il :)
 	public partial class Wikithis : Mod
 	{
 		internal const string RickRoll = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
 		internal static bool AprilFools { get; private set; }
-		internal static Dictionary<int, string> NPCToURL { get; private set; }
-		internal static Dictionary<int, string> TileToURL { get; private set; }
-		internal static Dictionary<int, string> ItemToURL { get; private set; }
 		internal static Dictionary<(Mod, GameCulture.CultureName), string> ModToURL { get; private set; }
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; }
 
@@ -43,10 +37,6 @@ namespace Wikithis
 		{
 			ModToURL = new();
 			ModToTexture = new();
-
-			NPCToURL = new();
-			ItemToURL = new();
-			TileToURL = new();
 
 			ItemIdNameReplace = new();
 			NpcIdNameReplace = new();
@@ -71,7 +61,6 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver += NPCURL;
-			On.Terraria.Main.DrawMouseOver += TileURL;
 		}
 
 		private void NPCURL(ILContext il)
@@ -98,24 +87,6 @@ namespace Wikithis
 			catch (Exception e)
 			{
 				Logger.Error($"IL Error: {e.Message} {e.StackTrace}");
-			}
-		}
-
-		private void TileURL(On.Terraria.Main.orig_DrawMouseOver orig, Main self)
-		{
-			orig(self);
-
-			if (!WikithisConfig.Config.CanWikiTiles)
-				return;
-
-			Tile tile = Main.tile[(int)Main.MouseWorld.X / 16, (int)Main.MouseWorld.Y / 16];
-			if (!tile.HasTile)
-				return;
-
-			bool exists = !TileToURL.ContainsKey(tile.TileType) || TileToURL.ContainsKey(tile.TileType) && !CheckURLValid(TileToURL[tile.TileType]);
-			if (!exists && WikithisSystem.WikiKeybind.JustReleased)
-			{
-				OpenWikiPage(this, tile.TileType);
 			}
 		}
 
@@ -316,13 +287,10 @@ namespace Wikithis
 			ModToURL = null;
 			ModToTexture = null;
 
-			NPCToURL = null;
-			ItemToURL = null;
-			TileToURL = null;
+			WikiEntries = null;
 
 			ItemIdNameReplace = null;
 			NpcIdNameReplace = null;
-			TileIdNameReplace = null;
 
 			AprilFools = false;
 			CultureLoaded = 0;
@@ -331,7 +299,7 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver -= NPCURL;
-			On.Terraria.Main.DrawMouseOver -= TileURL;
+			//On.Terraria.Main.DrawMouseOver -= TileURL;
 		}
 
 		internal static string TooltipHotkeyString(ModKeybind keybind)
@@ -357,16 +325,12 @@ namespace Wikithis
 	{
 		public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset)
 		{
-			bool exists = !ItemToURL.ContainsKey(item.type) || ItemToURL.ContainsKey(item.type) && !CheckURLValid(ItemToURL[item.type]);
+			bool exists = !WikiEntries[typeof(Item)].ContainsKey(item.type.ToString()) || WikiEntries[typeof(Item)].ContainsKey(item.type.ToString()) && !CheckURLValid(WikiEntries[typeof(Item)][item.type.ToString()].Search);
 			if (line.Mod == Mod.Name && line.Name == "Wikithis:Wiki")
 			{
 				Asset<Texture2D> texture = TextureAssets.BestiaryMenuButton;
-				if (item.ModItem != null)
-				{
-					ModToTexture.TryGetValue(item.ModItem.Mod, out Asset<Texture2D> value);
-					if (value != null)
-						texture = value;
-				}
+				if (item.ModItem != null && ModToTexture.TryGetValue(item.ModItem.Mod, out Asset<Texture2D> value))
+					texture = value;
 
 				if (exists)
 				{
@@ -375,6 +339,8 @@ namespace Wikithis
 				}
 
 				Vector2 scale = new(2f / 3f, 2f / 3f);
+				if (texture.Width() + texture.Height() > 60)
+					scale = new(20f / (exists ? texture.Width() : 30f), 20f / texture.Height());
 				Vector2 origin = new(!exists ? 0f : -((30f - texture.Width()) / 2f), !exists ? 0f : -((TextureAssets.BestiaryMenuButton.Height() - texture.Height()) / 2f));
 
 				Main.spriteBatch.Draw(texture.Value, new Vector2(line.X, line.Y), new Rectangle(0, 0, exists ? texture.Width() : 30, texture.Height()), Color.White, 0f, origin, scale, 0, 0f);
@@ -393,7 +359,7 @@ namespace Wikithis
 			if (!WikithisConfig.Config.TooltipsEnabled)
 				return;
 
-			bool exists = !ItemToURL.ContainsKey(item.type) || ItemToURL.ContainsKey(item.type) && !CheckURLValid(ItemToURL[item.type]);
+			bool exists = !WikiEntries[typeof(Item)].ContainsKey(item.type.ToString()) || WikiEntries[typeof(Item)].ContainsKey(item.type.ToString()) && !CheckURLValid(WikiEntries[typeof(Item)][item.type.ToString()].Search);
 			string text = Language.GetTextValue($"Mods.{Mod.Name}.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind));
 			if (exists)
 				text = Language.GetTextValue($"Mods.{Mod.Name}.NoWiki");
@@ -429,7 +395,7 @@ namespace Wikithis
 
 		public override void Load() => WikiKeybind = KeybindLoader.RegisterKeybind(Mod, "Check wiki page on item/NPC", "O");
 
-		public override void PostAddRecipes() => SetupWikiPages(Mod);
+		public override void PostAddRecipes() => SetupWikiPages();
 
 		public override void Unload() => WikiKeybind = null;
 	}
