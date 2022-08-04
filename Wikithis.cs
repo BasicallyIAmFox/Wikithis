@@ -305,7 +305,7 @@ namespace Wikithis
 		internal static string TooltipHotkeyString(ModKeybind keybind)
 		{
 			if (Main.dedServ || keybind == null)
-				return "";
+				return string.Empty;
 
 			List<string> assignedKeys = keybind.GetAssignedKeys(InputMode.Keyboard);
 			if (assignedKeys.Count == 0)
