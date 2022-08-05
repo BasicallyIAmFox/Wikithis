@@ -6,19 +6,13 @@ namespace Wikithis
 {
 	public abstract class Wiki<TEntry, TKey> : ModType, IWiki<TEntry, TKey>
 	{
-		#region Fields
 		private readonly Dictionary<TKey, WikiEntry<TKey>> _entries = new();
-
 		private readonly Func<TEntry, TKey> _getKeyFunc;
-		#endregion
 
-		#region Constructors
 		protected Wiki() => _getKeyFunc = null;
 
 		public Wiki(Func<TEntry, TKey> getKeyFunc) => _getKeyFunc = getKeyFunc;
-		#endregion
 
-		#region Methods
 		/// <summary>
 		/// Used to link all <typeparamref name="TEntry"/> with their correspondent wiki pages.
 		/// </summary>
@@ -51,14 +45,11 @@ namespace Wikithis
 		/// </summary>
 		/// <param name="key">Key of entry.</param>
 		public virtual void MessageIfDoesntExists(TKey key) => Wikithis.Instance.Logger.Info("My modder forgot to put message! Sorry!");
-		#endregion
 
-		#region TML Methods
 		public sealed override void SetStaticDefaults() { }
 
 		public sealed override void SetupContent() { }
 
 		protected sealed override void Register() => Wikithis._wikis.Add(FullName, this);
-		#endregion
 	}
 }

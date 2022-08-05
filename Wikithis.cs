@@ -14,34 +14,23 @@ namespace Wikithis
 {
 	public partial class Wikithis : Mod
 	{
-		#region Fields
 		internal const string RickRoll = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-
 		internal static bool AprilFools { get; private set; }
 		internal static Dictionary<string, IWiki> _wikis { get; private set; }
 		internal static Dictionary<(Mod, GameCulture.CultureName), string> _modToURL { get; private set; }
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; }
-
 		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; }
 		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; }
-
 		public static GameCulture.CultureName CultureLoaded { get; private set; }
 		private static Wikithis instance;
-		#endregion
 
-		#region Properties
 		public static IDictionary<string, IWiki> Wikis => _wikis;
-
 		public static IDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
-
 		public static IDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
-
 		public static IDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
 
 		public static Wikithis Instance { get => instance; private set => instance = value; }
-		#endregion
 
-		#region Constructors
 		public Wikithis()
 		{
 			_wikis = new();
@@ -55,9 +44,7 @@ namespace Wikithis
 			AprilFools = DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
 			Instance = this;
 		}
-		#endregion
 
-		#region Methods
 		public override void Load()
 		{
 			CultureLoaded = (Language.ActiveCulture.Name == "en-US") ? GameCulture.CultureName.English :
@@ -343,9 +330,7 @@ namespace Wikithis
 
 			return null;
 		}
-		#endregion
-
-		#region Utilities
+		
 		public static bool CheckURLValid(string s) => Uri.TryCreate(s, UriKind.Absolute, out Uri uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
 
 		internal static string GetInternalName(int id, int num = 0) => num == 0 ? ItemID.Search.GetName(id) : NPCID.Search.GetName(id);
@@ -454,6 +439,5 @@ namespace Wikithis
 
 			return stringBuilder.ToString();
 		}
-		#endregion
 	}
 }

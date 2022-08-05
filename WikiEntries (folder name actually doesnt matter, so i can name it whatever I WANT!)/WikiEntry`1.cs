@@ -4,7 +4,6 @@ namespace Wikithis
 {
 	public readonly struct WikiEntry<TKey>
 	{
-		#region Fields
 		/// <summary>
 		/// The key, identifier of an entry.
 		/// </summary>
@@ -14,17 +13,13 @@ namespace Wikithis
 		/// URL of an entry.
 		/// </summary>
 		public readonly string Search;
-		#endregion
 
-		#region Constructors
 		public WikiEntry(TKey key, string searchStr)
 		{
 			Key = key;
 			Search = searchStr;
 		}
-		#endregion
 
-		#region Methods
 		/// <summary>
 		/// Opens URL of an entry.
 		/// </summary>
@@ -38,6 +33,5 @@ namespace Wikithis
 					WikithisSystem.RickRolled = true;
 			}
 		}
-		#endregion
 	}
 }

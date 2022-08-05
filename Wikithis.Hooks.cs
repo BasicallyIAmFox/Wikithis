@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Wikithis
 {
-	partial class Wikithis
+	public partial class Wikithis
 	{
 		private void NPCURL(ILContext il)
 		{
