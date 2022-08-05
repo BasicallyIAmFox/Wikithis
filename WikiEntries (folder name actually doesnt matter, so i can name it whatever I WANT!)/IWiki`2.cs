@@ -11,5 +11,7 @@
 		bool HasEntryAndIsValid(TKey key) => HasEntry(key) && Wikithis.CheckURLValid(GetEntry(key).Search);
 
 		bool IsValid(TKey key) => HasEntry(key) && Wikithis.CheckURLValid(GetEntry(key).Search);
+
+		void MessageIfDoesntExists(TKey key);
 	}
 }

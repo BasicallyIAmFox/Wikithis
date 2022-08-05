@@ -28,5 +28,21 @@ namespace Wikithis
 				AddEntry(item, new(item.type, Wikithis.DefaultSearchStr(name, item.ModItem?.Mod)));
 			}
 		}
+
+		public override void MessageIfDoesntExists(int key)
+		{
+			Item item = ContentSamples.ItemsByType[key];
+
+			bool bl = Wikithis.ModToURL.ContainsKey((item.ModItem?.Mod, Wikithis.CultureLoaded));
+			if (!bl)
+				bl = Wikithis.ModToURL.ContainsKey((item.ModItem?.Mod, GameCulture.CultureName.English));
+
+			Wikithis.Instance.Logger.Info("Key: " + key.ToString());
+			Wikithis.Instance.Logger.Info("Type: " + item.type.ToString());
+			Wikithis.Instance.Logger.Info("Name: " + item.Name);
+			Wikithis.Instance.Logger.Info("Vanilla: " + (item.ModItem == null).ToString());
+			Wikithis.Instance.Logger.Info("Mod: " + item.ModItem?.Mod.Name);
+			Wikithis.Instance.Logger.Info("Domain in dictionary: " + (item.ModItem != null ? bl.ToString() : "False"));
+		}
 	}
 }

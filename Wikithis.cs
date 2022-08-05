@@ -14,32 +14,46 @@ namespace Wikithis
 {
 	public partial class Wikithis : Mod
 	{
-		#region Fields and Field Init
+		#region Fields
 		internal const string RickRoll = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
 		internal static bool AprilFools { get; private set; }
-		internal static Dictionary<string, IWiki> Wikis { get; private set; }
-		internal static Dictionary<(Mod, GameCulture.CultureName), string> ModToURL { get; private set; }
+		internal static Dictionary<string, IWiki> _wikis { get; private set; }
+		internal static Dictionary<(Mod, GameCulture.CultureName), string> _modToURL { get; private set; }
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; }
 
-		internal static Dictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace { get; private set; }
-		internal static Dictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace { get; private set; }
+		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; }
+		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; }
 
-		internal static GameCulture.CultureName CultureLoaded { get; private set; }
+		public static GameCulture.CultureName CultureLoaded { get; private set; }
+		private static Wikithis instance;
+		#endregion
+
+		#region Properties
+		public static IDictionary<string, IWiki> Wikis => _wikis;
+
+		public static IDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
+
+		public static IDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
+
+		public static IDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
+
+		public static Wikithis Instance { get => instance; private set => instance = value; }
 		#endregion
 
 		#region Constructors
 		public Wikithis()
 		{
-			Wikis = new();
+			_wikis = new();
 
-			ModToURL = new();
+			_modToURL = new();
 			ModToTexture = new();
 
-			ItemIdNameReplace = new();
-			NpcIdNameReplace = new();
+			_itemIdNameReplace = new();
+			_npcIdNameReplace = new();
 
 			AprilFools = DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
+			Instance = this;
 		}
 		#endregion
 
@@ -72,13 +86,13 @@ namespace Wikithis
 
 		public override void Unload()
 		{
-			Wikis = null;
+			_wikis = null;
 
-			ModToURL = null;
+			_modToURL = null;
 			ModToTexture = null;
 
-			ItemIdNameReplace = null;
-			NpcIdNameReplace = null;
+			_itemIdNameReplace = null;
+			_npcIdNameReplace = null;
 
 			AprilFools = false;
 			CultureLoaded = 0;
@@ -87,11 +101,12 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver -= NPCURL;
+			Instance = null;
 		}
 
 		public override object Call(params object[] args)
 		{
-			Array.Resize(ref args, 4);
+			Array.Resize(ref args, 6);
 			const string success = "Success";
 
 			try
@@ -128,6 +143,14 @@ namespace Wikithis
 					"WikiTexture",
 					"AddWiki"
 				};
+				string[] fifth = new string[]
+				{
+					"CustomWiki"
+				};
+				string[] sixth = new string[]
+				{
+					"OpenCustomWiki"
+				};
 
 				if (first.Any(x => x.ToLower() == message) || messageOverload.HasValue && messageOverload.Value == 0)
 				{
@@ -146,17 +169,17 @@ namespace Wikithis
 					if (nameOfArgument != string.Empty)
 						throw new ArgumentNullException($"Call Error: The {nameOfArgument} argument for the attempted message, \"{message ?? messageOverload.ToString()}\" has returned null.");
 
-					if (culture != GameCulture.CultureName.English && ModToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
+					if (culture != GameCulture.CultureName.English && _modToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
 					{
-						ModToURL.TryAdd((mod, culture.Value), domain);
+						_modToURL.TryAdd((mod, culture.Value), domain);
 					}
-					else if (culture != GameCulture.CultureName.English && !ModToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
+					else if (culture != GameCulture.CultureName.English && !_modToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
 					{
 						throw new Exception("English (default; main) key wasn't present in Dictionary, yet translations are being added!");
 					}
 					else
 					{
-						ModToURL.TryAdd((mod, culture.Value), domain);
+						_modToURL.TryAdd((mod, culture.Value), domain);
 					}
 					return success;
 				}
@@ -189,13 +212,13 @@ namespace Wikithis
 
 					if (id == null || id?.Count == 1)
 					{
-						ItemIdNameReplace.TryAdd((id2 ?? id[0], culture.Value), name);
+						_itemIdNameReplace.TryAdd((id2 ?? id[0], culture.Value), name);
 					}
 					else
 					{
 						foreach (int i in id)
 						{
-							ItemIdNameReplace.TryAdd((i, culture.Value), name);
+							_itemIdNameReplace.TryAdd((i, culture.Value), name);
 						}
 					}
 					return success;
@@ -229,13 +252,13 @@ namespace Wikithis
 
 					if (id == null || id?.Count == 1)
 					{
-						NpcIdNameReplace.TryAdd((id2 ?? id[0], culture.Value), name);
+						_npcIdNameReplace.TryAdd((id2 ?? id[0], culture.Value), name);
 					}
 					else
 					{
 						foreach (int i in id)
 						{
-							NpcIdNameReplace.TryAdd((i, culture.Value), name);
+							_npcIdNameReplace.TryAdd((i, culture.Value), name);
 						}
 					}
 					return success;
@@ -257,11 +280,51 @@ namespace Wikithis
 					ModToTexture.TryAdd(mod, texture);
 					return success;
 				}
-				else if (messageOverload.HasValue && messageOverload.Value == 4)
+				else if (fifth.Any(x => x.ToLower() == message) || messageOverload.HasValue && messageOverload.Value == 4)
 				{
+					Mod mod = args[index + 0] as Mod;
+					string name = args[index + 1] as string;
+					Func<object, object> key = args[index + 2] as Func<object, object>;
+					var initialize = args[index + 3] as Action<Func<object, bool>, Action<object, object, string>, Func<string, Mod, string>>;
+					var noExists = args[index + 4] as Action<IDictionary<(Mod, GameCulture.CultureName), string>, GameCulture.CultureName, object>;
+
+					string nameOfArgument = string.Empty;
+					if (mod == null)
+						nameOfArgument = nameof(mod);
+					if (name == null)
+						nameOfArgument = nameof(name);
+					if (key == null)
+						nameOfArgument = nameof(key);
+					if (initialize == null)
+						nameOfArgument = nameof(initialize);
+
+					if (nameOfArgument != string.Empty)
+						throw new ArgumentNullException($"Call Error: The {nameOfArgument} argument for the attempted message, \"{message ?? messageOverload.ToString()}\" has returned null.");
+
+					mod.AddContent(new SealedWiki(name, key, initialize, noExists));
+					return success;
 				}
-				else if (messageOverload.HasValue && messageOverload.Value == 5)
+				else if (sixth.Any(x => x.ToLower() == message) || messageOverload.HasValue && messageOverload.Value == 5)
 				{
+					Mod mod = args[index + 0] as Mod;
+					string name = args[index + 1] as string;
+					object key = args[index + 2];
+					bool? withKeybind = args[index + 3] as bool?;
+					withKeybind ??= true;
+
+					string nameOfArgument = string.Empty;
+					if (mod == null)
+						nameOfArgument = nameof(mod);
+					if (name == null)
+						nameOfArgument = nameof(name);
+
+					if (nameOfArgument != string.Empty)
+						throw new ArgumentNullException($"Call Error: The {nameOfArgument} argument for the attempted message, \"{message ?? messageOverload.ToString()}\" has returned null.");
+
+					if (Wikis.TryGetValue($"{mod.Name}/{name}", out IWiki value))
+						(value as IWiki<object, object>).GetEntry(key).OpenWikiPage(withKeybind.Value);
+
+					return success;
 				}
 				else if (messageOverload.HasValue && messageOverload.Value == 6)
 				{
@@ -283,7 +346,7 @@ namespace Wikithis
 		#endregion
 
 		#region Utilities
-		internal static bool CheckURLValid(string s) => Uri.TryCreate(s, UriKind.Absolute, out Uri uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
+		public static bool CheckURLValid(string s) => Uri.TryCreate(s, UriKind.Absolute, out Uri uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
 
 		internal static string GetInternalName(int id, int num = 0) => num == 0 ? ItemID.Search.GetName(id) : NPCID.Search.GetName(id);
 
@@ -356,55 +419,24 @@ namespace Wikithis
 			}
 		}
 
-		internal static void OpenWikiPage(Mod mod, Item item)
+		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true)
 		{
-			IWiki<Item, int> wiki = Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>;
-
-			if (wiki.HasEntryAndIsValid(item.type))
+			if (wiki.HasEntryAndIsValid(key))
 			{
-				wiki.GetEntry(item.type).OpenWikiPage(false);
+				wiki.GetEntry(key).OpenWikiPage(checkForKeybind);
 			}
 			else
 			{
-				Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.Error"), Color.OrangeRed);
+				Main.NewText(Language.GetTextValue("Mods.Wikithis.Error"), Color.OrangeRed);
 
-				bool bl = ModToURL.ContainsKey((item.ModItem?.Mod, CultureLoaded));
-				if (!bl)
-					bl = ModToURL.ContainsKey((item.ModItem?.Mod, GameCulture.CultureName.English));
-
-				mod.Logger.Error("Tried to get wiki page, but failed!");
-				mod.Logger.Info("Type: " + item.type.ToString());
-				mod.Logger.Info("Name: " + item.Name);
-				mod.Logger.Info("Vanilla: " + (item.ModItem == null).ToString());
-				mod.Logger.Info("Mod: " + item.ModItem?.Mod.Name);
-				mod.Logger.Info("Domain in dictionary: " + (item.ModItem != null ? bl.ToString() : "False"));
+				Instance.Logger.Error("Tried to get wiki page, but failed!");
+				wiki.MessageIfDoesntExists(key);
 			}
 		}
 
-		internal static void OpenWikiPage(Mod mod, NPC npc)
-		{
-			IWiki<Item, int> wiki = Wikis[$"Wikithis/{nameof(NPCWiki)}"] as IWiki<Item, int>;
+		internal static void OpenWikiPage(Mod mod, Item item) => OpenWikiPage(item.type, Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>, false);
 
-			if (wiki.HasEntryAndIsValid(npc.type))
-			{
-				wiki.GetEntry(npc.type).OpenWikiPage(false);
-			}
-			else
-			{
-				Main.NewText(Language.GetTextValue($"Mods.{mod.Name}.Error"), Color.OrangeRed);
-
-				bool bl = ModToURL.ContainsKey((npc.ModNPC?.Mod, CultureLoaded));
-				if (!bl)
-					bl = ModToURL.ContainsKey((npc.ModNPC?.Mod, GameCulture.CultureName.English));
-
-				mod.Logger.Error("Tried to get wiki page, but failed!");
-				mod.Logger.Info("Type: " + npc.type.ToString());
-				mod.Logger.Info("Name: " + npc.GivenOrTypeName);
-				mod.Logger.Info("Vanilla: " + (npc.ModNPC == null).ToString());
-				mod.Logger.Info("Mod: " + npc.ModNPC?.Mod.Name);
-				mod.Logger.Info("Domain in dictionary: " + (npc.ModNPC != null ? bl.ToString() : "False"));
-			}
-		}
+		internal static void OpenWikiPage(Mod mod, NPC npc) => OpenWikiPage(npc.netID, Wikis[$"Wikithis/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false);
 
 		internal static string TooltipHotkeyString(ModKeybind keybind)
 		{
