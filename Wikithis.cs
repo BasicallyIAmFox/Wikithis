@@ -406,6 +406,9 @@ namespace Wikithis
 
 		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true)
 		{
+			if (checkForKeybind && !WikithisSystem.WikiKeybind.JustReleased)
+				return;
+
 			if (wiki.HasEntryAndIsValid(key))
 			{
 				wiki.GetEntry(key).OpenWikiPage(checkForKeybind);
