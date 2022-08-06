@@ -11,7 +11,7 @@ namespace Wikithis
 
 		public override void OnWorldUnload() => RickRolled = false;
 
-		public override void Load() => WikiKeybind = KeybindLoader.RegisterKeybind(Mod, "$Mods.Wikithis.WikiKeybind", "O");
+		public override void Load() => WikiKeybind = KeybindLoader.RegisterKeybind(Mod, "Check wiki page on item/NPC", "O");
 
 		public override void PostAddRecipes() => Wikithis.SetupWikiPages();
 
