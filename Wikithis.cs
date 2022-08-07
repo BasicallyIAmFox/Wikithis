@@ -331,10 +331,24 @@ namespace Wikithis
 			return null;
 		}
 		
+		/// <summary>
+		/// Checks if URL is valid.
+		/// </summary>
+		/// <param name="s">The URL.</param>
+		/// <returns></returns>
 		public static bool CheckURLValid(string s) => Uri.TryCreate(s, UriKind.Absolute, out Uri uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
 
 		internal static string GetInternalName(int id, int num = 0) => num == 0 ? ItemID.Search.GetName(id) : NPCID.Search.GetName(id);
 
+		/// <summary>
+		/// Makes default URL link.
+		/// <br>If <paramref name="mod"/> is null, then it will use default Terraria wiki.</br>
+		/// <br>If <paramref name="mod"/> is not null, then it will try to get domain from ModToURL dictionary.</br>
+		/// <br>If ModToURL doesn't contains <paramref name="mod"/>, then stops creating URL.</br>
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="mod"></param>
+		/// <returns></returns>
 		public static string DefaultSearchStr(string name, Mod mod)
 		{
 			name = name.Replace(' ', '_');
@@ -404,12 +418,24 @@ namespace Wikithis
 			}
 		}
 
+		/// <summary>
+		/// If user has pressed keybind, then next steps are taken:
+		///	<br>1. Check if <paramref name="key"/> is valid. If true, then takes to last step. Otherwise takes two next steps.</br>
+		///	<br>2. Gets entry by <paramref name="key"/> key.</br>
+		///	<br>3. Opens wiki page from entry. Next step is ignored.</br>
+		///	<br>4. Types in chat that error happened.</br>
+		/// </summary>
+		/// <typeparam name="TEntry"></typeparam>
+		/// <typeparam name="TKey"></typeparam>
+		/// <param name="key"></param>
+		/// <param name="wiki"></param>
+		/// <param name="checkForKeybind"></param>
 		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true)
 		{
-			if (checkForKeybind && !WikithisSystem.WikiKeybind.JustReleased)
+			if (!WikithisSystem.WikiKeybind.JustReleased)
 				return;
 
-			if (wiki.HasEntryAndIsValid(key))
+			if (wiki.IsValid(key))
 			{
 				wiki.GetEntry(key).OpenWikiPage(checkForKeybind);
 			}
