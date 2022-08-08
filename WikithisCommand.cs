@@ -11,32 +11,37 @@ namespace Wikithis
 	{
 		public override string Command => "wikithis";
 
-		public override string Usage => $"/wikithis <npc|item> [name of type]\n{Language.GetTextValue($"Mods.{Mod.Name}.WikithisInput")}";
+		public override string Usage => $"/wikithis <npc|item> [name of type]\n{Language.GetTextValue($"Mods.{nameof(Wikithis)}.WikithisInput")}";
 
-		public override string Description => Language.GetTextValue($"Mods.{Mod.Name}.WikithisDesc");
+		public override string Description => Language.GetTextValue($"Mods.{nameof(Wikithis)}.WikithisDesc");
 
 		public override CommandType Type => CommandType.Chat;
 
 		public override void Action(CommandCaller caller, string input, string[] args)
 		{
-			if (caller.Player.whoAmI == Main.myPlayer && args.Length == 0)
+			if (caller.Player.whoAmI != Main.myPlayer)
+				return;
+
+			if (args.Length == 0)
 			{
 				foreach (string s in Usage.Split('\n'))
 				{
-					Main.NewText(s, Color.OrangeRed);
+					caller.Reply(s, Color.OrangeRed);
 				}
 				return;
 			}
 
 			Array.Resize(ref args, 2);
-			if (caller.Player.whoAmI == Main.myPlayer && args[0] is string type)
+			if (args[0] is string type)
 			{
-				type = type.ToLower();
+				type = type.ToLowerInvariant();
+
 				if (type == "npc" && args[1] is string name)
 				{
 					if (!int.TryParse(args[1], out int npcType))
 					{
-						string getName = args[1].Replace("_", " ");
+						string getName = name.Replace('_', ' ');
+
 						NPC npc = new();
 						for (int k = NPCID.NegativeIDCount + 1; k < NPCLoader.NPCCount; k++)
 						{
@@ -50,24 +55,24 @@ namespace Wikithis
 
 						if (npcType == 0)
 						{
-							Main.NewText($"{input} <-- Unknown NPC type!", Color.OrangeRed);
-							throw new UsageException($"Unknown NPC: {name}");
+							caller.Reply($"{input} <-- Unknown NPC type!", Color.OrangeRed);
+							return;
 						}
 					}
 
-					if (npcType <= 0 || npcType >= NPCLoader.NPCCount)
+					if (npcType == NPCID.None || npcType <= NPCID.NegativeIDCount || npcType >= NPCLoader.NPCCount)
 					{
-						Main.NewText($"{input} <-- Unknown NPC ID!", Color.OrangeRed);
-						throw new UsageException($"Unknown NPC ID: {npcType}");
+						caller.Reply($"{input} <-- Unknown NPC ID!", Color.OrangeRed);
+						return;
 					}
-					Wikithis.OpenWikiPage(Mod, ContentSamples.NpcsByNetId[npcType]);
+					Wikithis.OpenWikiPage(ContentSamples.NpcsByNetId[npcType], false);
 				}
 				else if (type == "item" && args[1] is string name2)
 				{
-					name = name2;
 					if (!int.TryParse(args[1], out int itemType))
 					{
-						string getName = args[1].Replace("_", " ");
+						string getName = name2.Replace('_', ' ');
+
 						Item item = new();
 						for (int k = 0; k < ItemLoader.ItemCount; k++)
 						{
@@ -79,44 +84,33 @@ namespace Wikithis
 							break;
 						}
 
-						if (itemType == 0)
+						if (itemType == ItemID.None)
 						{
-							Main.NewText($"{input} <-- Unknown item type!", Color.OrangeRed);
-							throw new UsageException($"Unknown item: {name}");
+							caller.Reply($"{input} <-- Unknown item type!", Color.OrangeRed);
+							return;
 						}
 					}
 
-					if (itemType <= 0 || itemType >= ItemLoader.ItemCount)
+					if (itemType <= ItemID.None || itemType >= ItemLoader.ItemCount)
 					{
-						Main.NewText($"{input} <-- Unknown item ID!", Color.OrangeRed);
-						throw new UsageException($"Unknown item ID: {itemType}");
+						caller.Reply($"{input} <-- Unknown item ID!", Color.OrangeRed);
+						return;
 					}
-					Wikithis.OpenWikiPage(Mod, ContentSamples.ItemsByType[itemType]);
+					Wikithis.OpenWikiPage(ContentSamples.ItemsByType[itemType], false);
 				}
 				else if (type == "npc" && args[1] is null)
 				{
-					Main.NewText($"{input} <-- Unknown NPC name!", Color.OrangeRed);
+					caller.Reply($"{input} <-- Unknown NPC name!", Color.OrangeRed);
 				}
 				else if (type == "item" && args[1] is null)
 				{
-					Main.NewText($"{input} <-- Unknown item name!", Color.OrangeRed);
+					caller.Reply($"{input} <-- Unknown item name!", Color.OrangeRed);
 				}
 				else
 				{
-					Main.NewText($"{input} <-- Unknown type! Available types: [c/{Color.Yellow.Hex3()}:npc], [c/{Color.Yellow.Hex3()}:item].", Color.OrangeRed);
-					throw new UsageException("Unknown type: " + type);
+					caller.Reply($"{input} <-- Unknown type! Available types: [c/{Color.Yellow.Hex3()}:npc], [c/{Color.Yellow.Hex3()}:item].", Color.OrangeRed);
 				}
 			}
 		}
 	}
-
-	// crossplatform warning
-	/*internal class WikithisPlayer : ModPlayer
-	{
-		public override void OnEnterWorld(Player player)
-		{
-			if (!Main.dedServ && !Platform.IsWindows)
-				Main.NewText(Language.GetTextValue("Mods.Wikithis.UnsupportedWarning"), Color.OrangeRed);
-		}
-	}*/
 }

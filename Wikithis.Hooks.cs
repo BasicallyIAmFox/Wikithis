@@ -24,7 +24,7 @@ namespace Wikithis
 				{
 					if (WikithisConfig.Config.CanWikiNPCs && hovers && WikithisSystem.WikiKeybind.JustPressed)
 					{
-						OpenWikiPage(this, npc);
+						OpenWikiPage(npc);
 					}
 				});
 			}

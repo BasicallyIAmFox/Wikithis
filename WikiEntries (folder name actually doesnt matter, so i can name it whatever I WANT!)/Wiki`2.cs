@@ -44,7 +44,7 @@ namespace Wikithis
 		/// <br>This method mostly meant for debugging.</br>
 		/// </summary>
 		/// <param name="key">Key of entry.</param>
-		public virtual void MessageIfDoesntExists(TKey key) => Wikithis.Instance.Logger.Info("My modder forgot to put message! Sorry!");
+		public virtual void MessageIfDoesntExists(TKey key) => Mod.Logger.Info("My modder forgot to put message! Sorry!");
 
 		public sealed override void SetStaticDefaults() { }
 
