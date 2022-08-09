@@ -39,7 +39,7 @@ namespace Wikithis
 			}
 			if (!wrong && WikithisSystem.WikiKeybind.JustPressed && line.Mod == "Terraria" && line.Name == "ItemName")
 			{
-				Wikithis.OpenWikiPage(item);
+				Wikithis.OpenWikiPage(item, false);
 			}
 			return true;
 		}
