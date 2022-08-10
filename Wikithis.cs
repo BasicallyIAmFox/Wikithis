@@ -125,7 +125,7 @@ namespace Wikithis
 				else if (CultureLoaded == GameCulture.CultureName.French)
 					url = url.Insert(l, "fr/");
 				else if (CultureLoaded == GameCulture.CultureName.Spanish)
-					url = url.Insert(l, "pl/");
+					url += "/es";
 				else if (CultureLoaded == GameCulture.CultureName.Russian)
 					url = url.Insert(l, "ru/");
 				else if (CultureLoaded == GameCulture.CultureName.German)
