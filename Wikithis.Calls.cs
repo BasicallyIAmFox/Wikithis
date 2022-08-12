@@ -245,9 +245,14 @@ namespace Wikithis
 
 					if (nameOfArgument != string.Empty)
 						throw new ArgumentNullException($"Call Error: The {nameOfArgument} argument for the attempted message, \"{message ?? messageOverload.ToString()}\" has returned null.");
-
-					if (Wikis.TryGetValue($"{mod.Name}/{name}", out IWiki value))
+					if (DelegateWikis.TryGetValue(mod, out var delegates) && delegates.pageExists(name))
+					{
+						delegates.openPage(name);
+					}
+					else if (Wikis.TryGetValue($"{mod.Name}/{name}", out IWiki value))
+					{
 						(value as IWiki<object, object>).GetEntry(key).OpenWikiPage(withKeybind.Value);
+					}
 					return success;
 				}
 				else if (seventh.Any(x => x.ToLower() == message) || messageOverload.HasValue && messageOverload.Value == 6)

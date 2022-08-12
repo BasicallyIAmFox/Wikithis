@@ -200,7 +200,7 @@ namespace Wikithis
 		}
 
 		internal static void OpenWikiPage(Item item, bool forceCheck = true) {
-			if (DelegateWikis.TryGetValue(item.ModItem?.Mod, out var delegates))
+			if (DelegateWikis.TryGetValue(item.ModItem?.Mod, out var delegates) && delegates.pageExists(item))
 			{
 				delegates.openPage(item);
 			}
@@ -211,7 +211,7 @@ namespace Wikithis
 		}
 
 		internal static void OpenWikiPage(NPC npc, bool forceCheck = true) {
-			if (DelegateWikis.TryGetValue(npc?.ModNPC?.Mod, out var delegates))
+			if (DelegateWikis.TryGetValue(npc?.ModNPC?.Mod, out var delegates) && delegates.pageExists(npc))
 			{
 				delegates.openPage(npc);
 			}
