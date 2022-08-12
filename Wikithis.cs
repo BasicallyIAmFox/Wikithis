@@ -14,35 +14,23 @@ namespace Wikithis
 	public partial class Wikithis : Mod
 	{
 		internal const string RickRoll = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-		internal static bool AprilFools { get; private set; }
-		internal static Dictionary<string, IWiki> _wikis { get; private set; }
-		internal static Dictionary<(Mod, GameCulture.CultureName), string> _modToURL { get; private set; }
-		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; }
-		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; }
-		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; }
-		public static GameCulture.CultureName CultureLoaded { get; private set; }
-		private static Wikithis instance;
+		internal static bool AprilFools { get; private set; } = DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
+		internal static Dictionary<string, IWiki> _wikis { get; private set; } = new();
+		internal static Dictionary<(Mod, GameCulture.CultureName), string> _modToURL { get; private set; } = new();
+		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; } = new();
+		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; } = new();
+		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; } = new();
 
 		public static IDictionary<string, IWiki> Wikis => _wikis;
 		public static IDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
 		public static IDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
 		public static IDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
+		public static GameCulture.CultureName CultureLoaded { get; private set; }
 
+		private static Wikithis instance;
 		public static Wikithis Instance { get => instance; private set => instance = value; }
 
-		public Wikithis()
-		{
-			_wikis = new();
-
-			_modToURL = new();
-			ModToTexture = new();
-
-			_itemIdNameReplace = new();
-			_npcIdNameReplace = new();
-
-			AprilFools = DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
-			Instance = this;
-		}
+		public Wikithis() => Instance = this;
 
 		public override void Load()
 		{
@@ -125,7 +113,7 @@ namespace Wikithis
 				else if (CultureLoaded == GameCulture.CultureName.French)
 					url = url.Insert(l, "fr/");
 				else if (CultureLoaded == GameCulture.CultureName.Spanish)
-					url += "/es";
+					url = url.Insert(l, "es/");
 				else if (CultureLoaded == GameCulture.CultureName.Russian)
 					url = url.Insert(l, "ru/");
 				else if (CultureLoaded == GameCulture.CultureName.German)
@@ -189,6 +177,7 @@ namespace Wikithis
 		/// <param name="key"></param>
 		/// <param name="wiki"></param>
 		/// <param name="checkForKeybind"></param>
+		/// <param name="forceCheck"></param>
 		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true)
 		{
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
