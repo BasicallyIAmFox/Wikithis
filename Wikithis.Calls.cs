@@ -103,6 +103,10 @@ namespace Wikithis
 				{
 					"OpenCustomWiki"
 				};
+				string[] seventh = new string[]
+				{
+					"DelegateWiki"
+				};
 
 				if (first.Any(x => x.ToLower() == message) || messageOverload.HasValue && messageOverload.Value == 0)
 				{
@@ -241,12 +245,37 @@ namespace Wikithis
 
 					if (nameOfArgument != string.Empty)
 						throw new ArgumentNullException($"Call Error: The {nameOfArgument} argument for the attempted message, \"{message ?? messageOverload.ToString()}\" has returned null.");
-
-					if (Wikis.TryGetValue($"{mod.Name}/{name}", out IWiki value))
+					if (DelegateWikis.TryGetValue(mod, out var delegates) && delegates.pageExists(name))
+					{
+						delegates.openPage(name);
+					}
+					else if (Wikis.TryGetValue($"{mod.Name}/{name}", out IWiki value))
+					{
 						(value as IWiki<object, object>).GetEntry(key).OpenWikiPage(withKeybind.Value);
+					}
 					return success;
 				}
-				else if (messageOverload.HasValue && messageOverload.Value == 6)
+				else if (seventh.Any(x => x.ToLower() == message) || messageOverload.HasValue && messageOverload.Value == 6)
+				{
+					Mod mod = args[index + 0] as Mod;
+					Func<object, bool> noWiki = args[index + 1] as Func<object, bool>;
+					Action<object> action = args[index + 2] as Action<object>;
+
+					string nameOfArgument = string.Empty;
+					if (mod == null)
+						nameOfArgument = nameof(mod);
+					if (noWiki == null)
+						nameOfArgument = nameof(noWiki);
+					if (action == null)
+						nameOfArgument = nameof(action);
+
+					if (nameOfArgument != string.Empty)
+						throw new ArgumentNullException($"Call Error: The {nameOfArgument} argument for the attempted message, \"{message ?? messageOverload.ToString()}\" has returned null.");
+
+					DelegateWikis.Add(mod, (noWiki, action));
+					return success;
+				}
+				else if (messageOverload.HasValue && messageOverload.Value == 7)
 				{
 				}
 				else
