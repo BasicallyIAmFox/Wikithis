@@ -15,7 +15,7 @@ namespace Wikithis
 		{
 			foreach (Item item in ContentSamples.ItemsByType.Values)
 			{
-				if (HasEntry(item.type) || ItemID.Sets.Deprecated[item.type] || item.ModItem?.Mod.Name == "ModLoader")
+				if (HasEntry(item.type) || ItemID.Sets.Deprecated[item.type] || item.ModItem?.Mod.Name == "ModLoader" || item.type == ItemID.None)
 					continue;
 
 				string name = item.type < ItemID.Count

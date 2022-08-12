@@ -15,7 +15,7 @@ namespace Wikithis
 		{
 			foreach (NPC npc in ContentSamples.NpcsByNetId.Values)
 			{
-				if (HasEntry(npc.type))
+				if (HasEntry(npc.type) || npc.type == NPCID.None)
 					continue;
 
 				string name = npc.netID < NPCID.Count
