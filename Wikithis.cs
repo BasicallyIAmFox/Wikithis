@@ -20,11 +20,13 @@ namespace Wikithis
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; } = new();
 		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; } = new();
 		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; } = new();
+		internal static Dictionary<Mod, (Func<object, bool> pageExists, Action<object> openPage)> _delegateWikis { get; private set; } = new();
 
 		public static IDictionary<string, IWiki> Wikis => _wikis;
 		public static IDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
 		public static IDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
 		public static IDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
+		public static Dictionary<Mod, (Func<object, bool> pageExists, Action<object> openPage)> DelegateWikis => _delegateWikis;
 		public static GameCulture.CultureName CultureLoaded { get; private set; }
 
 		private static Wikithis instance;
@@ -61,6 +63,7 @@ namespace Wikithis
 		public override void Unload()
 		{
 			_wikis = null;
+			_delegateWikis = null;
 
 			_modToURL = null;
 			ModToTexture = null;
@@ -196,9 +199,27 @@ namespace Wikithis
 			}
 		}
 
-		internal static void OpenWikiPage(Item item, bool forceCheck = true) => OpenWikiPage(item.type, Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>, false, forceCheck);
+		internal static void OpenWikiPage(Item item, bool forceCheck = true) {
+			if (DelegateWikis.TryGetValue(item.ModItem?.Mod, out var delegates))
+			{
+				delegates.openPage(item);
+			}
+			else
+			{
+				OpenWikiPage(item.type, Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>, false, forceCheck);
+			}
+		}
 
-		internal static void OpenWikiPage(NPC npc, bool forceCheck = true) => OpenWikiPage(npc.netID, Wikis[$"Wikithis/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false, forceCheck);
+		internal static void OpenWikiPage(NPC npc, bool forceCheck = true) {
+			if (DelegateWikis.TryGetValue(npc?.ModNPC?.Mod, out var delegates))
+			{
+				delegates.openPage(npc);
+			}
+			else
+			{
+				OpenWikiPage(npc.netID, Wikis[$"Wikithis/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false, forceCheck);
+			}
+		}
 
 		internal static string TooltipHotkeyString(ModKeybind keybind)
 		{
