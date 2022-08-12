@@ -7,7 +7,7 @@ namespace Wikithis
 {
 	public class NPCWiki : Wiki<NPC, int>
 	{
-		public NPCWiki() : base(new Func<NPC, int>((x) => x.type))
+		public NPCWiki() : base(new Func<NPC, int>((x) => x.netID))
 		{
 		}
 
@@ -15,11 +15,11 @@ namespace Wikithis
 		{
 			foreach (NPC npc in ContentSamples.NpcsByNetId.Values)
 			{
-				if (HasEntry(npc.type) || npc.type == NPCID.None)
+				if (HasEntry(npc.type) || npc.netID <= NPCID.None)
 					continue;
 
 				string name = npc.netID < NPCID.Count
-					? Language.GetTextValue($"NPCName.{Wikithis.GetInternalName(npc.type, 1)}")
+					? Language.GetTextValue($"NPCName.{Wikithis.GetInternalName(npc.netID, 1)}")
 					: Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}");
 
 				if (Wikithis.NpcIdNameReplace.TryGetValue((npc.netID, Wikithis.CultureLoaded), out string name2))
@@ -39,6 +39,7 @@ namespace Wikithis
 
 			Wikithis.Instance.Logger.Info("Key: " + key.ToString());
 			Wikithis.Instance.Logger.Info("Type: " + npc.type.ToString());
+			Wikithis.Instance.Logger.Info("Net ID: " + npc.netID.ToString());
 			Wikithis.Instance.Logger.Info("Name: " + npc.GivenOrTypeName);
 			Wikithis.Instance.Logger.Info("Vanilla: " + (npc.ModNPC == null).ToString());
 			Wikithis.Instance.Logger.Info("Mod: " + npc.ModNPC?.Mod.Name);

@@ -20,13 +20,13 @@ namespace Wikithis
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; } = new();
 		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; } = new();
 		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; } = new();
-		internal static Dictionary<Mod, (Func<object, bool> pageExists, Action<object> openPage)> _delegateWikis { get; private set; } = new();
+		internal static Dictionary<string, (Func<object, object, bool> pageExists, Func<object, object, bool> openPage)> _delegateWikis { get; private set; } = new();
 
 		public static IDictionary<string, IWiki> Wikis => _wikis;
 		public static IDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
 		public static IDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
 		public static IDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
-		public static Dictionary<Mod, (Func<object, bool> pageExists, Action<object> openPage)> DelegateWikis => _delegateWikis;
+		public static IDictionary<string, (Func<object, object, bool> pageExists, Func<object, object, bool> openPage)> DelegateWikis => _delegateWikis;
 		public static GameCulture.CultureName CultureLoaded { get; private set; }
 
 		private static Wikithis instance;
@@ -74,6 +74,8 @@ namespace Wikithis
 			AprilFools = false;
 			CultureLoaded = 0;
 
+			_callMessageCache = null;
+
 			if (Main.dedServ)
 				return;
 
@@ -87,8 +89,6 @@ namespace Wikithis
 		/// <param name="s">The URL.</param>
 		/// <returns></returns>
 		public static bool CheckURLValid(string s) => Uri.TryCreate(s, UriKind.Absolute, out Uri uriResult) && uriResult.Scheme == Uri.UriSchemeHttps;
-
-		internal static string GetInternalName(int id, int num = 0) => num == 0 ? ItemID.Search.GetName(id) : NPCID.Search.GetName(id);
 
 		/// <summary>
 		/// Makes default URL link.
@@ -169,6 +169,20 @@ namespace Wikithis
 		}
 
 		/// <summary>
+		/// Used to open item wiki page.
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="forceCheck"></param>
+		public static void OpenWikiPage(Item item, bool forceCheck = true) => OpenWikiPage(entry => entry.ModItem?.Mod, item, item.type, Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>, false, forceCheck);
+
+		/// <summary>
+		/// Used to open NPC wiki page.
+		/// </summary>
+		/// <param name="npc"></param>
+		/// <param name="forceCheck"></param>
+		public static void OpenWikiPage(NPC npc, bool forceCheck = true) => OpenWikiPage(entry => entry.ModNPC?.Mod, npc, npc.netID, Wikis[$"Wikithis/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false, forceCheck);
+
+		/// <summary>
 		/// If user has pressed keybind, then next steps are taken:
 		///	<br>1. Check if <paramref name="key"/> is valid. If true, then takes to last step. Otherwise takes two next steps.</br>
 		///	<br>2. Gets entry by <paramref name="key"/> key.</br>
@@ -181,6 +195,33 @@ namespace Wikithis
 		/// <param name="wiki"></param>
 		/// <param name="checkForKeybind"></param>
 		/// <param name="forceCheck"></param>
+		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true)
+		{
+			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
+				return;
+
+			if (DelegateWikis.TryGetValue(getMod(entry)?.Name ?? "Terraria", out var delegates) && delegates.pageExists(entry, key))
+			{
+				if (delegates.openPage(entry, key))
+					goto orig;
+				return;
+			}
+
+			orig:
+			if (wiki.IsValid(key))
+			{
+				wiki.GetEntry(key).OpenWikiPage(checkForKeybind);
+			}
+			else
+			{
+				Main.NewText(Language.GetTextValue("Mods.Wikithis.Error"), Color.OrangeRed);
+
+				Instance.Logger.Error("Tried to get wiki page, but failed!");
+				wiki.MessageIfDoesntExists(key);
+			}
+		}
+
+		[Obsolete("Use OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, ...) instead.", true)]
 		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true)
 		{
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
@@ -199,27 +240,7 @@ namespace Wikithis
 			}
 		}
 
-		internal static void OpenWikiPage(Item item, bool forceCheck = true) {
-			if (DelegateWikis.TryGetValue(item.ModItem?.Mod, out var delegates) && delegates.pageExists(item))
-			{
-				delegates.openPage(item);
-			}
-			else
-			{
-				OpenWikiPage(item.type, Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>, false, forceCheck);
-			}
-		}
-
-		internal static void OpenWikiPage(NPC npc, bool forceCheck = true) {
-			if (DelegateWikis.TryGetValue(npc?.ModNPC?.Mod, out var delegates) && delegates.pageExists(npc))
-			{
-				delegates.openPage(npc);
-			}
-			else
-			{
-				OpenWikiPage(npc.netID, Wikis[$"Wikithis/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false, forceCheck);
-			}
-		}
+		internal static string GetInternalName(int id, int num = 0) => num == 0 ? ItemID.Search.GetName(id) : NPCID.Search.GetName(id);
 
 		internal static string TooltipHotkeyString(ModKeybind keybind)
 		{
