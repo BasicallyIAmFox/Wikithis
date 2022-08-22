@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -9,9 +9,11 @@ namespace Wikithis
 {
 	internal class WikithisCommand : ModCommand
 	{
+		public override bool IsLoadingEnabled(Mod mod) => false; // needs LOTS of work...
+
 		public override string Command => "wikithis";
 
-		public override string Usage => $"/wikithis <npc|item> [name of type]\n{Language.GetTextValue($"Mods.{nameof(Wikithis)}.WikithisInput")}";
+		public override string Usage => $"/wikithis <{string.Join("|", Wikithis._commandAvailableTypes.Keys)}> [key of type]\n{Language.GetTextValue($"Mods.{Mod.Name}.WikithisInput")}";
 
 		public override string Description => Language.GetTextValue($"Mods.{nameof(Wikithis)}.WikithisDesc");
 
@@ -36,79 +38,30 @@ namespace Wikithis
 			{
 				type = type.ToLowerInvariant();
 
-				if (type == "npc" && args[1] is string name)
+				Dictionary<string, IWiki<object, IConvertible>> availableTypes = Wikithis._commandAvailableTypes;
+
+				if (availableTypes.ContainsKey(type))
 				{
-					if (!int.TryParse(args[1], out int npcType))
+					if (args[1] is IConvertible name)
 					{
-						string getName = name.Replace('_', ' ');
-
-						NPC npc = new();
-						for (int k = NPCID.NegativeIDCount + 1; k < NPCLoader.NPCCount; k++)
+						var typeWiki = availableTypes[type];
+						if (!typeWiki.HasEntry(name))
 						{
-							npc.SetDefaults(k);
-							if (getName != npc.GivenOrTypeName)
-								continue;
-
-							npcType = k;
-							break;
-						}
-
-						if (npcType == 0)
-						{
-							caller.Reply($"{input} <-- Unknown NPC type!", Color.OrangeRed);
+							caller.Reply($"{input} <-- Unknown key!", Color.OrangeRed);
 							return;
 						}
-					}
 
-					if (npcType == NPCID.None || npcType <= NPCID.NegativeIDCount || npcType >= NPCLoader.NPCCount)
+						typeWiki.GetEntry(name).OpenWikiPage(false);
+					}
+					else
 					{
-						caller.Reply($"{input} <-- Unknown NPC ID!", Color.OrangeRed);
-						return;
+						caller.Reply($"{input} <-- Unknown key!", Color.OrangeRed);
 					}
-					Wikithis.OpenWikiPage(ContentSamples.NpcsByNetId[npcType], false);
-				}
-				else if (type == "item" && args[1] is string name2)
-				{
-					if (!int.TryParse(args[1], out int itemType))
-					{
-						string getName = name2.Replace('_', ' ');
-
-						Item item = new();
-						for (int k = 0; k < ItemLoader.ItemCount; k++)
-						{
-							item.SetDefaults(k, true);
-							if (getName != item.Name)
-								continue;
-
-							itemType = k;
-							break;
-						}
-
-						if (itemType == ItemID.None)
-						{
-							caller.Reply($"{input} <-- Unknown item type!", Color.OrangeRed);
-							return;
-						}
-					}
-
-					if (itemType <= ItemID.None || itemType >= ItemLoader.ItemCount)
-					{
-						caller.Reply($"{input} <-- Unknown item ID!", Color.OrangeRed);
-						return;
-					}
-					Wikithis.OpenWikiPage(ContentSamples.ItemsByType[itemType], false);
-				}
-				else if (type == "npc" && args[1] is null)
-				{
-					caller.Reply($"{input} <-- Unknown NPC name!", Color.OrangeRed);
-				}
-				else if (type == "item" && args[1] is null)
-				{
-					caller.Reply($"{input} <-- Unknown item name!", Color.OrangeRed);
 				}
 				else
 				{
-					caller.Reply($"{input} <-- Unknown type! Available types: [c/{Color.Yellow.Hex3()}:npc], [c/{Color.Yellow.Hex3()}:item].", Color.OrangeRed);
+					string joiner = string.Join($"], [c/{Color.Yellow.Hex3()}:", availableTypes.Keys);
+					caller.Reply($"{input} <-- Unknown type! Available types: {joiner}.]", Color.OrangeRed);
 				}
 			}
 		}

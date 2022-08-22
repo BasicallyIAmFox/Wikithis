@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
@@ -17,7 +16,7 @@ namespace Wikithis
 		{
 			IWiki<Item, int> wiki = Wikithis.Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>;
 			bool wrong = !wiki.IsValid(item.type);
-			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && delegates.pageExists(item, item.type))
+			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type))
 			{
 				wrong = false;
 			}
@@ -55,7 +54,7 @@ namespace Wikithis
 
 			IWiki<Item, int> wiki = Wikithis.Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>;
 			bool wrong = !wiki.IsValid(item.type);
-			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && delegates.pageExists(item, item.type))
+			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type))
 			{
 				wrong = false;
 			}
@@ -68,18 +67,6 @@ namespace Wikithis
 			{
 				OverrideColor = !wrong ? Color.LightGray : Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
 			});
-
-			if (ModLoader.TryGetMod("CalamityMod", out Mod calamity) && item.ModItem?.Mod.Name == calamity?.Name && calamity?.Version <= new Version(2, 0, 0, 3))
-			{
-				tooltips.Add(new(Mod, "Wikithis:WikiClam", "Stop saying that mod is bad because it doesnt supports Calamity.")
-				{
-					OverrideColor = Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
-				});
-				tooltips.Add(new(Mod, "Wikithis:WikiClam2", "Calamity *will* support Wikithis in next update. Thanks.")
-				{
-					OverrideColor = Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
-				});
-			}
 		}
 	}
 }

@@ -21,12 +21,13 @@ namespace Wikithis
 		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; } = new();
 		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; } = new();
 		internal static Dictionary<string, (Func<object, object, bool> pageExists, Func<object, object, bool> openPage)> _delegateWikis { get; private set; } = new();
+		internal static Dictionary<string, IWiki<object, IConvertible>> _commandAvailableTypes { get; private set; } = new();
 
-		public static IDictionary<string, IWiki> Wikis => _wikis;
-		public static IDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
-		public static IDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
-		public static IDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
-		public static IDictionary<string, (Func<object, object, bool> pageExists, Func<object, object, bool> openPage)> DelegateWikis => _delegateWikis;
+		public static IReadOnlyDictionary<string, IWiki> Wikis => _wikis;
+		public static IReadOnlyDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
+		public static IReadOnlyDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
+		public static IReadOnlyDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
+		public static IReadOnlyDictionary<string, (Func<object, object, bool> pageExists, Func<object, object, bool> openPage)> DelegateWikis => _delegateWikis;
 		public static GameCulture.CultureName CultureLoaded { get; private set; }
 
 		private static Wikithis instance;
@@ -54,6 +55,16 @@ namespace Wikithis
 
 		internal static void SetupWikiPages()
 		{
+			foreach (KeyValuePair<string, IWiki> pair in Wikis)
+			{
+				var wiki = pair.Value as IWiki<object, IConvertible>;
+				var typeName = pair.Key.Split('/')[1].ToLowerInvariant();
+				if (typeName.EndsWith("wiki"))
+					typeName = typeName[..typeName.IndexOf("wiki")];
+
+				_commandAvailableTypes.Add(typeName, wiki);
+			}
+
 			foreach (IWiki wiki in Wikis.Values)
 			{
 				wiki.Initialize();
@@ -75,6 +86,7 @@ namespace Wikithis
 			CultureLoaded = 0;
 
 			_callMessageCache = null;
+			_commandAvailableTypes = null;
 
 			if (Main.dedServ)
 				return;
@@ -195,7 +207,7 @@ namespace Wikithis
 		/// <param name="wiki"></param>
 		/// <param name="checkForKeybind"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true)
+		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TKey : IConvertible
 		{
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
 				return;
@@ -207,7 +219,7 @@ namespace Wikithis
 				return;
 			}
 
-			orig:
+		orig:
 			if (wiki.IsValid(key))
 			{
 				wiki.GetEntry(key).OpenWikiPage(checkForKeybind);
@@ -222,7 +234,7 @@ namespace Wikithis
 		}
 
 		[Obsolete("Use OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, ...) instead.", true)]
-		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true)
+		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TKey : IConvertible
 		{
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
 				return;

@@ -1,20 +1,15 @@
-﻿namespace Wikithis
-{
-	public interface IWiki<in TEntry, TKey> : IWiki
-	{
-		/// <summary>
-		/// Adds <typeparamref name="TEntry"/> entry in list.
-		/// </summary>
-		/// <param name="entry"></param>
-		/// <param name="wikiEntry"></param>
-		void AddEntry(TEntry entry, WikiEntry<TKey> wikiEntry);
+﻿using System;
 
+namespace Wikithis
+{
+	public interface IWiki<in TEntry, in TKey> : IWiki where TKey : IConvertible
+	{
 		/// <summary>
 		/// Tries to get <typeparamref name="TEntry"/> entry using <paramref name="key"/>.
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns>A <seealso cref="WikiEntry{TKey}"/> instance. If entry doesn't exists, it returns default value.</returns>
-		WikiEntry<TKey> GetEntry(TKey key);
+		IWikiEntry<TKey> GetEntry(TKey key);
 
 		/// <summary>
 		/// Checks if entry for <typeparamref name="TKey"/> key exists.

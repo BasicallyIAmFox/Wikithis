@@ -25,7 +25,7 @@ namespace Wikithis
 				if (Wikithis.NpcIdNameReplace.TryGetValue((npc.netID, Wikithis.CultureLoaded), out string name2))
 					name = name2;
 
-				AddEntry(npc, new(npc.netID, Wikithis.DefaultSearchStr(name, npc.ModNPC?.Mod)));
+				AddEntry(npc, new WikiEntry<int>(npc.netID, Wikithis.DefaultSearchStr(name, npc.ModNPC?.Mod)));
 			}
 		}
 

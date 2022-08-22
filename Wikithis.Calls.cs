@@ -222,8 +222,8 @@ namespace Wikithis
 				{
 					Mod mod = args[index + 0] as Mod;
 					string name = args[index + 1] as string;
-					Func<object, object> key = args[index + 2] as Func<object, object>;
-					var initialize = args[index + 3] as Action<Func<object, bool>, Action<object, object, string>, Func<string, Mod, string>>;
+					var key = args[index + 2] as Func<object, IConvertible>;
+					var initialize = args[index + 3] as Action<Func<IConvertible, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>>;
 					var noExists = args[index + 4] as Action<IDictionary<(Mod, GameCulture.CultureName), string>, GameCulture.CultureName, object>;
 
 					string nameOfArgument = string.Empty;
@@ -247,7 +247,7 @@ namespace Wikithis
 					int num = args[index + 0] is Mod ? 1 : 0;
 
 					string name;
-					object key = args[index + 1 + num];
+					IConvertible key = args[index + 1 + num] as IConvertible;
 					bool? withKeybind = args[index + 2 + num] as bool?;
 					withKeybind ??= true;
 
@@ -315,7 +315,7 @@ namespace Wikithis
 
 					if (Wikis.TryGetValue(name, out IWiki value))
 					{
-						(value as IWiki<object, object>).GetEntry(key).OpenWikiPage(withKeybind.Value);
+						(value as IWiki<object, IConvertible>).GetEntry(key).OpenWikiPage(withKeybind.Value);
 					}
 
 					goto successReturn;
@@ -337,7 +337,7 @@ namespace Wikithis
 					if (nameOfArgument != string.Empty)
 						throw new ArgumentNullException($"Call Error: The {nameOfArgument} argument for the attempted message, \"{message ?? messageOverload.ToString()}\" has returned null.");
 
-					DelegateWikis.Add(mod, (noWiki, action));
+					_delegateWikis.Add(mod, (noWiki, action));
 					goto successReturn;
 				}
 				else if (messageOverload.HasValue && messageOverload.Value == 7)

@@ -2,17 +2,17 @@
 
 namespace Wikithis
 {
-	public readonly struct WikiEntry<TKey>
+	public readonly struct WikiEntry<TKey> : IWikiEntry<TKey>
 	{
 		/// <summary>
 		/// The key, identifier of an entry.
 		/// </summary>
-		public readonly TKey Key;
+		public readonly TKey Key { get; }
 
 		/// <summary>
 		/// URL of an entry.
 		/// </summary>
-		public readonly string Search;
+		public readonly string Search { get; }
 
 		public WikiEntry(TKey key, string searchStr)
 		{

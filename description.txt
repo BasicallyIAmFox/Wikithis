@@ -2,8 +2,4 @@ Wikithis allows you to check wiki of selected item/npc ingame!
 
 Supports multiple different languages. (all languages Terraria supports)
 
-Message for literally everyone who plays with Calamity:
-Stop saying that mod is bad because it doesnt supports Calamity.
-Calamity *will* support Wikithis in next update. Thanks.
-
 (Doesn't supports mods initially, check Steam Workshop page if you want to know how to add support for your mod)

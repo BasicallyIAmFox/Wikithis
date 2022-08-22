@@ -1,13 +1,9 @@
 ﻿[h1][url=https://discord.gg/rrxE78cyjm]Discord[/url][/h1]
 
 Wikithis allows you to check wiki of selected item/npc ingame!
-Works for [i]most vanilla items and npcs[/i] (errors might appear, report in discord server if you get an error!), modded items/npcs might require testing.
+Works for every vanilla item, npc! Also will work with most modded items/npcs.
 
 Supports multiple different languages. (all languages Terraria supports)
-
-Message for literally everyone who plays with Calamity:
-Stop saying that mod is bad because it doesnt supports Calamity.
-Calamity *will* support Wikithis in next update. Thanks.
 
 If you want to add support for this mod, then check lower!
 

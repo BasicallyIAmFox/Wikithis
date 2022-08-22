@@ -25,7 +25,7 @@ namespace Wikithis
 				if (Wikithis.ItemIdNameReplace.TryGetValue((item.type, Wikithis.CultureLoaded), out string name2))
 					name = name2;
 
-				AddEntry(item, new(item.type, Wikithis.DefaultSearchStr(name, item.ModItem?.Mod)));
+				AddEntry(item, new WikiEntry<int>(item.type, Wikithis.DefaultSearchStr(name, item.ModItem?.Mod)));
 			}
 		}
 
