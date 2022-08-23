@@ -46,7 +46,7 @@ public override void Load() // You can use any other loading method, doesn't mat
         //    this, // instance of your mod
         //    "ProjectileWiki", // name of wiki
         //    new Func<object, IConvertible>(x => (x as Projectile).type), // type of your entry (can be anything)
-        //    new Action<Func<objetc, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>>((hasEntryFunc, addEntryFunc, defaultSearchStr) =>
+        //    new Action<Func<object, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>>((hasEntryFunc, addEntryFunc, defaultSearchStr) =>
         //    {
         //        foreach (Projectile proj in ContentSamples.ProjectilesByType.Values) // iterate through each instance
         //        {
