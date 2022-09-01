@@ -1,19 +1,31 @@
 ﻿Mods.Wikithis: {
-	CreationErrors: {
-		Item: "未能为项目{0}创建url链接"
-		NPC: "无法为NPC{0}创建url链接"
+	Config: {
+		CanWikiNPCs: {
+			Label: 显示NPC维基
+			Tooltip: 想要全面了解某个NPC吗? 那么就开启这个选项吧! (默认为关)
+		}
+		TooltipsEnabled: {
+			Label: 显示维基提示
+			Tooltip: '''不想看到“按下 XX 以打开维基页面”的提示吗? 关掉这个选项来让它消失! (默认为开)'''
+		}
 	}
-	Error: '''维基页面不存在或无效! 报告，如果你认为这是一个问题！'''
-	Click: "按{0}打开wiki页面!"
-	NoWiki: 没有维基可用！
+
+	CreationErrors: {
+		Item: "无法为物品 {0} 创建URL链接"
+		NPC: "无法为NPC {0} 创建URL链接"
+	}
+	Error: '''维基页面不存在或无效! 如果您确认这是个漏洞，请向模组开发者报告'''
+	Click: "按下 {0} 以打开维基页面"
+	NoWiki: 没有可用的维基页面!
 	WikithisInput:
 		'''
-		用下划线替换项目/NPC名称中的空格
+		用下划线替换物品/NPC名称中的空格
 		区分大小写！
 		'''
-	WikithisDesc: 重定向到项目/NPC的wiki页面
-	NetworkFail: 网络连接失败! 确保你连接到WI-FI！
-	UnsupportedWarning: 您正在Windows之外的其他平台上玩！ 可能的预期行为：错误，冻结，崩溃。
-	LoadingItem: "为{0}设置wiki页面"
-	LoadingNPC: "为{0}设置wiki页面"
+	WikithisDesc: 重定向到物品/NPC的维基页面
+	NetworkFail: 无法连接到网络，请检查您的网络连接
+	UnsupportedWarning: 您使用的操作系统并非Windows, 该模组可能不会正常运作
+	LoadingItem: "正在为 {0} 设置维基页面"
+	LoadingNPC: "正在为 {0} 设置维基页面"
+	WikiKeybind: 查看物品/NPC的维基页面
 }
