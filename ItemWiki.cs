@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -13,13 +15,11 @@ namespace Wikithis
 
 		public override void Initialize()
 		{
-			foreach (Item item in ContentSamples.ItemsByType.Values)
+			IEnumerable<Item> list = ContentSamples.ItemsByType.Values.Where(x => !HasEntry(x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None);
+			foreach (Item item in list)
 			{
-				if (HasEntry(item.type) || ItemID.Sets.Deprecated[item.type] || item.ModItem?.Mod.Name == "ModLoader" || item.type == ItemID.None)
-					continue;
-
 				string name = item.type < ItemID.Count
-					? Language.GetTextValue($"ItemName.{Wikithis.GetInternalName(item.type)}")
+					? Language.GetTextValue($"ItemName.{ItemID.Search.GetName(item.type)}")
 					: Language.GetTextValue($"Mods.{item.ModItem.Mod.Name}.ItemName.{item.ModItem.Name}");
 
 				if (Wikithis.ItemIdNameReplace.TryGetValue((item.type, Wikithis.CultureLoaded), out string name2))

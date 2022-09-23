@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Wikithis
 {
-	public abstract class Wiki<TEntry, TKey> : ModType, IWiki<TEntry, TKey> where TKey : IConvertible
+	public abstract class Wiki<TEntry, TKey> : ModType, IWiki<TEntry, TKey> where TEntry : notnull where TKey : notnull, IConvertible
 	{
 		private readonly Dictionary<TKey, IWikiEntry<TKey>> _entries = new();
 		private readonly Func<TEntry, TKey> _getKeyFunc;

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -13,8 +12,6 @@ namespace Wikithis
 {
 	public partial class Wikithis : Mod
 	{
-		internal const string RickRoll = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-		internal static bool AprilFools { get; private set; } = DateTime.Now.Day == 1 && DateTime.Now.Month == 4;
 		internal static Dictionary<string, IWiki> _wikis { get; private set; } = new();
 		internal static Dictionary<(Mod, GameCulture.CultureName), string> _modToURL { get; private set; } = new();
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; } = new();
@@ -82,11 +79,18 @@ namespace Wikithis
 			_itemIdNameReplace = null;
 			_npcIdNameReplace = null;
 
-			AprilFools = false;
 			CultureLoaded = 0;
 
 			_callMessageCache = null;
 			_commandAvailableTypes = null;
+
+			first = null;
+			second = null;
+			third = null;
+			fourth = null;
+			fifth = null;
+			sixth = null;
+			seventh = null;
 
 			if (Main.dedServ)
 				return;
@@ -121,22 +125,10 @@ namespace Wikithis
 				const int l = 25; // length of "https://terraria.wiki.gg/wiki/"
 
 				string url = $"https://terraria.wiki.gg/wiki/{name}";
-				if (CultureLoaded == GameCulture.CultureName.Polish)
-					url = url.Insert(l, "pl/");
-				else if (CultureLoaded == GameCulture.CultureName.Italian)
+				if (CultureLoaded == GameCulture.CultureName.Italian)
 					url += "/it";
-				else if (CultureLoaded == GameCulture.CultureName.French)
-					url = url.Insert(l, "fr/");
-				else if (CultureLoaded == GameCulture.CultureName.Spanish)
-					url = url.Insert(l, "es/");
-				else if (CultureLoaded == GameCulture.CultureName.Russian)
-					url = url.Insert(l, "ru/");
-				else if (CultureLoaded == GameCulture.CultureName.German)
-					url = url.Insert(l, "de/");
-				else if (CultureLoaded == GameCulture.CultureName.Portuguese)
-					url = url.Insert(l, "pt/");
-				else if (CultureLoaded == GameCulture.CultureName.Chinese)
-					url = url.Insert(l, "zh/");
+				else if (CultureLoaded != GameCulture.CultureName.English)
+					url = url.Insert(l, Language.ActiveCulture.Name[0..1] + '/');
 
 				return url;
 			}
@@ -185,14 +177,14 @@ namespace Wikithis
 		/// </summary>
 		/// <param name="item"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage(Item item, bool forceCheck = true) => OpenWikiPage(entry => entry.ModItem?.Mod, item, item.type, Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>, false, forceCheck);
+		public static void OpenWikiPage(Item item, bool forceCheck = true) => OpenWikiPage(entry => entry.ModItem?.Mod, item, item.type, Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"] as IWiki<Item, int>, false, forceCheck);
 
 		/// <summary>
 		/// Used to open NPC wiki page.
 		/// </summary>
 		/// <param name="npc"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage(NPC npc, bool forceCheck = true) => OpenWikiPage(entry => entry.ModNPC?.Mod, npc, npc.netID, Wikis[$"Wikithis/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false, forceCheck);
+		public static void OpenWikiPage(NPC npc, bool forceCheck = true) => OpenWikiPage(entry => entry.ModNPC?.Mod, npc, npc.netID, Wikis[$"{nameof(Wikithis)}/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false, forceCheck);
 
 		/// <summary>
 		/// If user has pressed keybind, then next steps are taken:
@@ -207,7 +199,7 @@ namespace Wikithis
 		/// <param name="wiki"></param>
 		/// <param name="checkForKeybind"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TKey : IConvertible
+		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible
 		{
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
 				return;
@@ -234,7 +226,7 @@ namespace Wikithis
 		}
 
 		[Obsolete("Use OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, ...) instead.", true)]
-		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TKey : IConvertible
+		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible
 		{
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
 				return;
@@ -251,8 +243,6 @@ namespace Wikithis
 				wiki.MessageIfDoesntExists(key);
 			}
 		}
-
-		internal static string GetInternalName(int id, int num = 0) => num == 0 ? ItemID.Search.GetName(id) : NPCID.Search.GetName(id);
 
 		internal static string TooltipHotkeyString(ModKeybind keybind)
 		{

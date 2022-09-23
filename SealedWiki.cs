@@ -21,7 +21,7 @@ namespace Wikithis
 			this.noExists = noExists;
 		}
 
-		public override void Initialize() => initialize((x) => HasEntry(x), (x, y, z) => AddEntry(x, new WikiEntry<IConvertible>(y, z)), (x, y) => Wikithis.DefaultSearchStr(x, y));
+		public override void Initialize() => initialize(x => HasEntry(x), (x, y, z) => AddEntry(x, new WikiEntry<IConvertible>(y, z)), (x, y) => Wikithis.DefaultSearchStr(x, y));
 
 		public override void MessageIfDoesntExists(IConvertible key)
 		{

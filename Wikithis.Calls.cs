@@ -13,6 +13,55 @@ namespace Wikithis
 	{
 		private static string _callMessageCache = null;
 
+		private static string[] first = new string[]
+		{
+					"0",
+					"addmoduRL"
+		};
+		private static string[] second = new string[]
+		{
+					"1",
+					"itemidreplacement",
+					"itemidreplacements",
+					"itemidsreplacement",
+					"itemidsreplacements",
+					"replaceitemid",
+					"replaceitemids"
+		};
+		private static string[] third = new string[]
+		{
+					"2",
+					"npcidreplacement",
+					"npcidreplacements",
+					"npcidsreplacement",
+					"npcidsreplacements",
+					"replacenpcid",
+					"replacenpcids"
+		};
+		private static string[] fourth = new string[]
+		{
+					"3",
+					"addwikitexture",
+					"wikitexture",
+					"addwiki"
+		};
+		private static string[] fifth = new string[]
+		{
+					"4",
+					"customwiki"
+		};
+		private static string[] sixth = new string[]
+		{
+					"5",
+					"openwiki",
+					"opencustomwiki"
+		};
+		private static string[] seventh = new string[]
+		{
+					"6",
+					"delegatewiki"
+		};
+
 		public static void AddModURL(Mod mod, string domain, GameCulture.CultureName? culture)
 		{
 			if (culture != GameCulture.CultureName.English && _modToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
@@ -70,58 +119,9 @@ namespace Wikithis
 				int? messageOverload = args[0] as int?;
 				const int index = 1;
 
-				string[] first = new string[]
-				{
-					"0",
-					"AddModURL"
-				};
-				string[] second = new string[]
-				{
-					"1",
-					"ItemIdReplacement",
-					"ItemIdReplacements",
-					"ItemIdsReplacement",
-					"ItemIdsReplacements",
-					"ReplaceItemId",
-					"ReplaceItemIds"
-				};
-				string[] third = new string[]
-				{
-					"2",
-					"NpcIdReplacement",
-					"NpcIdReplacements",
-					"NpcIdsReplacement",
-					"NpcIdsReplacements",
-					"ReplaceNpcId",
-					"ReplaceNpcIds"
-				};
-				string[] fourth = new string[]
-				{
-					"3",
-					"AddWikiTexture",
-					"WikiTexture",
-					"AddWiki"
-				};
-				string[] fifth = new string[]
-				{
-					"4",
-					"CustomWiki"
-				};
-				string[] sixth = new string[]
-				{
-					"5",
-					"OpenWiki",
-					"OpenCustomWiki"
-				};
-				string[] seventh = new string[]
-				{
-					"6",
-					"DelegateWiki"
-				};
-
 				_callMessageCache = messageOverload.HasValue ? messageOverload.Value.ToString() : message;
 
-				if (first.Any(x => x.ToLower() == _callMessageCache))
+				if (Array.IndexOf(first, _callMessageCache) != -1)
 				{
 					Mod mod = args[index + 0] as Mod;
 					string domain = args[index + 1] as string;
@@ -141,7 +141,7 @@ namespace Wikithis
 					AddModURL(mod, domain, culture);
 					goto successReturn;
 				}
-				else if (second.Any(x => x.ToLower() == _callMessageCache))
+				else if (Array.IndexOf(second, _callMessageCache) != -1)
 				{
 					int? id2 = args[index + 0] as int?;
 					List<int> id = args[index + 0] as List<int>;
@@ -171,7 +171,7 @@ namespace Wikithis
 					ReplaceItemIds(name, culture, id.ToArray());
 					goto successReturn;
 				}
-				else if (third.Any(x => x.ToLower() == _callMessageCache))
+				else if (Array.IndexOf(third, _callMessageCache) != -1)
 				{
 					int? id2 = args[index + 0] as int?;
 					List<int> id = args[index + 0] as List<int>;
@@ -201,7 +201,7 @@ namespace Wikithis
 					ReplaceNpcIds(name, culture, id.ToArray());
 					goto successReturn;
 				}
-				else if (fourth.Any(x => x.ToLower() == _callMessageCache))
+				else if (Array.IndexOf(fourth, _callMessageCache) != -1)
 				{
 					Mod mod = args[index + 0] as Mod;
 					Asset<Texture2D> texture = args[index + 1] as Asset<Texture2D>;
@@ -218,7 +218,7 @@ namespace Wikithis
 					ModToTexture.TryAdd(mod, texture);
 					goto successReturn;
 				}
-				else if (fifth.Any(x => x.ToLower() == _callMessageCache))
+				else if (Array.IndexOf(fifth, _callMessageCache) != -1)
 				{
 					Mod mod = args[index + 0] as Mod;
 					string name = args[index + 1] as string;
@@ -242,7 +242,7 @@ namespace Wikithis
 					mod.AddContent(new SealedWiki(name, key, initialize, noExists));
 					goto successReturn;
 				}
-				else if (sixth.Any(x => x.ToLower() == _callMessageCache))
+				else if (Array.IndexOf(sixth, _callMessageCache) != -1)
 				{
 					int num = args[index + 0] is Mod ? 1 : 0;
 
@@ -320,7 +320,7 @@ namespace Wikithis
 
 					goto successReturn;
 				}
-				else if (seventh.Any(x => x.ToLower() == _callMessageCache))
+				else if (Array.IndexOf(seventh, _callMessageCache) != -1)
 				{
 					string mod = args[index + 0] as string;
 					var noWiki = args[index + 1] as Func<object, object, bool>;
@@ -344,8 +344,9 @@ namespace Wikithis
 				{
 #if !DEBUG
 					throw new NotImplementedException("You not supposed to use this call... yet.");
-#endif
+#else
 					goto successReturn;
+#endif
 				}
 				else
 				{

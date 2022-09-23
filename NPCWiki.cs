@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -13,13 +15,11 @@ namespace Wikithis
 
 		public override void Initialize()
 		{
-			foreach (NPC npc in ContentSamples.NpcsByNetId.Values)
+			IEnumerable<NPC> list = ContentSamples.NpcsByNetId.Values.Where(x => !HasEntry(x.netID) && x.netID != NPCID.None);
+			foreach (NPC npc in list)
 			{
-				if (HasEntry(npc.type) || npc.netID <= NPCID.None)
-					continue;
-
 				string name = npc.netID < NPCID.Count
-					? Language.GetTextValue($"NPCName.{Wikithis.GetInternalName(npc.netID, 1)}")
+					? Language.GetTextValue($"NPCName.{NPCID.Search.GetName(npc.netID)}")
 					: Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}");
 
 				if (Wikithis.NpcIdNameReplace.TryGetValue((npc.netID, Wikithis.CultureLoaded), out string name2))

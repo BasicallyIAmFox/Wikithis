@@ -2,7 +2,7 @@
 
 namespace Wikithis
 {
-	public readonly struct WikiEntry<TKey> : IWikiEntry<TKey>
+	public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> where TKey : notnull
 	{
 		/// <summary>
 		/// The key, identifier of an entry.
@@ -28,9 +28,7 @@ namespace Wikithis
 		{
 			if (Search != null & Search != string.Empty & (!checkForKeybind || WikithisSystem.WikiKeybind.JustReleased))
 			{
-				Utils.OpenToURL(Wikithis.AprilFools && !WikithisSystem.RickRolled ? Wikithis.RickRoll : Search);
-				if (Wikithis.AprilFools && !WikithisSystem.RickRolled)
-					WikithisSystem.RickRolled = true;
+				Utils.OpenToURL(Search);
 			}
 		}
 	}
