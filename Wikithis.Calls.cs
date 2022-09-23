@@ -119,7 +119,7 @@ namespace Wikithis
 				int? messageOverload = args[0] as int?;
 				const int index = 1;
 
-				_callMessageCache = messageOverload.HasValue ? messageOverload.Value.ToString() : message;
+				_callMessageCache = messageOverload.HasValue ? messageOverload.Value.ToString().ToLower() : message;
 
 				if (Array.IndexOf(first, _callMessageCache) != -1)
 				{
