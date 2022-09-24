@@ -16,7 +16,7 @@ namespace Wikithis
 		private static string[] first = new string[]
 		{
 					"0",
-					"addmoduRL"
+					"addmodurl"
 		};
 		private static string[] second = new string[]
 		{
@@ -119,7 +119,7 @@ namespace Wikithis
 				int? messageOverload = args[0] as int?;
 				const int index = 1;
 
-				_callMessageCache = messageOverload.HasValue ? messageOverload.Value.ToString().ToLower() : message;
+				_callMessageCache = messageOverload.HasValue ? messageOverload.Value.ToString() : message;
 
 				if (Array.IndexOf(first, _callMessageCache) != -1)
 				{
