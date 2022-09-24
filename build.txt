@@ -8,4 +8,5 @@ includeSource = false
 side = Client
 
 homepage = https://discord.gg/rrxE78cyjm
-buildIgnore = *.csproj, *.csproj.user, *.json
+buildIgnore = *.csproj, *.csproj.user, *.json, *.Ink
+dllReferences = CCLiar

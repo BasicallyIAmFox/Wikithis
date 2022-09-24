@@ -14,23 +14,6 @@ namespace Wikithis
 			ILCursor c = new(il);
 			try
 			{
-				// OLD IL
-				/*
-				c.GotoNext(i => i.MatchCall(typeof(NPCLoader).GetMethod(nameof(NPCLoader.ModifyHoverBoundingBox), BindingFlags.Public | BindingFlags.Static)))
-					.GotoNext(MoveType.After, i => i.MatchStloc(14))
-					.Emit(OpCodes.Ldsfld, typeof(Main).GetField(nameof(Main.npc)))
-					.Emit(OpCodes.Ldloc, 10)
-					.Emit(OpCodes.Ldelem_Ref)
-					.Emit(OpCodes.Ldloc, 14);
-				c.EmitDelegate<Action<NPC, bool>>((npc, hovers) =>
-				{
-					if (WikithisConfig.Config.CanWikiNPCs && hovers && WikithisSystem.WikiKeybind.JustPressed)
-					{
-						OpenWikiPage(npc, false);
-					}
-				});
-				*/
-
 				int npcIndex = 0;
 				int hovers = 0;
 

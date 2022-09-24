@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -15,8 +14,7 @@ namespace Wikithis
 
 		public override void Initialize()
 		{
-			IEnumerable<Item> list = ContentSamples.ItemsByType.Values.Where(x => !HasEntry(x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None);
-			foreach (Item item in list)
+			foreach (Item item in ContentSamples.ItemsByType.Values.Where(x => !HasEntry(x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None))
 			{
 				string name = item.type < ItemID.Count
 					? Language.GetTextValue($"ItemName.{ItemID.Search.GetName(item.type)}")

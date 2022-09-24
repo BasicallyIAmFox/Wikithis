@@ -26,7 +26,7 @@ namespace Wikithis
 		/// <param name="checkForKeybind"></param>
 		public void OpenWikiPage(bool checkForKeybind = true)
 		{
-			if (Search != null & Search != string.Empty & (!checkForKeybind || WikithisSystem.WikiKeybind.JustReleased))
+			if (!string.IsNullOrEmpty(Search) && (!checkForKeybind || WikithisSystem.WikiKeybind.JustReleased))
 			{
 				Utils.OpenToURL(Search);
 			}

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -15,8 +14,7 @@ namespace Wikithis
 
 		public override void Initialize()
 		{
-			IEnumerable<NPC> list = ContentSamples.NpcsByNetId.Values.Where(x => !HasEntry(x.netID) && x.netID != NPCID.None);
-			foreach (NPC npc in list)
+			foreach (NPC npc in ContentSamples.NpcsByNetId.Values.Where(x => !HasEntry(x.netID) && x.netID != NPCID.None))
 			{
 				string name = npc.netID < NPCID.Count
 					? Language.GetTextValue($"NPCName.{NPCID.Search.GetName(npc.netID)}")

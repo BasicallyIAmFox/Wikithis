@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CCLiar;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -7,6 +8,7 @@ using System.Text;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Wikithis.Calls;
 
 namespace Wikithis
 {
@@ -48,6 +50,15 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver += NPCURL;
+
+			CCList<Wikithis>.Initialize();
+			CCList<Wikithis>.Register(new AddModUrlCall());
+			CCList<Wikithis>.Register(new AddWikiTextureCall());
+			CCList<Wikithis>.Register(new CustomWikiCall());
+			CCList<Wikithis>.Register(new DelegateWikiCall());
+			CCList<Wikithis>.Register(new OpenWikiCall());
+			CCList<Wikithis>.Register(new ReplaceItemIdsCall());
+			CCList<Wikithis>.Register(new ReplaceNpcIdsCall());
 		}
 
 		internal static void SetupWikiPages()
@@ -84,18 +95,11 @@ namespace Wikithis
 			_callMessageCache = null;
 			_commandAvailableTypes = null;
 
-			first = null;
-			second = null;
-			third = null;
-			fourth = null;
-			fifth = null;
-			sixth = null;
-			seventh = null;
-
 			if (Main.dedServ)
 				return;
 
 			IL.Terraria.Main.DrawMouseOver -= NPCURL;
+			CCList<Wikithis>.Clear();
 			Instance = null;
 		}
 
