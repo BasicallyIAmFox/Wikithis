@@ -132,7 +132,7 @@ namespace Wikithis
 				if (CultureLoaded == GameCulture.CultureName.Italian)
 					url += "/it";
 				else if (CultureLoaded != GameCulture.CultureName.English)
-					url = url.Insert(l, Language.ActiveCulture.Name[0..1] + '/');
+					url = url.Insert(l, Language.ActiveCulture.Name[..2] + '/');
 
 				return url;
 			}
