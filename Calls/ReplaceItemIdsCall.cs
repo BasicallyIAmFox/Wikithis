@@ -1,5 +1,6 @@
 ﻿using CCLiar;
 using System;
+using System.Collections.Generic;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -11,15 +12,20 @@ namespace Wikithis.Calls
 
 		public ReplaceItemIdsCall() : base(x => Array.IndexOf(array, x) != -1, args =>
 		{
-			int itemId = args.Get<int>(0);
+			object itemId = args.Get<object>(0) is int ? args.Get<int>(0) : args.Get<List<int>>(0);
 			string newName = args.Get<string>(1);
 			GameCulture.CultureName culture = args.Get<GameCulture.CultureName>(2);
 
-			Wikithis.ReplaceItemIds(newName, culture, itemId);
+			List<int> items = new();
+			if (itemId is int _i)
+				items.Add(_i);
+			else if (itemId is List<int> _l)
+				items.AddRange(_l);
+			Wikithis.ReplaceItemIds(newName, culture, items.ToArray());
 			return Wikithis.GotoSuccessReturn();
 		}, new ICCKey[]
 		{
-			new CCKey<int>(),
+			new CCOrKey<int, List<int>>(),
 			new CCKey<string>(),
 			new CCOptionalKey<GameCulture.CultureName?>(() => GameCulture.CultureName.English),
 		})
