@@ -32,7 +32,22 @@ namespace Wikithis
 		private static Wikithis instance;
 		public static Wikithis Instance { get => instance; private set => instance = value; }
 
-		public Wikithis() => Instance = this;
+		public Wikithis()
+		{
+			Instance = this;
+
+			if (Main.dedServ)
+				return;
+
+			CCList<Wikithis>.Initialize();
+			CCList<Wikithis>.Register(new AddModUrlCall());
+			CCList<Wikithis>.Register(new AddWikiTextureCall());
+			CCList<Wikithis>.Register(new CustomWikiCall());
+			CCList<Wikithis>.Register(new DelegateWikiCall());
+			CCList<Wikithis>.Register(new OpenWikiCall());
+			CCList<Wikithis>.Register(new ReplaceItemIdsCall());
+			CCList<Wikithis>.Register(new ReplaceNpcIdsCall());
+		}
 
 		public override void Load()
 		{
@@ -50,15 +65,6 @@ namespace Wikithis
 				return;
 
 			IL.Terraria.Main.DrawMouseOver += NPCURL;
-
-			CCList<Wikithis>.Initialize();
-			CCList<Wikithis>.Register(new AddModUrlCall());
-			CCList<Wikithis>.Register(new AddWikiTextureCall());
-			CCList<Wikithis>.Register(new CustomWikiCall());
-			CCList<Wikithis>.Register(new DelegateWikiCall());
-			CCList<Wikithis>.Register(new OpenWikiCall());
-			CCList<Wikithis>.Register(new ReplaceItemIdsCall());
-			CCList<Wikithis>.Register(new ReplaceNpcIdsCall());
 		}
 
 		internal static void SetupWikiPages()

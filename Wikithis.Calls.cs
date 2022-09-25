@@ -1,5 +1,6 @@
 ﻿using CCLiar;
 using System;
+using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -63,6 +64,9 @@ namespace Wikithis
 
 		public override object Call(params object[] args)
 		{
+			if (Main.dedServ)
+				return "Got called on server-side!";
+
 			try
 			{
 				string message = (args[0] as string)?.ToLower();
