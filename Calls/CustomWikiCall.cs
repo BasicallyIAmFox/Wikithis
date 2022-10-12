@@ -12,14 +12,13 @@ namespace Wikithis.Calls
 
 		public CustomWikiCall() : base(x => Array.IndexOf(array, x) != -1, args =>
 		{
-			var mod = args.Get<Mod>(0);
-			var name = args.Get<string>(1);
-			var key = args.Get<Func<object, IConvertible>>(2);
-			var initialize = args.Get<Action<Func<IConvertible, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>>>(3);
-			var noExists = args.Get<Action<IDictionary<(Mod, GameCulture.CultureName), string>, GameCulture.CultureName, object>>(4);
+			var mod = args.Get<Mod>(0, _ => _ == null);
+			var name = args.Get<string>(1, _ => string.IsNullOrWhiteSpace(_));
+			var key = args.Get<Func<object, IConvertible>>(2, _ => _ == null);
+			var initialize = args.Get<Action<Func<IConvertible, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>>>(3, _ => _ == null);
+			var noExists = args.Get<Action<IDictionary<(Mod, GameCulture.CultureName), string>, GameCulture.CultureName, object>>(4, _ => _ == null);
 
-			mod.AddContent(new SealedWiki(name, key, initialize, noExists));
-			return Wikithis.GotoSuccessReturn();
+			return Call(mod, name, key, initialize, noExists);
 		}, new ICCKey[]
 		{
 			new CCKey<Mod>(),
@@ -35,6 +34,12 @@ namespace Wikithis.Calls
 				"customwiki",
 				"addcustomwiki"
 			};
+		}
+
+		public static bool Call(Mod mod, string name, Func<object, IConvertible> key, Action<Func<IConvertible, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>> init, Action<IDictionary<(Mod, GameCulture.CultureName), string>, GameCulture.CultureName, object> noExists)
+		{
+			mod.AddContent(new SealedWiki(name, key, init, noExists));
+			return Wikithis.GotoSuccessReturn();
 		}
 
 		public void Unload() => array = null;

@@ -14,14 +14,14 @@ namespace Wikithis
 	{
 		public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset)
 		{
-			IWiki<Item, int> wiki = Wikithis.Wikis[$"Wikithis/{nameof(ItemWiki)}"] as IWiki<Item, int>;
+			IWiki<Item, int> wiki = Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"] as IWiki<Item, int>;
 			bool wrong = !wiki.IsValid(item.type);
 			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type))
 			{
 				wrong = false;
 			}
 
-			if (line.Mod == Mod.Name && line.Name == "Wikithis:Wiki")
+			if (line.Mod == Mod.Name && line.Name == $"{nameof(Wikithis)}:Wiki")
 			{
 				Asset<Texture2D> texture = TextureAssets.BestiaryMenuButton;
 				if (item.ModItem != null && Wikithis.ModToTexture.TryGetValue(item.ModItem.Mod, out Asset<Texture2D> value))

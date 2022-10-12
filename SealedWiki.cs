@@ -10,13 +10,12 @@ namespace Wikithis
 	{
 		private readonly Action<Func<IConvertible, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>> initialize;
 		private readonly Action<IDictionary<(Mod, GameCulture.CultureName), string>, GameCulture.CultureName, object> noExists;
-		private readonly string name;
 
-		public override string Name => name;
+		public override string Name { get; }
 
 		public SealedWiki(string name, Func<object, IConvertible> func, Action<Func<IConvertible, bool>, Action<object, IConvertible, string>, Func<string, Mod, string>> initialize, Action<IDictionary<(Mod, GameCulture.CultureName), string>, GameCulture.CultureName, object> noExists = null) : base(func)
 		{
-			this.name = name;
+			Name = name;
 			this.initialize = initialize;
 			this.noExists = noExists;
 		}

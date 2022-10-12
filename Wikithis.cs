@@ -4,7 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -14,6 +18,8 @@ namespace Wikithis
 {
 	public partial class Wikithis : Mod
 	{
+		internal static Regex WikiUrlRegex = new(@".*\/\{.*\}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+		internal static Regex WikiStrRegex = new(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 		internal static Dictionary<string, IWiki> _wikis { get; private set; } = new();
 		internal static Dictionary<(Mod, GameCulture.CultureName), string> _modToURL { get; private set; } = new();
 		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; } = new();
@@ -127,14 +133,14 @@ namespace Wikithis
 		/// <returns></returns>
 		public static string DefaultSearchStr(string name, Mod mod)
 		{
-			name = name.Replace(' ', '_');
-			name = name.Replace("'", "%27");
+			name = name.Replace(' ', '_').Replace("'", "%27");
 
+			string url;
 			if (mod == null)
 			{
 				const int l = 25; // length of "https://terraria.wiki.gg/wiki/"
 
-				string url = $"https://terraria.wiki.gg/wiki/{name}";
+				url = $"https://terraria.wiki.gg/wiki/{name}";
 				if (CultureLoaded == GameCulture.CultureName.Italian)
 					url += "/it";
 				else if (CultureLoaded != GameCulture.CultureName.English)
@@ -142,44 +148,48 @@ namespace Wikithis
 
 				return url;
 			}
-			else
+
+			string result;
+			bool success = false;
+			url = string.Empty;
+
+			GameCulture.CultureName culture = CultureLoaded;
+
+			bool doesntContainsOthers = ModToURL.TryGetValue(new ValueTuple<Mod, GameCulture.CultureName>(mod, culture), out _);
+			if (!doesntContainsOthers)
+				culture = GameCulture.CultureName.English;
+
+			if (ModToURL.TryGetValue((mod, culture), out string value))
 			{
-				string url = string.Empty;
-				bool success = false;
-
-				GameCulture.CultureName culture = CultureLoaded;
-
-				bool doesntContainsOthers = ModToURL.TryGetValue(new ValueTuple<Mod, GameCulture.CultureName>(mod, culture), out _);
-				if (!doesntContainsOthers)
-					culture = GameCulture.CultureName.English;
-
-				if (ModToURL.TryGetValue((mod, culture), out string value))
-				{
-					success = true;
-					url = value;
-				}
-
-				if (!success)
-					return string.Empty;
-
-				string[] urls = url.Split('$');
-				string[] urls2 = url.Split('♛');
-				string result = $"https://{urls[0]}/wiki";
-
-				if (urls.Length >= 2)
-				{
-					foreach (string v in urls.AsSpan(1))
-					{
-						result += $"/{v}";
-					}
-				}
-
-				result += $"/{name}";
-				if (urls2.Length > 1)
-					result += $"/{urls2[1]}";
-
-				return CheckURLValid(result) ? result : string.Empty;
+				success = true;
+				url = value;
 			}
+
+			if (success && WikiUrlRegex.IsMatch(value))
+			{
+				return CheckURLValid(result = WikiStrRegex.Replace(value, name)) ? result : string.Empty;
+			}
+
+			if (!success)
+				return string.Empty;
+
+			string[] urls = url.Split('$');
+			string[] urls2 = url.Split('♛');
+			result = $"https://{urls[0]}/wiki";
+
+			if (urls.Length >= 2)
+			{
+				foreach (string v in urls.AsSpan(1))
+				{
+					result += $"/{v}";
+				}
+			}
+
+			result += $"/{name}";
+			if (urls2.Length > 1)
+				result += $"/{urls2[1]}";
+
+			return CheckURLValid(result) ? result : string.Empty;
 		}
 
 		/// <summary>

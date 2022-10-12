@@ -11,11 +11,11 @@ namespace Wikithis.Calls
 
 		public AddModUrlCall() : base(x => Array.IndexOf(array, x) != -1, args =>
 		{
-			Mod mod = args.Get<Mod>(0);
-			string domain = args.Get<string>(1);
+			Mod mod = args.Get<Mod>(0, _ => _ == null);
+			string domain = args.Get<string>(1, _ => string.IsNullOrWhiteSpace(_));
 			GameCulture.CultureName culture = args.Get<GameCulture.CultureName>(2);
 
-			Wikithis.AddModURL(mod, domain, culture);
+			Call(mod, domain, culture);
 			return Wikithis.GotoSuccessReturn();
 		}, new ICCKey[]
 		{
@@ -30,6 +30,8 @@ namespace Wikithis.Calls
 				"addmodurl"
 			};
 		}
+
+		public static void Call(Mod mod, string domain, GameCulture.CultureName culture = GameCulture.CultureName.English) => Wikithis.AddModURL(mod, domain, culture);
 
 		public void Unload() => array = null;
 

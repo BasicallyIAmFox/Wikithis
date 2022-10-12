@@ -11,7 +11,7 @@ namespace Wikithis
 
 		protected Wiki() => _getKeyFunc = null;
 
-		public Wiki(Func<TEntry, TKey> getKeyFunc) => _getKeyFunc = getKeyFunc;
+		protected Wiki(Func<TEntry, TKey> getKeyFunc) => _getKeyFunc = getKeyFunc;
 
 		/// <summary>
 		/// Used to link all <typeparamref name="TEntry"/> with their correspondent wiki pages.

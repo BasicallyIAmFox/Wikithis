@@ -10,12 +10,11 @@ namespace Wikithis.Calls
 
 		public DelegateWikiCall() : base(x => Array.IndexOf(array, x) != -1, args =>
 		{
-			string mod = args.Get<string>(0);
-			var noWiki = args.Get<Func<object, object, bool>>(1);
-			var action = args.Get<Func<object, object, bool>>(2);
+			string mod = args.Get<string>(0, _ => string.IsNullOrWhiteSpace(_));
+			var noWiki = args.Get<Func<object, object, bool>>(1, _ => _ == null);
+			var action = args.Get<Func<object, object, bool>>(2, _ => _ == null);
 
-			Wikithis._delegateWikis.Add(mod, (noWiki, action));
-			return Wikithis.GotoSuccessReturn();
+			return Call(mod, noWiki, action);
 		}, new ICCKey[]
 		{
 			new CCKey<string>(),
@@ -29,6 +28,14 @@ namespace Wikithis.Calls
 				"delegatewiki",
 				"adddelegatewiki",
 			};
+		}
+
+		public static bool Call(Mod mod, Func<object, object, bool> noWiki, Func<object, object, bool> action) => Call(mod.Name, noWiki, action);
+
+		public static bool Call(string mod, Func<object, object, bool> noWiki, Func<object, object, bool> action)
+		{
+			Wikithis._delegateWikis.Add(mod, (noWiki, action));
+			return Wikithis.GotoSuccessReturn();
 		}
 
 		public void Unload() => array = null;

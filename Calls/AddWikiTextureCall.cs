@@ -12,11 +12,10 @@ namespace Wikithis.Calls
 
 		public AddWikiTextureCall() : base(x => Array.IndexOf(array, x) != -1, args =>
 		{
-			var mod = args.Get<Mod>(0);
-			var texture = args.Get<Asset<Texture2D>>(1);
+			var mod = args.Get<Mod>(0, _ => _ == null);
+			var texture = args.Get<Asset<Texture2D>>(1, _ => _ == null);
 
-			Wikithis.ModToTexture.TryAdd(mod, texture);
-			return Wikithis.GotoSuccessReturn();
+			return Call(mod, texture);
 		}, new ICCKey[]
 		{
 			new CCKey<Mod>(),
@@ -30,6 +29,12 @@ namespace Wikithis.Calls
 				"wikitexture",
 				"addwiki"
 			};
+		}
+
+		public static bool Call(Mod mod, Asset<Texture2D> asset)
+		{
+			Wikithis.ModToTexture.TryAdd(mod, asset);
+			return Wikithis.GotoSuccessReturn();
 		}
 
 		public void Unload() => array = null;

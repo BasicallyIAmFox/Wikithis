@@ -11,9 +11,28 @@ namespace Wikithis.Calls
 
 		public OpenWikiCall() : base(x => Array.IndexOf(array, x) != -1, args =>
 		{
-			string fullname = args.Get<string>(0);
+			string fullname = args.Get<string>(0, _ => string.IsNullOrWhiteSpace(_));
 			IConvertible key = args.Get<IConvertible>(1);
 			bool withKeybind = args.Get<bool>(2);
+
+			return Call(fullname, key, withKeybind);
+		}, new ICCKey[]
+		{
+			new CCKey<string>(),
+			new CCKey<IConvertible>(),
+			new CCOptionalKey<bool?>(() => true),
+		})
+		{
+			array = new string[]
+			{
+				"5",
+				"openwiki",
+				"opencustomwiki"
+			};
+		}
+
+		public static bool Call(string fullname, IConvertible key, bool withKeybind = true)
+		{
 			string name = fullname?.Split('/')[1];
 
 			bool? isItemOrNpc = null;
@@ -38,32 +57,21 @@ namespace Wikithis.Calls
 				int keyy = key2.ToInt32(null);
 
 				if (isItemOrNpc is true)
-					(Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"] as IWiki<Item, int>)?.GetEntry(keyy).OpenWikiPage(withKeybind);
+					(Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"] as IWiki<Item, int>)?.GetEntry(keyy)?.OpenWikiPage(withKeybind);
 				else
-					(Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(NPCWiki)}"] as IWiki<NPC, int>)?.GetEntry(keyy).OpenWikiPage(withKeybind);
+					(Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(NPCWiki)}"] as IWiki<NPC, int>)?.GetEntry(keyy)?.OpenWikiPage(withKeybind);
 
 				return Wikithis.GotoSuccessReturn();
 			}
 
 			if (Wikithis.Wikis.TryGetValue(name, out IWiki value))
 			{
-				(value as IWiki<object, IConvertible>)?.GetEntry(key).OpenWikiPage(withKeybind);
+				(value as IWiki<object, IConvertible>)?.GetEntry(key)?.OpenWikiPage(withKeybind);
 			}
 			return Wikithis.GotoSuccessReturn();
-		}, new ICCKey[]
-		{
-			new CCKey<string>(),
-			new CCKey<IConvertible>(),
-			new CCOptionalKey<bool?>(() => true),
-		})
-		{
-			array = new string[]
-			{
-				"5",
-				"openwiki",
-				"opencustomwiki"
-			};
 		}
+
+		public static bool Call(Mod mod, string name, IConvertible key, bool withKeybind = true) => Call($"{mod.Name}/{name}", key, withKeybind);
 
 		public void Unload() => array = null;
 
