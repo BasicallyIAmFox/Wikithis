@@ -6,7 +6,7 @@ namespace Wikithis
 {
 	public abstract class Wiki<TEntry, TKey> : ModType, IWiki<TEntry, TKey> where TEntry : notnull where TKey : notnull, IConvertible
 	{
-		private readonly Dictionary<TKey, IWikiEntry<TKey>> _entries = new();
+		private readonly Dictionary<TKey, IWikiEntry> _entries = new();
 		private readonly Func<TEntry, TKey> _getKeyFunc;
 
 		protected Wiki() => _getKeyFunc = null;
@@ -23,20 +23,20 @@ namespace Wikithis
 		/// </summary>
 		/// <param name="entry"></param>
 		/// <param name="wikiEntry"></param>
-		public void AddEntry(TEntry entry, IWikiEntry<TKey> wikiEntry) => _entries.TryAdd(_getKeyFunc(entry), wikiEntry);
+		public void AddEntry(TEntry entry, IWikiEntry wikiEntry) => _entries.TryAdd(_getKeyFunc(entry), wikiEntry);
 
 		/// <summary>
 		/// Tries to get <typeparamref name="TEntry"/> entry using <paramref name="key"/>.
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns>A <seealso cref="WikiEntry{TKey}"/> instance. If entry doesn't exists, it returns default value.</returns>
-		public IWikiEntry<TKey> GetEntry(TKey key) => _entries.GetValueOrDefault(key);
+		public IWikiEntry GetEntry(TKey key) => _entries.GetValueOrDefault(key);
 
 		/// <summary>
 		/// Gets all entries.
 		/// </summary>
 		/// <returns></returns>
-		public IReadOnlyDictionary<TKey, IWikiEntry<TKey>> GetEntries() => _entries;
+		public IReadOnlyDictionary<TKey, IWikiEntry> GetEntries() => _entries;
 
 		/// <summary>
 		/// Checks if entry for <typeparamref name="TKey"/> key exists.
@@ -51,6 +51,12 @@ namespace Wikithis
 		/// </summary>
 		/// <param name="key">Key of entry.</param>
 		public virtual void MessageIfDoesntExists(TKey key) => Mod.Logger.Info("My modder forgot to put message! Sorry!");
+
+		public IWikiEntry GetEntry(object key) => GetEntry((TKey)key);
+
+		public bool HasEntry(object key) => HasEntry((TKey)key);
+
+		public void MessageIfDoesntExists(object key) => MessageIfDoesntExists((TKey)key);
 
 		public sealed override void SetStaticDefaults() { }
 

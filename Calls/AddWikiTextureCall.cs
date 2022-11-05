@@ -33,7 +33,7 @@ namespace Wikithis.Calls
 
 		public static bool Call(Mod mod, Asset<Texture2D> asset)
 		{
-			Wikithis.ModToTexture.TryAdd(mod, asset);
+			Wikithis._modToTexture.TryAdd(mod, asset);
 			return Wikithis.GotoSuccessReturn();
 		}
 

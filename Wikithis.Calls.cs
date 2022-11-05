@@ -3,6 +3,7 @@ using System;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Wikithis.Exceptions;
 
 namespace Wikithis
 {
@@ -13,18 +14,11 @@ namespace Wikithis
 		[Obsolete("Use Calls.AddModUrlCall.Call(...) instead.")]
 		public static void AddModURL(Mod mod, string domain, GameCulture.CultureName? culture)
 		{
-			if (culture != GameCulture.CultureName.English && _modToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
+			if (culture != GameCulture.CultureName.English && !_modToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
 			{
-				_modToURL.TryAdd((mod, culture.Value), domain);
+				throw new LanguageException($"Unable to add an URL to the mod ({mod.Name}) because there is no English URL!");
 			}
-			else if (culture != GameCulture.CultureName.English && !_modToURL.ContainsKey(new(mod, GameCulture.CultureName.English)))
-			{
-				throw new Exception("English (default; main) key wasn't present in Dictionary, yet translations are being added!");
-			}
-			else
-			{
-				_modToURL.TryAdd((mod, culture.Value), domain);
-			}
+			_modToURL.TryAdd((mod, culture.Value), domain);
 
 			if (!WikiUrlRegex.IsMatch(domain))
 			{
@@ -35,32 +29,18 @@ namespace Wikithis
 		[Obsolete("Use Calls.ReplaceItemIdsCall.Call(...) instead.")]
 		public static void ReplaceItemIds(string name, GameCulture.CultureName? culture, params int[] ids)
 		{
-			if (ids.Length == 1)
+			foreach (int i in ids)
 			{
-				//_itemIdNameReplace.TryAdd((ids[0], culture.Value), name);
-			}
-			else
-			{
-				foreach (int i in ids)
-				{
-					//_itemIdNameReplace.TryAdd((i, culture.Value), name);
-				}
+				_itemIdNameReplace.TryAdd((i, culture.Value), name);
 			}
 		}
 
 		[Obsolete("Use Calls.ReplaceNpcIdsCall.Call(...) instead.")]
 		public static void ReplaceNpcIds(string name, GameCulture.CultureName? culture, params int[] ids)
 		{
-			if (ids.Length == 1)
+			foreach (int i in ids)
 			{
-				_npcIdNameReplace.TryAdd((ids[0], culture.Value), name);
-			}
-			else
-			{
-				foreach (int i in ids)
-				{
-					_npcIdNameReplace.TryAdd((i, culture.Value), name);
-				}
+				_npcIdNameReplace.TryAdd((i, culture.Value), name);
 			}
 		}
 
@@ -68,6 +48,12 @@ namespace Wikithis
 		{
 			_callMessageCache = null;
 			return true;
+		}
+
+		internal static bool GotoFailedReturn()
+		{
+			_callMessageCache = null;
+			return false;
 		}
 
 		public override object Call(params object[] args)

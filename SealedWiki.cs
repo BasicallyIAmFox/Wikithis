@@ -26,8 +26,13 @@ namespace Wikithis
 		{
 			if (noExists != null)
 			{
+				IDictionary<(Mod, GameCulture.CultureName), string> sve = Wikithis._modToURL;
 				IDictionary<(Mod, GameCulture.CultureName), string> mtu = Wikithis._modToURL;
 				noExists(mtu, Wikithis.CultureLoaded, key);
+				if (!sve.Equals(mtu))
+				{
+					throw new ArrayTypeMismatchException($"URL links dictionary was modified by {Mod.Name}!");
+				}
 				return;
 			}
 			base.MessageIfDoesntExists(key);

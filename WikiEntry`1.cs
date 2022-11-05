@@ -1,8 +1,9 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
 
 namespace Wikithis
 {
-	public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> where TKey : notnull
+	public readonly struct WikiEntry<TKey> : IWikiEntry where TKey : IConvertible
 	{
 		/// <summary>
 		/// The key, identifier of an entry.
@@ -26,9 +27,21 @@ namespace Wikithis
 		/// <param name="checkForKeybind"></param>
 		public void OpenWikiPage(bool checkForKeybind = true)
 		{
+			dynamic inst = Main.instance;
+			if (!inst.IsActive)
+				return;
+
+			if (new TimeSpan(IWikiEntry.weJustOpenedWiki?.ElapsedTicks ?? 0).TotalSeconds >= 0.5)
+				IWikiEntry.weJustOpenedWiki = null;
+			if (IWikiEntry.weJustOpenedWiki != null)
+				return;
+
 			if (!string.IsNullOrEmpty(Search) && (!checkForKeybind || WikithisSystem.WikiKeybind.JustReleased))
 			{
 				Utils.OpenToURL(Search);
+
+				IWikiEntry.weJustOpenedWiki = new();
+				IWikiEntry.weJustOpenedWiki.Start();
 			}
 		}
 	}

@@ -16,14 +16,20 @@ namespace Wikithis
 		{
 			foreach (NPC npc in ContentSamples.NpcsByNetId.Values.Where(x => !HasEntry(x.netID) && x.netID != NPCID.None))
 			{
-				string name = npc.netID < NPCID.Count
-					? Language.GetTextValue($"NPCName.{NPCID.Search.GetName(npc.netID)}")
-					: Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}");
+				try
+				{
+					string name = npc.ModNPC == null
+						? Language.GetTextValue($"NPCName.{NPCID.Search.GetName(npc.netID)}")
+						: Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}");
 
-				if (Wikithis.NpcIdNameReplace.TryGetValue((npc.netID, Wikithis.CultureLoaded), out string name2))
-					name = name2;
+					if (Wikithis.NpcIdNameReplace.TryGetValue((npc.netID, Wikithis.CultureLoaded), out string name2))
+						name = name2;
 
-				AddEntry(npc, new WikiEntry<int>(npc.netID, Wikithis.DefaultSearchStr(name, npc.ModNPC?.Mod)));
+					AddEntry(npc, new WikiEntry<int>(npc.netID, Wikithis.DefaultSearchStr(name, npc.ModNPC?.Mod)));
+				}
+				catch
+				{
+				}
 			}
 		}
 

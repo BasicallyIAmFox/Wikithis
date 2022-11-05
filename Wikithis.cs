@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using Terraria;
@@ -22,14 +19,14 @@ namespace Wikithis
 		internal static Regex WikiStrRegex = new(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 		internal static Dictionary<string, IWiki> _wikis { get; private set; } = new();
 		internal static Dictionary<(Mod, GameCulture.CultureName), string> _modToURL { get; private set; } = new();
-		internal static Dictionary<Mod, Asset<Texture2D>> ModToTexture { get; private set; } = new();
+		internal static Dictionary<Mod, Asset<Texture2D>> _modToTexture { get; private set; } = new();
 		internal static Dictionary<(int, GameCulture.CultureName), string> _itemIdNameReplace { get; private set; } = new();
 		internal static Dictionary<(int, GameCulture.CultureName), string> _npcIdNameReplace { get; private set; } = new();
 		internal static Dictionary<string, (Func<object, object, bool> pageExists, Func<object, object, bool> openPage)> _delegateWikis { get; private set; } = new();
-		internal static Dictionary<string, IWiki<object, IConvertible>> _commandAvailableTypes { get; private set; } = new();
 
 		public static IReadOnlyDictionary<string, IWiki> Wikis => _wikis;
 		public static IReadOnlyDictionary<(Mod, GameCulture.CultureName), string> ModToURL => _modToURL;
+		public static IReadOnlyDictionary<Mod, Asset<Texture2D>> ModToTexture => _modToTexture;
 		public static IReadOnlyDictionary<(int, GameCulture.CultureName), string> ItemIdNameReplace => _itemIdNameReplace;
 		public static IReadOnlyDictionary<(int, GameCulture.CultureName), string> NpcIdNameReplace => _npcIdNameReplace;
 		public static IReadOnlyDictionary<string, (Func<object, object, bool> pageExists, Func<object, object, bool> openPage)> DelegateWikis => _delegateWikis;
@@ -44,7 +41,7 @@ namespace Wikithis
 
 			if (Main.dedServ)
 				return;
-
+			
 			CCList<Wikithis>.Initialize();
 			CCList<Wikithis>.Register(new AddModUrlCall());
 			CCList<Wikithis>.Register(new AddWikiTextureCall());
@@ -75,20 +72,11 @@ namespace Wikithis
 
 		internal static void SetupWikiPages()
 		{
-			foreach (KeyValuePair<string, IWiki> pair in Wikis)
-			{
-				var wiki = pair.Value as IWiki<object, IConvertible>;
-				var typeName = pair.Key.Split('/')[1].ToLowerInvariant();
-				if (typeName.EndsWith("wiki"))
-					typeName = typeName[..typeName.IndexOf("wiki")];
-
-				_commandAvailableTypes.Add(typeName, wiki);
-			}
-
 			foreach (IWiki wiki in Wikis.Values)
 			{
 				wiki.Initialize();
 			}
+			WikithisInitializer.InitializeEverything();
 		}
 
 		public override void Unload()
@@ -97,15 +85,15 @@ namespace Wikithis
 			_delegateWikis = null;
 
 			_modToURL = null;
-			ModToTexture = null;
+			_modToTexture = null;
 
 			_itemIdNameReplace = null;
 			_npcIdNameReplace = null;
 
 			CultureLoaded = 0;
-
 			_callMessageCache = null;
-			_commandAvailableTypes = null;
+
+			IWikiEntry.weJustOpenedWiki = null;
 
 			if (Main.dedServ)
 				return;
@@ -166,9 +154,7 @@ namespace Wikithis
 			}
 
 			if (success && WikiUrlRegex.IsMatch(value))
-			{
 				return CheckURLValid(result = WikiStrRegex.Replace(value, name)) ? result : string.Empty;
-			}
 
 			if (!success)
 				return string.Empty;
@@ -197,14 +183,14 @@ namespace Wikithis
 		/// </summary>
 		/// <param name="item"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage(Item item, bool forceCheck = true) => OpenWikiPage(entry => entry.ModItem?.Mod, item, item.type, Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"] as IWiki<Item, int>, false, forceCheck);
+		public static void OpenWikiPage(Item item, bool forceCheck = true) => OpenWikiPage(entry => entry.ModItem?.Mod, item, item.type, Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"], false, forceCheck);
 
 		/// <summary>
 		/// Used to open NPC wiki page.
 		/// </summary>
 		/// <param name="npc"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage(NPC npc, bool forceCheck = true) => OpenWikiPage(entry => entry.ModNPC?.Mod, npc, npc.netID, Wikis[$"{nameof(Wikithis)}/{nameof(NPCWiki)}"] as IWiki<NPC, int>, false, forceCheck);
+		public static void OpenWikiPage(NPC npc, bool forceCheck = true) => OpenWikiPage(entry => entry.ModNPC?.Mod, npc, npc.netID, Wikis[$"{nameof(Wikithis)}/{nameof(NPCWiki)}"], false, forceCheck);
 
 		/// <summary>
 		/// If user has pressed keybind, then next steps are taken:
@@ -219,7 +205,7 @@ namespace Wikithis
 		/// <param name="wiki"></param>
 		/// <param name="checkForKeybind"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible
+		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible
 		{
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
 				return;

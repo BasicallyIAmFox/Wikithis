@@ -45,29 +45,30 @@ namespace Wikithis.Calls
 				{
 					goto tryOpenNormal;
 				}
-				return Wikithis.GotoSuccessReturn();
+				goto gotoFailed;
 			}
 
 		tryOpenNormal:
 			if (isItemOrNpc is not null)
 			{
 				if (key is not IConvertible key2)
-					throw new NotImplementedException();
+					throw new InvalidCastException();
 
 				int keyy = key2.ToInt32(null);
+				Wikithis.Wikis[$"{nameof(Wikithis)}/{name}"].GetEntry(keyy)?.OpenWikiPage(withKeybind);
 
-				if (isItemOrNpc is true)
-					(Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"] as IWiki<Item, int>)?.GetEntry(keyy)?.OpenWikiPage(withKeybind);
-				else
-					(Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(NPCWiki)}"] as IWiki<NPC, int>)?.GetEntry(keyy)?.OpenWikiPage(withKeybind);
-
-				return Wikithis.GotoSuccessReturn();
+				goto gotoSuccess;
 			}
 
 			if (Wikithis.Wikis.TryGetValue(name, out IWiki value))
 			{
-				(value as IWiki<object, IConvertible>)?.GetEntry(key)?.OpenWikiPage(withKeybind);
+				value.GetEntry(key)?.OpenWikiPage(withKeybind);
+				goto gotoSuccess;
 			}
+
+		gotoFailed:
+			return Wikithis.GotoFailedReturn();
+		gotoSuccess:
 			return Wikithis.GotoSuccessReturn();
 		}
 

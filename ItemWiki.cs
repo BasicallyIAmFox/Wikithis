@@ -8,7 +8,7 @@ namespace Wikithis
 {
 	public class ItemWiki : Wiki<Item, int>
 	{
-		public ItemWiki() : base(new Func<Item, int>((x) => x.type))
+		public ItemWiki() : base(new Func<Item, int>((x) => x.netID))
 		{
 		}
 
@@ -16,14 +16,20 @@ namespace Wikithis
 		{
 			foreach (Item item in ContentSamples.ItemsByType.Values.Where(x => !HasEntry(x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None))
 			{
-				string name = item.type < ItemID.Count
-					? Language.GetTextValue($"ItemName.{ItemID.Search.GetName(item.type)}")
-					: Language.GetTextValue($"Mods.{item.ModItem.Mod.Name}.ItemName.{item.ModItem.Name}");
+				try
+				{
+					string name = item.ModItem == null
+						? Language.GetTextValue($"ItemName.{ItemID.Search.GetName(item.netID)}")
+						: Language.GetTextValue($"Mods.{item.ModItem.Mod.Name}.ItemName.{item.ModItem.Name}");
 
-				if (Wikithis.ItemIdNameReplace.TryGetValue((item.type, Wikithis.CultureLoaded), out string name2))
-					name = name2;
+					if (Wikithis.ItemIdNameReplace.TryGetValue((item.type, Wikithis.CultureLoaded), out string name2))
+						name = name2;
 
-				AddEntry(item, new WikiEntry<int>(item.type, Wikithis.DefaultSearchStr(name, item.ModItem?.Mod)));
+					AddEntry(item, new WikiEntry<int>(item.netID, Wikithis.DefaultSearchStr(name, item.ModItem?.Mod)));
+				}
+				catch
+				{
+				}
 			}
 		}
 
@@ -38,7 +44,7 @@ namespace Wikithis
 			Wikithis.Instance.Logger.Info("Key: " + key.ToString());
 			Wikithis.Instance.Logger.Info("Type: " + item.type.ToString());
 			Wikithis.Instance.Logger.Info("Name: " + item.Name);
-			Wikithis.Instance.Logger.Info("Vanilla: " + (item.ModItem == null).ToString());
+			Wikithis.Instance.Logger.Info("Vanilla: " + (item.netID < ItemID.Count).ToString());
 			Wikithis.Instance.Logger.Info("Mod: " + item.ModItem?.Mod.Name);
 			Wikithis.Instance.Logger.Info("Domain in dictionary: " + (item.ModItem != null ? bl.ToString() : "False"));
 		}

@@ -9,7 +9,7 @@ namespace Wikithis
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns>A <seealso cref="WikiEntry{TKey}"/> instance. If entry doesn't exists, it returns default value.</returns>
-		IWikiEntry<TKey> GetEntry(TKey key);
+		IWikiEntry GetEntry(TKey key);
 
 		/// <summary>
 		/// Checks if entry for <typeparamref name="TKey"/> key exists.
