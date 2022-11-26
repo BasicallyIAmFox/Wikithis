@@ -11,10 +11,8 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Wikithis.Calls;
 
-namespace Wikithis
-{
-	public partial class Wikithis : Mod
-	{
+namespace Wikithis {
+	public partial class Wikithis : Mod {
 		internal static Regex WikiUrlRegex = new(@".*\/\{.*\}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 		internal static Regex WikiStrRegex = new(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 		internal static Dictionary<string, IWiki> _wikis { get; private set; } = new();
@@ -35,13 +33,12 @@ namespace Wikithis
 		private static Wikithis instance;
 		public static Wikithis Instance { get => instance; private set => instance = value; }
 
-		public Wikithis()
-		{
+		public Wikithis() {
 			Instance = this;
 
 			if (Main.dedServ)
 				return;
-			
+
 			CCList<Wikithis>.Initialize();
 			CCList<Wikithis>.Register(new AddModUrlCall());
 			CCList<Wikithis>.Register(new AddWikiTextureCall());
@@ -52,8 +49,7 @@ namespace Wikithis
 			CCList<Wikithis>.Register(new ReplaceNpcIdsCall());
 		}
 
-		public override void Load()
-		{
+		public override void Load() {
 			CultureLoaded = (Language.ActiveCulture.Name == "en-US") ? GameCulture.CultureName.English :
 				((Language.ActiveCulture.Name == "de-DE") ? GameCulture.CultureName.German :
 				((Language.ActiveCulture.Name == "es-ES") ? GameCulture.CultureName.Spanish :
@@ -70,17 +66,14 @@ namespace Wikithis
 			IL.Terraria.Main.DrawMouseOver += NPCURL;
 		}
 
-		internal static void SetupWikiPages()
-		{
-			foreach (IWiki wiki in Wikis.Values)
-			{
+		internal static void SetupWikiPages() {
+			foreach (IWiki wiki in Wikis.Values) {
 				wiki.Initialize();
 			}
 			WikithisInitializer.InitializeEverything();
 		}
 
-		public override void Unload()
-		{
+		public override void Unload() {
 			_wikis = null;
 			_delegateWikis = null;
 
@@ -119,13 +112,11 @@ namespace Wikithis
 		/// <param name="name"></param>
 		/// <param name="mod"></param>
 		/// <returns></returns>
-		public static string DefaultSearchStr(string name, Mod mod)
-		{
+		public static string DefaultSearchStr(string name, Mod mod) {
 			name = name.Replace(' ', '_').Replace("'", "%27");
 
 			string url;
-			if (mod == null)
-			{
+			if (mod == null) {
 				const int l = 25; // length of "https://terraria.wiki.gg/wiki/"
 
 				url = $"https://terraria.wiki.gg/wiki/{name}";
@@ -147,8 +138,7 @@ namespace Wikithis
 			if (!doesntContainsOthers)
 				culture = GameCulture.CultureName.English;
 
-			if (ModToURL.TryGetValue((mod, culture), out string value))
-			{
+			if (ModToURL.TryGetValue((mod, culture), out string value)) {
 				success = true;
 				url = value;
 			}
@@ -163,10 +153,8 @@ namespace Wikithis
 			string[] urls2 = url.Split('♛');
 			result = $"https://{urls[0]}/wiki";
 
-			if (urls.Length >= 2)
-			{
-				foreach (string v in urls.AsSpan(1))
-				{
+			if (urls.Length >= 2) {
+				foreach (string v in urls.AsSpan(1)) {
 					result += $"/{v}";
 				}
 			}
@@ -205,25 +193,21 @@ namespace Wikithis
 		/// <param name="wiki"></param>
 		/// <param name="checkForKeybind"></param>
 		/// <param name="forceCheck"></param>
-		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible
-		{
+		public static void OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, TKey key, IWiki wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible {
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
 				return;
 
-			if (DelegateWikis.TryGetValue(getMod(entry)?.Name ?? "Terraria", out var delegates) && delegates.pageExists(entry, key))
-			{
+			if (DelegateWikis.TryGetValue(getMod(entry)?.Name ?? "Terraria", out var delegates) && delegates.pageExists(entry, key)) {
 				if (delegates.openPage(entry, key))
 					goto orig;
 				return;
 			}
 
 		orig:
-			if (wiki.IsValid(key))
-			{
+			if (wiki.IsValid(key)) {
 				wiki.GetEntry(key).OpenWikiPage(checkForKeybind);
 			}
-			else
-			{
+			else {
 				Main.NewText(Language.GetTextValue("Mods.Wikithis.Error"), Color.OrangeRed);
 
 				Instance.Logger.Error("Tried to get wiki page, but failed!");
@@ -232,17 +216,14 @@ namespace Wikithis
 		}
 
 		[Obsolete("Use OpenWikiPage<TEntry, TKey>(Func<TEntry, Mod> getMod, TEntry entry, ...) instead.", true)]
-		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible
-		{
+		public static void OpenWikiPage<TEntry, TKey>(TKey key, IWiki<TEntry, TKey> wiki, bool checkForKeybind = true, bool forceCheck = true) where TEntry : notnull where TKey : notnull, IConvertible {
 			if (forceCheck && !WikithisSystem.WikiKeybind.JustReleased)
 				return;
 
-			if (wiki.IsValid(key))
-			{
+			if (wiki.IsValid(key)) {
 				wiki.GetEntry(key).OpenWikiPage(checkForKeybind);
 			}
-			else
-			{
+			else {
 				Main.NewText(Language.GetTextValue("Mods.Wikithis.Error"), Color.OrangeRed);
 
 				Instance.Logger.Error("Tried to get wiki page, but failed!");
@@ -250,8 +231,7 @@ namespace Wikithis
 			}
 		}
 
-		internal static string TooltipHotkeyString(ModKeybind keybind)
-		{
+		internal static string TooltipHotkeyString(ModKeybind keybind) {
 			if (Main.dedServ || keybind == null)
 				return string.Empty;
 

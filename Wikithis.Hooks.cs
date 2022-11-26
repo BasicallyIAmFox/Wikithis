@@ -5,15 +5,11 @@ using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Wikithis
-{
-	public partial class Wikithis
-	{
-		private void NPCURL(ILContext il)
-		{
+namespace Wikithis {
+	public partial class Wikithis {
+		private void NPCURL(ILContext il) {
 			ILCursor c = new(il);
-			try
-			{
+			try {
 				int npcIndex = 0;
 				int hovers = 0;
 
@@ -35,16 +31,13 @@ namespace Wikithis
 				c.Emit(OpCodes.Ldloc, npcIndex);
 				c.Emit(OpCodes.Ldelem_Ref);
 				c.Emit(OpCodes.Ldloc, hovers);
-				c.EmitDelegate<Action<NPC, bool>>((npc, hovers) =>
-				{
-					if (WikithisConfig.Config.CanWikiNPCs && hovers && WikithisSystem.WikiKeybind.JustPressed)
-					{
+				c.EmitDelegate<Action<NPC, bool>>((npc, hovers) => {
+					if (WikithisConfig.Config.CanWikiNPCs && hovers && WikithisSystem.WikiKeybind.JustPressed) {
 						OpenWikiPage(npc, false);
 					}
 				});
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				Logger.Error($"IL Error: {e.Message} {e.StackTrace}");
 			}
 		}

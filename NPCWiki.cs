@@ -4,20 +4,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace Wikithis
-{
-	public class NPCWiki : Wiki<NPC, int>
-	{
-		public NPCWiki() : base(new Func<NPC, int>((x) => x.netID))
-		{
+namespace Wikithis {
+	public class NPCWiki : Wiki<NPC, int> {
+		public NPCWiki() : base(new Func<NPC, int>((x) => x.netID)) {
 		}
 
-		public override void Initialize()
-		{
-			foreach (NPC npc in ContentSamples.NpcsByNetId.Values.Where(x => !HasEntry(x.netID) && x.netID != NPCID.None))
-			{
-				try
-				{
+		public override void Initialize() {
+			foreach (NPC npc in ContentSamples.NpcsByNetId.Values.Where(x => !HasEntry(x.netID) && x.netID != NPCID.None)) {
+				try {
 					string name = npc.ModNPC == null
 						? Language.GetTextValue($"NPCName.{NPCID.Search.GetName(npc.netID)}")
 						: Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}");
@@ -27,14 +21,12 @@ namespace Wikithis
 
 					AddEntry(npc, new WikiEntry<int>(npc.netID, Wikithis.DefaultSearchStr(name, npc.ModNPC?.Mod)));
 				}
-				catch
-				{
+				catch {
 				}
 			}
 		}
 
-		public override void MessageIfDoesntExists(int key)
-		{
+		public override void MessageIfDoesntExists(int key) {
 			NPC npc = ContentSamples.NpcsByNetId[key];
 
 			bool bl = Wikithis.ModToURL.ContainsKey((npc.ModNPC?.Mod, Wikithis.CultureLoaded));

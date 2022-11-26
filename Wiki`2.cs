@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using Terraria.ModLoader;
 
-namespace Wikithis
-{
-	public abstract class Wiki<TEntry, TKey> : ModType, IWiki<TEntry, TKey> where TEntry : notnull where TKey : notnull, IConvertible
-	{
+namespace Wikithis {
+	public abstract class Wiki<TEntry, TKey> : ModType, IWiki<TEntry, TKey> where TEntry : notnull where TKey : notnull, IConvertible {
 		private readonly Dictionary<TKey, IWikiEntry> _entries = new();
 		private readonly Func<TEntry, TKey> _getKeyFunc;
 

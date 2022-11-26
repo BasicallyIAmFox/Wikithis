@@ -4,20 +4,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace Wikithis
-{
-	public class ItemWiki : Wiki<Item, int>
-	{
-		public ItemWiki() : base(new Func<Item, int>((x) => x.netID))
-		{
+namespace Wikithis {
+	public class ItemWiki : Wiki<Item, int> {
+		public ItemWiki() : base(new Func<Item, int>((x) => x.netID)) {
 		}
 
-		public override void Initialize()
-		{
-			foreach (Item item in ContentSamples.ItemsByType.Values.Where(x => !HasEntry(x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None))
-			{
-				try
-				{
+		public override void Initialize() {
+			foreach (Item item in ContentSamples.ItemsByType.Values.Where(x => !HasEntry(x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None)) {
+				try {
 					string name = item.ModItem == null
 						? Language.GetTextValue($"ItemName.{ItemID.Search.GetName(item.netID)}")
 						: Language.GetTextValue($"Mods.{item.ModItem.Mod.Name}.ItemName.{item.ModItem.Name}");
@@ -27,14 +21,12 @@ namespace Wikithis
 
 					AddEntry(item, new WikiEntry<int>(item.netID, Wikithis.DefaultSearchStr(name, item.ModItem?.Mod)));
 				}
-				catch
-				{
+				catch {
 				}
 			}
 		}
 
-		public override void MessageIfDoesntExists(int key)
-		{
+		public override void MessageIfDoesntExists(int key) {
 			Item item = ContentSamples.ItemsByType[key];
 
 			bool bl = Wikithis.ModToURL.ContainsKey((item.ModItem?.Mod, Wikithis.CultureLoaded));

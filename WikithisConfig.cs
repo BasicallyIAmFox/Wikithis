@@ -2,10 +2,8 @@
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace Wikithis
-{
-	public class WikithisConfig : ModConfig
-	{
+namespace Wikithis {
+	public class WikithisConfig : ModConfig {
 		public override ConfigScope Mode => ConfigScope.ClientSide;
 		internal static WikithisConfig Config => ModContent.GetInstance<WikithisConfig>();
 

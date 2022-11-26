@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace Wikithis
-{
-	public interface IWiki<in TEntry, in TKey> : IWiki where TEntry : notnull where TKey : notnull, IConvertible
-	{
+namespace Wikithis {
+	public interface IWiki<in TEntry, in TKey> : IWiki where TEntry : notnull where TKey : notnull, IConvertible {
 		/// <summary>
 		/// Tries to get <typeparamref name="TEntry"/> entry using <paramref name="key"/>.
 		/// </summary>

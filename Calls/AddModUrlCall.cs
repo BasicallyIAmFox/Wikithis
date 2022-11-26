@@ -3,14 +3,11 @@ using System;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Wikithis.Calls
-{
-	public sealed class AddModUrlCall : CCList, ILoadable
-	{
+namespace Wikithis.Calls {
+	public sealed class AddModUrlCall : CCList, ILoadable {
 		private static string[] array;
 
-		public AddModUrlCall() : base(x => Array.IndexOf(array, x) != -1, args =>
-		{
+		public AddModUrlCall() : base(x => Array.IndexOf(array, x) != -1, args => {
 			Mod mod = args.Get<Mod>(0, _ => _ == null);
 			string domain = args.Get<string>(1, _ => string.IsNullOrWhiteSpace(_));
 			GameCulture.CultureName culture = args.Get<GameCulture.CultureName>(2);
@@ -22,8 +19,7 @@ namespace Wikithis.Calls
 			new CCKey<Mod>(),
 			new CCKey<string>(),
 			new CCOptionalKey<GameCulture.CultureName?>(() => GameCulture.CultureName.English),
-		})
-		{
+		}) {
 			array = new string[]
 			{
 				"0",
@@ -35,8 +31,7 @@ namespace Wikithis.Calls
 
 		public void Unload() => array = null;
 
-		public void Load(Mod mod)
-		{
+		public void Load(Mod mod) {
 		}
 	}
 }

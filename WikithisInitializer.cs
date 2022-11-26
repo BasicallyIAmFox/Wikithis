@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace Wikithis
-{
-	internal static class WikithisInitializer
-	{
+namespace Wikithis {
+	internal static class WikithisInitializer {
 		public static Dictionary<string, Asset<Texture2D>> a = new();
 
 		public static void InitializeEverything()

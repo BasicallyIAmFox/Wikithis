@@ -1,10 +1,8 @@
 ﻿using System;
 using Terraria;
 
-namespace Wikithis
-{
-	public readonly struct WikiEntry<TKey> : IWikiEntry where TKey : IConvertible
-	{
+namespace Wikithis {
+	public readonly struct WikiEntry<TKey> : IWikiEntry where TKey : IConvertible {
 		/// <summary>
 		/// The key, identifier of an entry.
 		/// </summary>
@@ -15,8 +13,7 @@ namespace Wikithis
 		/// </summary>
 		public readonly string Search { get; }
 
-		public WikiEntry(TKey key, string searchStr)
-		{
+		public WikiEntry(TKey key, string searchStr) {
 			Key = key;
 			Search = searchStr;
 		}
@@ -25,19 +22,14 @@ namespace Wikithis
 		/// Opens URL of an entry.
 		/// </summary>
 		/// <param name="checkForKeybind"></param>
-		public void OpenWikiPage(bool checkForKeybind = true)
-		{
-			dynamic inst = Main.instance;
-			if (!inst.IsActive)
+		public void OpenWikiPage(bool checkForKeybind = true) {
+			if (!Main.instance.IsActive)
 				return;
 
 			if (new TimeSpan(IWikiEntry.weJustOpenedWiki?.ElapsedTicks ?? 0).TotalSeconds >= 0.5)
 				IWikiEntry.weJustOpenedWiki = null;
-			if (IWikiEntry.weJustOpenedWiki != null)
-				return;
 
-			if (!string.IsNullOrEmpty(Search) && (!checkForKeybind || WikithisSystem.WikiKeybind.JustReleased))
-			{
+			if (IWikiEntry.weJustOpenedWiki == null && !string.IsNullOrEmpty(Search) && (!checkForKeybind || WikithisSystem.WikiKeybind.JustReleased)) {
 				Utils.OpenToURL(Search);
 
 				IWikiEntry.weJustOpenedWiki = new();

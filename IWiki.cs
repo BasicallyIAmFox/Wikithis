@@ -1,7 +1,5 @@
-﻿namespace Wikithis
-{
-	public interface IWiki
-	{
+﻿namespace Wikithis {
+	public interface IWiki {
 		void Initialize();
 
 		IWikiEntry GetEntry(object key);

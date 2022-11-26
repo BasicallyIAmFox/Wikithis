@@ -10,25 +10,19 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Wikithis
-{
-	internal class WikithisItem : GlobalItem
-	{
-		public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset)
-		{
+namespace Wikithis {
+	internal class WikithisItem : GlobalItem {
+		public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset) {
 			IWiki wiki = Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"];
 			bool wrong = !wiki.IsValid(item.type);
-			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type))
-			{
+			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type)) {
 				wrong = false;
 			}
 
-			if (line.Mod == Mod.Name && line.Name == $"{nameof(Wikithis)}:Wiki")
-			{
+			if (line.Mod == Mod.Name && line.Name == $"{nameof(Wikithis)}:Wiki") {
 				Asset<Texture2D> texture = WikithisInitializer.a[item.ModItem?.Mod.Name ?? "Terraria"];
 
-				if (wrong)
-				{
+				if (wrong) {
 					Main.instance.LoadItem(ItemID.WireCutter);
 					texture = TextureAssets.Item[ItemID.WireCutter];
 				}
@@ -40,22 +34,19 @@ namespace Wikithis
 				Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.MouseText.Value, line.Text, line.X, line.Y, line.OverrideColor ?? line.Color, Color.Black, line.Origin);
 				return false;
 			}
-			if (!wrong && WikithisSystem.WikiKeybind.JustPressed && line.Mod == "Terraria" && line.Name == "ItemName")
-			{
+			if (!wrong && WikithisSystem.WikiKeybind.JustPressed && line.Mod == "Terraria" && line.Name == "ItemName") {
 				Wikithis.OpenWikiPage(item, false);
 			}
 			return true;
 		}
 
-		public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
-		{
+		public override void ModifyTooltips(Item item, List<TooltipLine> tooltips) {
 			if (!WikithisConfig.Config.TooltipsEnabled)
 				return;
 
 			IWiki wiki = Wikithis.Wikis[$"Wikithis/{nameof(ItemWiki)}"];
 			bool wrong = !wiki.IsValid(item.type);
-			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type))
-			{
+			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type)) {
 				wrong = false;
 			}
 
@@ -63,8 +54,7 @@ namespace Wikithis
 			if (wrong)
 				text = Language.GetTextValue($"Mods.{Mod.Name}.NoWiki");
 
-			tooltips.Add(new(Mod, "Wikithis:Wiki", $"    {text}")
-			{
+			tooltips.Add(new(Mod, "Wikithis:Wiki", $"    {text}") {
 				OverrideColor = !wrong ? Color.LightGray : Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
 			});
 		}
