@@ -15,7 +15,7 @@ namespace Wikithis {
 		public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset) {
 			IWiki wiki = Wikithis.Wikis[$"{nameof(Wikithis)}/{nameof(ItemWiki)}"];
 			bool wrong = !wiki.IsValid(item.type);
-			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && !delegates.pageExists(item, item.type)) {
+			if (wrong && Wikithis.DelegateWikis.TryGetValue(item.ModItem?.Mod.Name ?? "Terraria", out var delegates) && delegates.pageExists(item, item.type)) {
 				wrong = false;
 			}
 
