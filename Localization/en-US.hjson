@@ -1,31 +1,33 @@
-﻿Mods.Wikithis: {
-	Config: {
-		CanWikiNPCs: {
-			Label: Show NPC Wiki
-			Tooltip: Want to know more about NPCs? Then click here to enable! (By default: Disabled)
-		}
-		TooltipsEnabled: {
-			Label: Show Tooltip
-			Tooltip: '''Tired of seeing "Press something to open wiki page!"? Yes? Then click here to disable that! (By default: Enabled)'''
-		}
-	}
 
-	CreationErrors: {
-		Item: "Failed to create url link for item {0}"
-		NPC: "Failed to create url link for NPC {0}"
+Mods: {
+	Wikithis: {
+		Config: {
+			OpenSteamBrowser: {
+				Label: Open Steam Overlay instead of browser
+				Tooltip: Whenever a wiki page for item is opened, it will open Steam Overlay. If Steam isn't available, then it will open browser. (By default: Enabled)
+			}
+
+			CanWikiNPCs: {
+				Label: Show NPC Wiki
+				Tooltip: When enabled, allows to open wiki pages when pressed on NPCs (By default: Disabled)
+			}
+
+			TooltipsEnabled: {
+				Label: Show tooltips
+				Tooltip: Disables wiki tooltips if disabled. (By default: Enabled)
+			}
+		}
+
+		Keybinds.WikiKeybind.DisplayName: Check wiki page on item/NPC
+
+		CreationErrors: {
+			Item: Failed to create url link for item {0}
+			NPC: Failed to create url link for NPC {0}
+		}
+
+		Error: Wiki page doesn't exist or is invalid! Report if you think that's an issue!
+		Click: Press {0} to open wiki page!
+		NoWiki: No wiki page available!
+		WikithisDesc: Redirects to wiki page of an Item/NPC
 	}
-	Error: '''Wiki page doesn't exist or is invalid! Report if you think that's an issue!'''
-	Click: "Press {0} to open wiki page!"
-	NoWiki: No wiki page available!
-	WikithisInput:
-		'''
-		Replace spaces in item/npc name with underscores
-		CASE SENSITIVE!
-		'''
-	WikithisDesc: Redirects to wiki page of an Item/NPC
-	NetworkFail: Failed connection to Network! Make sure that you connected to WI-FI!
-	UnsupportedWarning: You are playing on some other platform besides Windows! Possible expected behavior: bugs, freezes, crashes.
-	LoadingItem: "Setting up wiki page for {0}"
-	LoadingNPC: "Setting up wiki page for {0}"
-	WikiKeybind: Check wiki page on item/NPC
 }

@@ -1,30 +1,33 @@
-﻿Mods.Wikithis: {
-	Config: {
-		CanWikiNPCs: {
-			Label: Zeige Wiki für NPCs
-			Tooltip: Du möchtest mehr über NPCs wissen? Dann klick hier um das Wiki auch für NPCs zu aktivieren! (Standard: AUS)
-		}
-		TooltipsEnabled: {
-			Label: Zeige Schnellinformationen
-			Tooltip: '''Du willst "Drücke irgendwas um die Wiki-Seite zu öffnen!" nicht mehr sehen? Wirklich? Dann klicke hier um die Meldung zu deaktivieren! (Standard: AN)'''
-		}
-	}
 
-	CreationErrors: {
-		Item: "Weblink für den Gegenstand {0} konnte nicht erstellt werden"
-		NPC: "Weblink für den NPC {0} konnte nicht erstellt werden"
+Mods: {
+	Wikithis: {
+		Config: {
+			OpenSteamBrowser: {
+				// Label: Open Steam Overlay instead of browser
+				// Tooltip: Whenever a wiki page for item is opened, it will open Steam Overlay. If Steam isn't available, then it will open browser. (By default: Enabled)
+			}
+
+			CanWikiNPCs: {
+				Label: Zeige Wiki für NPCs
+				Tooltip: Du möchtest mehr über NPCs wissen? Dann klick hier um das Wiki auch für NPCs zu aktivieren! (Standard: AUS)
+			}
+
+			TooltipsEnabled: {
+				Label: Zeige Schnellinformationen
+				Tooltip: Du willst "Drücke irgendwas um die Wiki-Seite zu öffnen!" nicht mehr sehen? Wirklich? Dann klicke hier um die Meldung zu deaktivieren! (Standard: AN)
+			}
+		}
+
+		// Keybinds.WikiKeybind.DisplayName: Check wiki page on item/NPC
+
+		CreationErrors: {
+			Item: Weblink für den Gegenstand {0} konnte nicht erstellt werden
+			NPC: Weblink für den NPC {0} konnte nicht erstellt werden
+		}
+
+		Error: Wiki-Seite existiert nicht oder ist ungültig! Melde dies wenn du denkst, dass es ein Fehler ist!
+		Click: Drücke {0} um die Wiki-Seite zu öffnen!
+		NoWiki: Keine Wiki-Seite verfügbar!
+		WikithisDesc: Verweist auf die Wiki-Seite des Gegenstandes/NPCs
 	}
-	Error: '''Wiki-Seite existiert nicht oder ist ungültig! Melde dies wenn du denkst, dass es ein Fehler ist!'''
-	Click: "Drücke {0} um die Wiki-Seite zu öffnen!"
-	NoWiki: Keine Wiki-Seite verfügbar!
-	WikithisInput:
-		'''
-		Ersetze Leerzeichen im Namen des Gegenstandes/NPCs mit Unterstrichen
-		Groß-/Kleinschreibung beachten!
-		'''
-	WikithisDesc: Verweist auf die Wiki-Seite des Gegenstandes/NPCs
-	NetworkFail: Keine Verbindung zum Netzwerk! Stelle sicher dass du mit dem Netzwerk/WLAN verbunden bist!
-	UnsupportedWarning: Du spielst nicht die Windows-Version! Mögliche erwartete Probleme: Fehler, einfrieren, Abstürze.
-	LoadingItem: "Richte Wiki-Seite für den Gegenstand {0} ein"
-	LoadingNPC: "Richte Wiki-Seite für den NPC {0} ein"
 }

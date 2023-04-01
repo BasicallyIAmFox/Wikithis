@@ -1,19 +1,33 @@
-﻿Mods.Wikithis: {
-	CreationErrors: {
-		Item: "Не удалось создать URL-ссылку для предмета {0}"
-		NPC: "Не удалось создать URL-ссылку для НИПа {0}"
+
+Mods: {
+	Wikithis: {
+		Config: {
+			OpenSteamBrowser: {
+				// Label: Open Steam Overlay instead of browser
+				// Tooltip: Whenever a wiki page for item is opened, it will open Steam Overlay. If Steam isn't available, then it will open browser. (By default: Enabled)
+			}
+
+			CanWikiNPCs: {
+				// Label: Show NPC Wiki
+				// Tooltip: When enabled, allows to open wiki pages when pressed on NPCs (By default: Disabled)
+			}
+
+			TooltipsEnabled: {
+				// Label: Show tooltips
+				// Tooltip: Disables wiki tooltips if disabled. (By default: Enabled)
+			}
+		}
+
+		// Keybinds.WikiKeybind.DisplayName: Check wiki page on item/NPC
+
+		CreationErrors: {
+			Item: Не удалось создать URL-ссылку для предмета {0}
+			NPC: Не удалось создать URL-ссылку для НИПа {0}
+		}
+
+		Error: Страница вики не существует или неправильна! Скажите мне, если вы думаете, что это проблема!
+		Click: Нажмите {0} чтобы открыть страницу вики!
+		NoWiki: Нет доступной вики!
+		WikithisDesc: Перенаправляет на страницу вики предмета/НИПа
 	}
-	Error: '''Страница вики не существует или неправильна! Скажите мне, если вы думаете, что это проблема!'''
-	Click: "Нажмите {0} чтобы открыть страницу вики!"
-	NoWiki: Нет доступной вики!
-	WikithisInput:
-		'''
-		Замените пробелы в имени предмета/НИПа подчёркиваниями
-		КАПИТАЛИЗАЦИЯ ИМЕЕТ ЗНАЧЕНИЕ!
-		'''
-	WikithisDesc: Перенаправляет на страницу вики предмета/НИПа
-	NetworkFail: Не удалось подключиться к сети! Убедитесь, что вы подключены к интернету!
-	UnsupportedWarning: Вы играете на любой платформе кроме Windows! Возможное поведение: баги, фризы/лаги, вылеты.
-	LoadingItem: "Загрузка страницы вики для {0}"
-	LoadingNPC: "Загрузка страницы вики для {0}"
 }

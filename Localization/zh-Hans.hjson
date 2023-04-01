@@ -1,31 +1,33 @@
-﻿Mods.Wikithis: {
-	Config: {
-		CanWikiNPCs: {
-			Label: 显示NPC维基
-			Tooltip: 想要全面了解某个NPC吗? 那么就开启这个选项吧! (默认为关)
-		}
-		TooltipsEnabled: {
-			Label: 显示维基提示
-			Tooltip: '''不想看到“按下 XX 以打开维基页面”的提示吗? 关掉这个选项来让它消失! (默认为开)'''
-		}
-	}
 
-	CreationErrors: {
-		Item: "无法为物品 {0} 创建URL链接"
-		NPC: "无法为NPC {0} 创建URL链接"
+Mods: {
+	Wikithis: {
+		Config: {
+			OpenSteamBrowser: {
+				// Label: Open Steam Overlay instead of browser
+				// Tooltip: Whenever a wiki page for item is opened, it will open Steam Overlay. If Steam isn't available, then it will open browser. (By default: Enabled)
+			}
+
+			CanWikiNPCs: {
+				Label: 显示NPC维基
+				Tooltip: 想要全面了解某个NPC吗? 那么就开启这个选项吧! (默认为关)
+			}
+
+			TooltipsEnabled: {
+				Label: 显示维基提示
+				Tooltip: 不想看到“按下 XX 以打开维基页面”的提示吗? 关掉这个选项来让它消失! (默认为开)
+			}
+		}
+
+		Keybinds.WikiKeybind.DisplayName: 查看物品/NPC的维基页面
+
+		CreationErrors: {
+			Item: 无法为物品 {0} 创建URL链接
+			NPC: 无法为NPC {0} 创建URL链接
+		}
+
+		Error: 维基页面不存在或无效! 如果您确认这是个漏洞，请向模组开发者报告
+		Click: 按下 {0} 以打开维基页面
+		NoWiki: 没有可用的维基页面!
+		WikithisDesc: 重定向到物品/NPC的维基页面
 	}
-	Error: '''维基页面不存在或无效! 如果您确认这是个漏洞，请向模组开发者报告'''
-	Click: "按下 {0} 以打开维基页面"
-	NoWiki: 没有可用的维基页面!
-	WikithisInput:
-		'''
-		用下划线替换物品/NPC名称中的空格
-		区分大小写！
-		'''
-	WikithisDesc: 重定向到物品/NPC的维基页面
-	NetworkFail: 无法连接到网络，请检查您的网络连接
-	UnsupportedWarning: 您使用的操作系统并非Windows, 该模组可能不会正常运作
-	LoadingItem: "正在为 {0} 设置维基页面"
-	LoadingNPC: "正在为 {0} 设置维基页面"
-	WikiKeybind: 查看物品/NPC的维基页面
 }

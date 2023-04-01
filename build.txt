@@ -1,12 +1,11 @@
 displayName = Wikithis
 author = BasicallyIAmFox
-version = 2.4.7.6
+version = 2.5.0.0
 
 hideCode = false
 hideResources = true
 includeSource = false
 side = Client
 
-homepage = https://discord.gg/rrxE78cyjm
-buildIgnore = ., *.sln, bin/*, obj*, *.csproj, *.csproj.user, *.json, *.Ink
-dllReferences = CCLiar
+homepage = https://github.com/BasicallyIAmFox/Wikithis
+buildIgnore = ., *.sln, bin/*, obj*, *.csproj, *.csproj.user, *.json

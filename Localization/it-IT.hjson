@@ -1,19 +1,33 @@
-﻿Mods.Wikithis: {
-	CreationErrors: {
-		Item: "Creazione del collegamento url per l'elemento {0} non riuscita"
-		NPC: "Creazione del collegamento URL per NPC {0} non riuscita"
+
+Mods: {
+	Wikithis: {
+		Config: {
+			OpenSteamBrowser: {
+				// Label: Open Steam Overlay instead of browser
+				// Tooltip: Whenever a wiki page for item is opened, it will open Steam Overlay. If Steam isn't available, then it will open browser. (By default: Enabled)
+			}
+
+			CanWikiNPCs: {
+				// Label: Show NPC Wiki
+				// Tooltip: When enabled, allows to open wiki pages when pressed on NPCs (By default: Disabled)
+			}
+
+			TooltipsEnabled: {
+				// Label: Show tooltips
+				// Tooltip: Disables wiki tooltips if disabled. (By default: Enabled)
+			}
+		}
+
+		// Keybinds.WikiKeybind.DisplayName: Check wiki page on item/NPC
+
+		CreationErrors: {
+			Item: Creazione del collegamento url per l'elemento {0} non riuscita
+			NPC: Creazione del collegamento URL per NPC {0} non riuscita
+		}
+
+		Error: La pagina Wiki non esiste o non è valida! Segnala se pensi che sia un problema!
+		Click: Premere {0} per aprire la pagina wiki!
+		NoWiki: Nessun wiki disponibile!
+		WikithisDesc: Reindirizza alla pagina wiki di un elemento/NPC
 	}
-	Error: '''La pagina Wiki non esiste o non è valida! Segnala se pensi che sia un problema!'''
-	Click: "Premere {0} per aprire la pagina wiki!"
-	NoWiki: Nessun wiki disponibile!
-	WikithisInput:
-		'''
-		Sostituisci gli spazi nel nome elemento/npc con caratteri di sottolineatura
-		MAIUSCOLE E MINUSCOLE!
-		'''
-	WikithisDesc: Reindirizza alla pagina wiki di un elemento/NPC
-	NetworkFail: Connessione alla rete non riuscita! Assicurati di essere connesso al WI-FI!
-	UnsupportedWarning: Stai giocando su qualche altra piattaforma oltre a Windows! Possibile comportamento previsto: bug, blocchi, arresti anomali.
-	LoadingItem: "Impostazione della pagina wiki per {0}"
-	LoadingNPC: "Impostazione della pagina wiki per {0}"
 }

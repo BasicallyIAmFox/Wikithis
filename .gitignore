@@ -348,6 +348,4 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-lib/CCLiar.dll.lnk
-*.sln
-*.dll
+Wikithis.sln
