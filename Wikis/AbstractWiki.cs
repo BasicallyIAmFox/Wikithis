@@ -48,7 +48,7 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 		}
 
 		GameCulture.CultureName culture = Wikithis.CultureLoaded;
-		bool doesntContainsOthers = Wikithis.dataForMods.GetOrCreateValue(mod).URLs.TryGetValue(culture, out _);
+		bool doesntContainsOthers = Wikithis.dataForMods.GetOrCreateValue(mod).URLs.ContainsKey(culture);
 		if (!doesntContainsOthers)
 			culture = GameCulture.CultureName.English;
 
@@ -57,7 +57,6 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 		}
 
 		throw new NotSupportedException("Update URL to new format!");
-
 	}
 
 	protected sealed override void Register() {

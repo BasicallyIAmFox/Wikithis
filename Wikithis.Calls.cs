@@ -50,7 +50,7 @@ public partial class Wikithis {
 						var data = dataForMods.GetOrCreateValue(mod);
 						data.URLs ??= new();
 
-						if (args[3] is GameCulture.CultureName language) {
+						if (args.Length >= 4 && args[3] is GameCulture.CultureName language) {
 							if (language is GameCulture.CultureName.English) {
 								throw new ArgumentException(GetArgumentCannotHaveValueReason(3, language));
 							}
