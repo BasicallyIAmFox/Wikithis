@@ -20,6 +20,7 @@ public readonly record struct WikiEntry<TKey>(TKey Key, string Search) : IWikiEn
 				Utils.OpenToURL(Search);
 				return;
 			}
+
 			try {
 				SteamFriends.ActivateGameOverlayToWebPage(Search);
 			}

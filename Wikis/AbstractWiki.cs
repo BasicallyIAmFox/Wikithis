@@ -52,11 +52,14 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 		if (!doesntContainsOthers)
 			culture = GameCulture.CultureName.English;
 
-		if (Wikithis.dataForMods.GetOrCreateValue(mod).URLs.TryGetValue(culture, out string value) && Wikithis.WikiUrlRegex.IsMatch(value)) {
-			return Wikithis.WikiStrRegex.Replace(value, name);
+		if (Wikithis.dataForMods.GetOrCreateValue(mod).URLs.TryGetValue(culture, out string value)) {
+			if (Wikithis.WikiUrlRegex.IsMatch(value)) {
+				return Wikithis.WikiStrRegex.Replace(value, name);
+			}
+			throw new NotSupportedException("Update URL to new format!");
 		}
 
-		throw new NotSupportedException("Update URL to new format!");
+		return null;
 	}
 
 	protected sealed override void Register() {
