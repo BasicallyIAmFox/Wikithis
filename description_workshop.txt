@@ -46,4 +46,4 @@ ppiece of cat - russian translation
 TheBrutalSkull ^-^ - french translation
 Naudiz - german translation
 
-The rest of translation files were translated using Google Translator. If you willing to re-translate those, please contact me in Discord server.
+The rest of translation files were translated using Google Translator.

@@ -7,7 +7,7 @@ using Terraria.ModLoader.Core;
 namespace Wikithis.Wikis;
 
 public sealed class ItemWiki : AbstractWiki<short> {
-	public override void Initialize() {
+	public sealed override void Initialize() {
 		LoaderUtils.ForEachAndAggregateExceptions(ContentSamples.ItemsByType.Values
 			.Where(x => !Entries.ContainsKey((short)x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None),
 			item => {

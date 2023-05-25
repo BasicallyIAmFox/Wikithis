@@ -23,7 +23,7 @@ public partial class Wikithis {
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> ItemUrlReplacements => itemReplacements;
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> NpcUrlReplacements => npcReplacements;
 
-	internal static ConditionalWeakTable<Mod, ModCallData> dataForMods = new();
+	public static ConditionalWeakTable<Mod, ModCallData> ModData { get; private set; } = new();
 
 	public override object Call(params object[] args) {
 		if (Main.dedServ)
@@ -47,7 +47,7 @@ public partial class Wikithis {
 						if (args[2] is not string url)
 							throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
 
-						var data = dataForMods.GetOrCreateValue(mod);
+						var data = ModData.GetOrCreateValue(mod);
 						data.URLs ??= new();
 
 						if (args.Length >= 4 && args[3] is GameCulture.CultureName language) {
@@ -177,7 +177,7 @@ public partial class Wikithis {
 						if (args[2] is not Asset<Texture2D> asset)
 							throw new ArgumentException(GetArgumentNotMatchingTypeReason<Asset<Texture2D>>(2));
 
-						dataForMods.GetOrCreateValue(mod).PersonalAsset = asset;
+						ModData.GetOrCreateValue(mod).PersonalAsset = asset;
 						return true;
 					}
 				case "4":

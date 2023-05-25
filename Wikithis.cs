@@ -7,20 +7,19 @@ using Wikithis.Wikis;
 
 namespace Wikithis;
 
-public partial class Wikithis : Mod {
+public sealed partial class Wikithis : Mod {
 	internal static Regex WikiUrlRegex = new(@".*\/\{.*\}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 	internal static Regex WikiStrRegex = new(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 	public static GameCulture.CultureName CultureLoaded { get; private set; }
 
-	private static Wikithis instance;
-	public static Wikithis Instance { get => instance; private set => instance = value; }
+	public static Wikithis Instance { get; private set; }
 
 	public Wikithis() {
 		Instance = this;
 	}
 
-	public override void Load() {
+	public sealed override void Load() {
 		CultureLoaded = (Language.ActiveCulture.Name == "en-US") ? GameCulture.CultureName.English :
 			((Language.ActiveCulture.Name == "de-DE") ? GameCulture.CultureName.German :
 			((Language.ActiveCulture.Name == "es-ES") ? GameCulture.CultureName.Spanish :
@@ -30,7 +29,7 @@ public partial class Wikithis : Mod {
 			((Language.ActiveCulture.Name == "pt-BR") ? GameCulture.CultureName.Portuguese :
 			((Language.ActiveCulture.Name == "ru-RU") ? GameCulture.CultureName.Russian :
 			((Language.ActiveCulture.Name == "zh-Hans") ? GameCulture.CultureName.Chinese : GameCulture.CultureName.English))))))));
-
+		
 		if (Main.dedServ) {
 			return;
 		}
@@ -50,15 +49,17 @@ public partial class Wikithis : Mod {
 		});
 	}
 
-	public override void Unload() {
+	public sealed override void Unload() {
+		Instance = null;
+
 		itemReplacements.Clear();
 		itemReplacements = null;
 
 		npcReplacements.Clear();
 		npcReplacements = null;
 
-		dataForMods.Clear();
-		dataForMods = null;
+		ModData.Clear();
+		ModData = null;
 
 		wikis.Clear();
 		wikis = null;
@@ -71,7 +72,6 @@ public partial class Wikithis : Mod {
 		}
 
 		IL_Main.HoverOverNPCs -= NPCURL;
-		Instance = null;
 	}
 
 	public static T GetWiki<T>() where T : class, IWiki => ModContent.GetInstance<T>();

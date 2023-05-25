@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -48,18 +49,23 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 		}
 
 		GameCulture.CultureName culture = Wikithis.CultureLoaded;
-		bool doesntContainsOthers = Wikithis.dataForMods.GetOrCreateValue(mod).URLs.ContainsKey(culture);
+		bool doesntContainsOthers = Wikithis.ModData.GetOrCreateValue(mod).URLs.ContainsKey(culture);
 		if (!doesntContainsOthers)
 			culture = GameCulture.CultureName.English;
 
-		if (Wikithis.dataForMods.GetOrCreateValue(mod).URLs.TryGetValue(culture, out string value)) {
+		if (Wikithis.ModData.GetOrCreateValue(mod).URLs.TryGetValue(culture, out string value)) {
 			if (Wikithis.WikiUrlRegex.IsMatch(value)) {
 				return Wikithis.WikiStrRegex.Replace(value, name);
 			}
-			throw new NotSupportedException("Update URL to new format!");
+			Throw(mod);
 		}
 
 		return null;
+
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		static void Throw(Mod mod) {
+			throw new NotSupportedException($"{mod.Name} has old Wikithis URL. Please update it to get rid of this exception.");
+		}
 	}
 
 	protected sealed override void Register() {

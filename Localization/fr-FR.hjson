@@ -1,32 +1,33 @@
 Mods: {
 	Wikithis: {
-		Config: {
-			OpenSteamBrowser: {
-				// Label: Open Steam Overlay instead of browser
-				// Tooltip: Whenever a wiki page for item is opened, it will open Steam Overlay. If Steam isn't available, then it will open browser. (By default: Enabled)
-			}
+		Configs: {
+			WikithisConfig: {
+				OpenSteamBrowser: {
+					// Label: Open Steam Overlay instead of browser
+					/* Tooltip:
+						'''
+						Whenever a wiki page for item is opened, it will open Steam Overlay.
+						If Steam isn't available, then it will open browser. (By default: Enabled)
+						''' */
+				}
 
-			CanWikiNPCs: {
-				// Label: Show NPC Wiki
-				// Tooltip: When enabled, allows to open wiki pages when pressed on NPCs (By default: Disabled)
-			}
+				TooltipsEnabled: {
+					// Label: Show tooltips
+					// Tooltip: Disables wiki tooltips if disabled. (By default: Enabled)
+				}
 
-			TooltipsEnabled: {
-				// Label: Show tooltips
-				// Tooltip: Disables wiki tooltips if disabled. (By default: Enabled)
+				CanWikiNPCs: {
+					// Label: Show NPC Wiki
+					// Tooltip: When enabled, allows to open wiki pages when pressed on NPCs (By default: Disabled)
+				}
+
+				// DisplayName: Wikithis Config
 			}
 		}
 
 		// Keybinds.WikiKeybind.DisplayName: Check wiki page on item/NPC
-
-		CreationErrors: {
-			Item: Échec de la création de l'URL pour l'objet {0}
-			NPC: Échec de la création de l'URL pour le PNJ {0}
-		}
-
-		Error: La page Wiki n'existe pas ou n'est pas valide! Signalez-le si vous croyez que c'est une erreur!
+		// TextFormatting: "    {0}"
 		Click: Appuyez sur {0} pour ouvrir la page du Wiki!
 		NoWiki: Aucun wiki n'est disponible!
-		WikithisDesc: Renvoie vers la page Wiki de l'objet/PNJ
 	}
 }

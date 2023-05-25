@@ -7,7 +7,7 @@ using Terraria.ModLoader.Core;
 namespace Wikithis.Wikis;
 
 public sealed class NPCWiki : AbstractWiki<short> {
-	public override void Initialize() {
+	public sealed override void Initialize() {
 		LoaderUtils.ForEachAndAggregateExceptions(ContentSamples.NpcsByNetId.Values
 			.Where(x => !Entries.ContainsKey((short)x.netID) && x.netID != ItemID.None),
 			npc => {

@@ -3,13 +3,13 @@ using Terraria;
 
 namespace Wikithis.Wikis;
 
-public interface IWikiEntry<TKey> {
+public interface IWikiEntry<out TKey> {
 	TKey Key { get; }
 
 	void OpenWikiPage(bool checkForKeybind = true);
 }
 
-public readonly record struct WikiEntry<TKey>(TKey Key, string Search) : IWikiEntry<TKey> {
+public readonly record struct WikiEntry<TKey>(in TKey Key, in string Search) : IWikiEntry<TKey> {
 	public void OpenWikiPage(bool checkForKeybind = true) {
 		if (string.IsNullOrEmpty(Search)) {
 			return;

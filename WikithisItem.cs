@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
-using System.Text;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -24,8 +23,8 @@ internal sealed class WikithisItem : GlobalItem {
 				Main.instance.LoadItem(ItemID.WireCutter);
 				texture = TextureAssets.Item[ItemID.WireCutter];
 			}
-			else if (item.ModItem?.Mod != null && Wikithis.dataForMods.GetOrCreateValue(item.ModItem.Mod).PersonalAsset != null) {
-				texture = Wikithis.dataForMods.GetOrCreateValue(item.ModItem.Mod).PersonalAsset;
+			else if (item.ModItem?.Mod != null && Wikithis.ModData.GetOrCreateValue(item.ModItem.Mod).PersonalAsset != null) {
+				texture = Wikithis.ModData.GetOrCreateValue(item.ModItem.Mod).PersonalAsset;
 			}
 			else {
 				texture = TextureAssets.BestiaryMenuButton;
@@ -52,12 +51,12 @@ internal sealed class WikithisItem : GlobalItem {
 		string text;
 		bool tryGet = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out _);
 		if (tryGet) {
-			text = Language.GetTextValue($"Mods.{Mod.Name}.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind));
+			text = Language.GetTextValue($"Mods.Wikithis.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind));
 		}
 		else {
-			text = Language.GetTextValue($"Mods.{Mod.Name}.NoWiki");
+			text = Language.GetTextValue($"Mods.Wikithis.NoWiki");
 		}
-		tooltips.Add(new(Mod, "Wikithis:Wiki", $"    {text}") {
+		tooltips.Add(new(Mod, "Wikithis:Wiki", Language.GetTextValue("Mods.Wikithis.TextFormatting", text)) {
 			OverrideColor = !tryGet ? Color.Lerp(Color.LightGray, Color.Pink, 0.5f) : Color.LightGray
 		});
 	}
@@ -66,17 +65,10 @@ internal sealed class WikithisItem : GlobalItem {
 		if (Main.dedServ || keybind == null)
 			return string.Empty;
 
-		List<string> assignedKeys = keybind.GetAssignedKeys();
+		var assignedKeys = keybind.GetAssignedKeys();
 		if (assignedKeys.Count == 0)
 			return "[NONE]";
 
 		return string.Join(" / ", assignedKeys);
-
-		/*StringBuilder stringBuilder = new(16);
-		stringBuilder.Append(assignedKeys[0]);
-		for (int index = 1; index < assignedKeys.Count; ++index)
-			stringBuilder.Append(" / ").Append(assignedKeys[index]);
-
-		return stringBuilder.ToString();*/
 	}
 }
