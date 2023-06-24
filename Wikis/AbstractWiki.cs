@@ -48,6 +48,7 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 			return url;
 		}
 
+#if !TML_2022_09
 		GameCulture.CultureName culture = Wikithis.CultureLoaded;
 		bool doesntContainsOthers = Wikithis.ModData.GetOrCreateValue(mod).URLs.ContainsKey(culture);
 		if (!doesntContainsOthers)
@@ -60,12 +61,52 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 			Throw(mod);
 		}
 
-		return null;
+		return string.Empty;
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		static void Throw(Mod mod) {
-			throw new NotSupportedException($"{mod.Name} has old Wikithis URL. Please update it to get rid of this exception.");
+			throw new NotSupportedException($"{mod.Name} has old Wiki URL. Please update it to get rid of this exception.");
 		}
+#else
+		string result;
+		bool success = false;
+		url = string.Empty;
+
+		GameCulture.CultureName culture = Wikithis.CultureLoaded;
+
+		if (Wikithis.ModData.GetOrCreateValue(mod).URLs == null) return string.Empty;
+
+		bool doesntContainsOthers = Wikithis.ModData.GetOrCreateValue(mod).URLs.TryGetValue(culture, out _);
+		if (!doesntContainsOthers)
+			culture = GameCulture.CultureName.English;
+
+		if (Wikithis.ModData.GetOrCreateValue(mod).URLs.TryGetValue(culture, out string value)) {
+			success = true;
+			url = value;
+		}
+
+		if (success && Wikithis.WikiUrlRegex.IsMatch(value))
+			return result = Wikithis.WikiStrRegex.Replace(value, name);
+
+		if (!success)
+			return string.Empty;
+
+		string[] urls = url.Split('$');
+		string[] urls2 = url.Split('♛');
+		result = $"https://{urls[0]}/wiki";
+
+		if (urls.Length >= 2) {
+			foreach (string v in urls.AsSpan(1)) {
+				result += $"/{v}";
+			}
+		}
+
+		result += $"/{name}";
+		if (urls2.Length > 1)
+			result += $"/{urls2[1]}";
+
+		return result;
+#endif
 	}
 
 	public override void Unload() {

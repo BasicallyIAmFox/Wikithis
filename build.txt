@@ -1,6 +1,6 @@
 displayName = Wikithis
 author = BasicallyIAmFox
-version = 2.5.0.1
+version = 2.5.0.2
 
 hideCode = false
 hideResources = true
