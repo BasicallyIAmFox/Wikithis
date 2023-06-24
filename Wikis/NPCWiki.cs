@@ -11,7 +11,13 @@ public sealed class NPCWiki : AbstractWiki<short> {
 		LoaderUtils.ForEachAndAggregateExceptions(ContentSamples.NpcsByNetId.Values
 			.Where(x => !Entries.ContainsKey((short)x.netID) && x.netID != ItemID.None),
 			npc => {
-				string name = npc.ModNPC?.DisplayName?.Value ?? Lang.GetNPCNameValue(npc.type);
+#if TML_2022_09
+				string name = npc.ModNPC != null
+					? Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}")
+					: Lang.GetNPCNameValue(npc.netID);
+#else
+				string name = npc.ModNPC?.DisplayName?.Value ?? Lang.GetNPCNameValue(npc.netID);
+#endif
 				if (Wikithis.npcReplacements.TryGetValue(((short)npc.netID, Wikithis.CultureLoaded), out string nameReplacement)) {
 					name = nameReplacement;
 				}

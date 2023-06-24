@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Wikithis.Wikis;
 
-public interface IWiki : IModType {
+public interface IWiki : IModType, ILoadable {
 	IEnumerable<KeyValuePair<object, object>> Entries { get; }
 
 	void Initialize();
@@ -18,7 +18,7 @@ public interface IWiki : IModType {
 }
 
 public abstract class AbstractWiki<TKey> : ModType, IWiki {
-	private readonly Dictionary<TKey, IWikiEntry<TKey>> entries = new();
+	private Dictionary<TKey, IWikiEntry<TKey>> entries = new();
 
 	public IReadOnlyDictionary<TKey, IWikiEntry<TKey>> Entries => entries;
 
@@ -68,8 +68,12 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 		}
 	}
 
+	public override void Unload() {
+		entries.Clear();
+		entries = null;
+	}
+
 	protected sealed override void Register() {
-		Wikithis.wikis.Add(this);
 		ModTypeLookup<IWiki>.Register(this);
 	}
 }

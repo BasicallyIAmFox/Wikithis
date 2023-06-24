@@ -8,18 +8,15 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Wikithis.Data;
-using Wikithis.Wikis;
 
 namespace Wikithis;
 
 public partial class Wikithis {
 	private static string _callMessageCache;
 
-	internal static List<IWiki> wikis = new();
 	internal static Dictionary<(short, GameCulture.CultureName), string> itemReplacements = new();
 	internal static Dictionary<(short, GameCulture.CultureName), string> npcReplacements = new();
 
-	public static IReadOnlyList<IWiki> Wikis => wikis;
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> ItemUrlReplacements => itemReplacements;
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> NpcUrlReplacements => npcReplacements;
 

@@ -34,7 +34,11 @@ public sealed partial class Wikithis : Mod {
 			return;
 		}
 
+#if TML_2022_09
+		IL.Terraria.Main.DrawMouseOver += NPCURL;
+#else
 		IL_Main.HoverOverNPCs += NPCURL;
+#endif
 	}
 
 	internal static void SetupWikiPages() {
@@ -43,7 +47,7 @@ public sealed partial class Wikithis : Mod {
 		}
 
 		Task.Run(() => {
-			foreach (IWiki wiki in wikis) {
+			foreach (IWiki wiki in ModContent.GetContent<IWiki>()) {
 				wiki.Initialize();
 			}
 		});
@@ -61,9 +65,6 @@ public sealed partial class Wikithis : Mod {
 		ModData.Clear();
 		ModData = null;
 
-		wikis.Clear();
-		wikis = null;
-
 		CultureLoaded = 0;
 		_callMessageCache = null;
 
@@ -71,7 +72,11 @@ public sealed partial class Wikithis : Mod {
 			return;
 		}
 
+#if TML_2022_09
+		IL.Terraria.Main.DrawMouseOver -= NPCURL;
+#else
 		IL_Main.HoverOverNPCs -= NPCURL;
+#endif
 	}
 
 	public static T GetWiki<T>() where T : class, IWiki => ModContent.GetInstance<T>();
