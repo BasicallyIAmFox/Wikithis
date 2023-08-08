@@ -17,6 +17,7 @@ public interface IWiki : IModType, ILoadable {
 	object GetEntry(object key);
 }
 
+[Autoload(Side = ModSide.Client)]
 public abstract class AbstractWiki<TKey> : ModType, IWiki {
 	private Dictionary<TKey, IWikiEntry<TKey>> entries = new();
 
@@ -40,16 +41,19 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 			const int l = 25; // length of "https://terraria.wiki.gg/wiki/"
 
 			url = $"https://terraria.wiki.gg/wiki/{name}";
-			if (Wikithis.CultureLoaded == GameCulture.CultureName.Italian)
+			if (Wikithis.CurrentCulture == GameCulture.CultureName.Italian)
 				url += "/it";
-			else if (Wikithis.CultureLoaded != GameCulture.CultureName.English)
+			else if (Wikithis.CurrentCulture != GameCulture.CultureName.English)
 				url = url.Insert(l, Language.ActiveCulture.Name[..2] + '/');
 
 			return url;
 		}
 
+		if (Wikithis.ModData.GetOrCreateValue(mod).URLs == null)
+			return string.Empty;
+
 #if !TML_2022_09
-		GameCulture.CultureName culture = Wikithis.CultureLoaded;
+		GameCulture.CultureName culture = Wikithis.CurrentCulture;
 		bool doesntContainsOthers = Wikithis.ModData.GetOrCreateValue(mod).URLs.ContainsKey(culture);
 		if (!doesntContainsOthers)
 			culture = GameCulture.CultureName.English;
@@ -58,6 +62,7 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 			if (Wikithis.WikiUrlRegex.IsMatch(value)) {
 				return Wikithis.WikiStrRegex.Replace(value, name);
 			}
+
 			Throw(mod);
 		}
 
@@ -73,8 +78,6 @@ public abstract class AbstractWiki<TKey> : ModType, IWiki {
 		url = string.Empty;
 
 		GameCulture.CultureName culture = Wikithis.CultureLoaded;
-
-		if (Wikithis.ModData.GetOrCreateValue(mod).URLs == null) return string.Empty;
 
 		bool doesntContainsOthers = Wikithis.ModData.GetOrCreateValue(mod).URLs.TryGetValue(culture, out _);
 		if (!doesntContainsOthers)

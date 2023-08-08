@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -15,7 +15,7 @@ internal sealed class WikithisItem : GlobalItem {
 	private const float scaleValue = 2f / 3f;
 
 	public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset) {
-		bool isAvailable = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out var wikiEntry);
+		bool isAvailable = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out var wikiEntry) && wikiEntry.IsValid();
 		if (line.Mod == Mod.Name && line.Name == $"{nameof(Wikithis)}:Wiki") {
 			Asset<Texture2D> texture;
 			bool defaultTexture = false;
@@ -38,9 +38,11 @@ internal sealed class WikithisItem : GlobalItem {
 			Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.MouseText.Value, line.Text, line.X, line.Y, line.OverrideColor ?? line.Color, Color.Black, line.Origin);
 			return false;
 		}
+
 		if (WikithisSystem.WikiKeybind.JustPressed && line.Mod == "Terraria" && line.Name == "ItemName" && isAvailable) {
 			wikiEntry.OpenWikiPage(false);
 		}
+
 		return true;
 	}
 
@@ -48,14 +50,11 @@ internal sealed class WikithisItem : GlobalItem {
 		if (!WikithisConfig.Config.TooltipsEnabled)
 			return;
 
-		string text;
-		bool tryGet = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out _);
-		if (tryGet) {
-			text = Language.GetTextValue($"Mods.Wikithis.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind));
-		}
-		else {
-			text = Language.GetTextValue($"Mods.Wikithis.NoWiki");
-		}
+		bool tryGet = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out var wikiEntry) && wikiEntry.IsValid();
+		string text = tryGet
+			? Language.GetTextValue($"Mods.Wikithis.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind))
+			: Language.GetTextValue($"Mods.Wikithis.NoWiki");
+
 		tooltips.Add(new(Mod, "Wikithis:Wiki", Language.GetTextValue("Mods.Wikithis.TextFormatting", text)) {
 			OverrideColor = !tryGet ? Color.Lerp(Color.LightGray, Color.Pink, 0.5f) : Color.LightGray
 		});
@@ -66,9 +65,6 @@ internal sealed class WikithisItem : GlobalItem {
 			return string.Empty;
 
 		var assignedKeys = keybind.GetAssignedKeys();
-		if (assignedKeys.Count == 0)
-			return "[NONE]";
-
-		return string.Join(" / ", assignedKeys);
+		return assignedKeys.Count == 0 ? "[NONE]" : string.Join(" / ", assignedKeys);
 	}
 }

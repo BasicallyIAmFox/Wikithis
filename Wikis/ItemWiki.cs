@@ -7,28 +7,35 @@ using Terraria.ModLoader.Core;
 namespace Wikithis.Wikis;
 
 public sealed class ItemWiki : AbstractWiki<short> {
+	private static void AddBrainScramblerReplacements() {
+		Wikithis.itemReplacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.English), "https://terraria.wiki.gg/wiki/Brain_Scrambler_(item)");
+		Wikithis.itemReplacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.German), "https://terraria.wiki.gg/de/wiki/Gehirnverwirrer_(Gegenstand)");
+		// Italian wiki doesn't has a wiki page for Brain Scrambler.
+		Wikithis.itemReplacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.French), "https://terraria.wiki.gg/fr/wiki/Embrouilleur_(objet)");
+		Wikithis.itemReplacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.Spanish), "https://terraria.wiki.gg/es/wiki/Destrozacerebros_(objeto)");
+		Wikithis.itemReplacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.Russian), "https://terraria.wiki.gg/ru/wiki/Запутыватель_мозгов_(предмет)");
+		Wikithis.itemReplacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.Chinese), "https://terraria.wiki.gg/zh/wiki/%E6%89%B0%E8%84%91%E5%99%A8");
+		// Portuguese wiki doesn't has a wiki page for Brain Scrambler.
+		// Polish wiki doesn't has a wiki page for Brain Scrambler.
+	}
+
 	public sealed override void Initialize() {
+		AddBrainScramblerReplacements();
+
 		LoaderUtils.ForEachAndAggregateExceptions(ContentSamples.ItemsByType.Values
-			.Where(x => !Entries.ContainsKey((short)x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None),
-			item => {
-#if TML_2022_09
-				string name = item.ModItem != null
-					? Language.GetTextValue($"Mods.{item.ModItem.Mod.Name}.ItemName.{item.ModItem.Name}")
-					: Lang.GetItemNameValue(item.type);
-#else
-				string name = item.ModItem?.DisplayName?.Value ?? Lang.GetItemNameValue(item.type);
-#endif
-				if (Wikithis.itemReplacements.TryGetValue(((short)item.type, Wikithis.CultureLoaded), out string nameReplacement)) {
-					name = nameReplacement;
+			.Where(x => !Entries.ContainsKey((short)x.type) && !ItemID.Sets.Deprecated[x.type] && x.ModItem?.Mod.Name != "ModLoader" && x.type != ItemID.None), item => {
+				string name = /*item.ModItem?.DisplayName?.Value ?? */Lang.GetItemNameValue(item.type);
+
+				string url = null;
+				if (Wikithis.itemReplacements.TryGetValue(((short)item.type, Wikithis.CurrentCulture), out string urlReplacement)) {
+					url = urlReplacement;
 				}
-				else if (Wikithis.itemReplacements.TryGetValue(((short)item.type, GameCulture.CultureName.English), out nameReplacement)) {
-					name = nameReplacement;
+				else if (Wikithis.itemReplacements.TryGetValue(((short)item.type, GameCulture.CultureName.English), out urlReplacement)) {
+					url = urlReplacement;
 				}
 
-				string url = DefaultSearchStr(name, item.ModItem?.Mod);
-				if (url != null) {
-					AddEntry((short)item.type, new WikiEntry<short>((short)item.type, url));
-				}
+				url ??= DefaultSearchStr(name, item.ModItem?.Mod);
+				AddEntry((short)item.type, new WikiEntry<short>((short)item.type, url));
 			});
 	}
 }

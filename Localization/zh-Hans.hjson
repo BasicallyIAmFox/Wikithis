@@ -3,30 +3,30 @@ Mods: {
 		Configs: {
 			WikithisConfig: {
 				OpenSteamBrowser: {
-					// Label: Open Steam Overlay instead of browser
-					/* Tooltip:
+					Label: 打开Steam Overlay而非浏览器
+					Tooltip:
 						'''
-						Whenever a wiki page for item is opened, it will open Steam Overlay.
-						If Steam isn't available, then it will open browser. (By default: Enabled)
-						''' */
+						打开物品的维基页面时，打开Steam Overlay。
+						如果Steam不可用，打开浏览器。（默认：启用）
+						'''
 				}
 
 				TooltipsEnabled: {
-					// Label: Show tooltips
-					// Tooltip: Disables wiki tooltips if disabled. (By default: Enabled)
+					Label: 显示工具提示
+					Tooltip: 如果禁用，则禁用维基的工具提示。（默认：启用）
 				}
 
 				CanWikiNPCs: {
-					// Label: Show NPC Wiki
-					// Tooltip: When enabled, allows to open wiki pages when pressed on NPCs (By default: Disabled)
+					Label: 显示NPC维基
+					Tooltip: 启用后，允许在对着NPC按下按键时打开维基（默认：禁用）
 				}
 
-				// DisplayName: Wikithis Config
+				DisplayName: Wikithis配置
 			}
 		}
 
 		Keybinds.WikiKeybind.DisplayName: 查看物品/NPC的维基页面
-		// TextFormatting: "    {0}"
+		TextFormatting: "    {0}"
 		Click: 按下 {0} 以打开维基页面
 		NoWiki: 没有可用的维基页面!
 	}

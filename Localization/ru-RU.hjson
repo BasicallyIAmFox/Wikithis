@@ -3,31 +3,31 @@ Mods: {
 		Configs: {
 			WikithisConfig: {
 				OpenSteamBrowser: {
-					// Label: Open Steam Overlay instead of browser
-					/* Tooltip:
+					Label: Открытие Overlay Steam вместо браузера
+					Tooltip:
 						'''
-						Whenever a wiki page for item is opened, it will open Steam Overlay.
-						If Steam isn't available, then it will open browser. (By default: Enabled)
-						''' */
+						Когда вы открываете вики-страницу предмета, она открывается в Steam Overlay.
+						Если Steam недоступен, страница открывается в браузере. (По умолчанию: Включено)
+						'''
 				}
 
 				TooltipsEnabled: {
-					// Label: Show tooltips
-					// Tooltip: Disables wiki tooltips if disabled. (By default: Enabled)
+					Label: Отображение вики-подсказки
+					Tooltip: Отключает вики-подсказоки на предметах, если эта настройка выключена. (По умолчанию: Включено)
 				}
 
 				CanWikiNPCs: {
-					// Label: Show NPC Wiki
-					// Tooltip: When enabled, allows to open wiki pages when pressed on NPCs (By default: Disabled)
+					Label: Отображение вики для НИПа
+					Tooltip: При включении позволяет открывать вики-страницу при нажатии на НИПа (По умолчанию: Выключено)
 				}
 
-				// DisplayName: Wikithis Config
+				DisplayName: Конфигурация Wikithis
 			}
 		}
 
-		// Keybinds.WikiKeybind.DisplayName: Check wiki page on item/NPC
-		// TextFormatting: "    {0}"
-		Click: Нажмите {0} чтобы открыть страницу вики!
-		NoWiki: Нет доступной вики!
+		Keybinds.WikiKeybind.DisplayName: Вики-страница Предмета/НИПа
+		TextFormatting: "    {0}"
+		Click: Нажмите {0}, чтобы открыть вики-страницу!
+		NoWiki: Вики-страница отсутствует!
 	}
 }

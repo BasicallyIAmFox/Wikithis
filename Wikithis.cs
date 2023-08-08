@@ -8,10 +8,10 @@ using Wikithis.Wikis;
 namespace Wikithis;
 
 public sealed partial class Wikithis : Mod {
-	internal static Regex WikiUrlRegex = new(@".*\/\{.*\}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-	internal static Regex WikiStrRegex = new(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+	public static Regex WikiUrlRegex { get; private set; } = new(@".*\/\{.*\}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+	public static Regex WikiStrRegex { get; private set; } = new(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-	public static GameCulture.CultureName CultureLoaded { get; private set; }
+	public static GameCulture.CultureName CurrentCulture { get; private set; }
 
 	public static Wikithis Instance { get; private set; }
 
@@ -20,24 +20,26 @@ public sealed partial class Wikithis : Mod {
 	}
 
 	public sealed override void Load() {
-		CultureLoaded = (Language.ActiveCulture.Name == "en-US") ? GameCulture.CultureName.English :
-			((Language.ActiveCulture.Name == "de-DE") ? GameCulture.CultureName.German :
-			((Language.ActiveCulture.Name == "es-ES") ? GameCulture.CultureName.Spanish :
-			((Language.ActiveCulture.Name == "fr-FR") ? GameCulture.CultureName.French :
-			((Language.ActiveCulture.Name == "it-IT") ? GameCulture.CultureName.Italian :
-			((Language.ActiveCulture.Name == "pl-PL") ? GameCulture.CultureName.Polish :
-			((Language.ActiveCulture.Name == "pt-BR") ? GameCulture.CultureName.Portuguese :
-			((Language.ActiveCulture.Name == "ru-RU") ? GameCulture.CultureName.Russian :
-			((Language.ActiveCulture.Name == "zh-Hans") ? GameCulture.CultureName.Chinese : GameCulture.CultureName.English))))))));
-		
+		CurrentCulture = Language.ActiveCulture.Name switch {
+			"de-DE" => GameCulture.CultureName.German,
+			"es-ES" => GameCulture.CultureName.Spanish,
+			"fr-FR" => GameCulture.CultureName.French,
+			"it-IT" => GameCulture.CultureName.Italian,
+			"pl-PL" => GameCulture.CultureName.Polish,
+			"pt-BR" => GameCulture.CultureName.Portuguese,
+			"ru-RU" => GameCulture.CultureName.Russian,
+			"zh-Hans" => GameCulture.CultureName.Chinese,
+			_ => GameCulture.CultureName.English
+		};
+
 		if (Main.dedServ) {
 			return;
 		}
 
-#if TML_2022_09
-		IL.Terraria.Main.DrawMouseOver += NPCURL;
-#else
 		IL_Main.HoverOverNPCs += NPCURL;
+
+#if DEBUG
+		WikithisTests.TestModCalls();
 #endif
 	}
 
@@ -47,7 +49,7 @@ public sealed partial class Wikithis : Mod {
 		}
 
 		Task.Run(() => {
-			foreach (IWiki wiki in ModContent.GetContent<IWiki>()) {
+			foreach (var wiki in ModContent.GetContent<IWiki>()) {
 				wiki.Initialize();
 			}
 		});
@@ -56,27 +58,26 @@ public sealed partial class Wikithis : Mod {
 	public sealed override void Unload() {
 		Instance = null;
 
-		itemReplacements.Clear();
+		WikiUrlRegex = null;
+		WikiStrRegex = null;
+
+		itemReplacements?.Clear();
 		itemReplacements = null;
 
-		npcReplacements.Clear();
+		npcReplacements?.Clear();
 		npcReplacements = null;
 
-		ModData.Clear();
+		ModData?.Clear();
 		ModData = null;
 
-		CultureLoaded = 0;
+		CurrentCulture = 0;
 		_callMessageCache = null;
 
 		if (Main.dedServ) {
 			return;
 		}
 
-#if TML_2022_09
-		IL.Terraria.Main.DrawMouseOver -= NPCURL;
-#else
 		IL_Main.HoverOverNPCs -= NPCURL;
-#endif
 	}
 
 	public static T GetWiki<T>() where T : class, IWiki => ModContent.GetInstance<T>();

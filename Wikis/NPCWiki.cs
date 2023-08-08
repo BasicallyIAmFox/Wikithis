@@ -15,9 +15,7 @@ public sealed class NPCWiki : AbstractWiki<short> {
 				string name = npc.ModNPC != null
 					? Language.GetTextValue($"Mods.{npc.ModNPC.Mod.Name}.NPCName.{npc.ModNPC.Name}")
 					: Lang.GetNPCNameValue(npc.netID);
-#else
-				string name = npc.ModNPC?.DisplayName?.Value ?? Lang.GetNPCNameValue(npc.netID);
-#endif
+
 				if (Wikithis.npcReplacements.TryGetValue(((short)npc.netID, Wikithis.CultureLoaded), out string nameReplacement)) {
 					name = nameReplacement;
 				}
@@ -26,6 +24,19 @@ public sealed class NPCWiki : AbstractWiki<short> {
 				}
 
 				string url = DefaultSearchStr(name, npc.ModNPC?.Mod);
+#else
+				string name = npc.ModNPC?.DisplayName?.Value ?? Lang.GetNPCNameValue(npc.netID);
+
+				string url = null;
+				if (Wikithis.npcReplacements.TryGetValue(((short)npc.netID, Wikithis.CurrentCulture), out string urlReplacement)) {
+					url = urlReplacement;
+				}
+				else if (Wikithis.npcReplacements.TryGetValue(((short)npc.netID, GameCulture.CultureName.English), out urlReplacement)) {
+					url = urlReplacement;
+				}
+
+				url ??= DefaultSearchStr(name, npc.ModNPC?.Mod);
+#endif
 				if (url != null) {
 					AddEntry((short)npc.netID, new WikiEntry<short>((short)npc.netID, url));
 				}

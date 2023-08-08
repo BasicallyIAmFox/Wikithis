@@ -41,9 +41,11 @@ public override void Load() // You can use any other loading method, doesn't mat
 }[/code]
 
 [h1]Translation Credits[/h1]
-Henrykado - brazilian portuguese translation
-ppiece of cat - russian translation
-TheBrutalSkull ^-^ - french translation
-Naudiz - german translation
+Lin and Listentowind - chinese translation
+Project tRu - russian translation
+Henrykado - old brazilian portuguese translation
+ppiece of cat - old russian translation
+TheBrutalSkull ^-^ - old french translation
+Naudiz - old german translation
 
 The rest of translation files were translated using Google Translator.
