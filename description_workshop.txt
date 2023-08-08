@@ -4,7 +4,7 @@
 Wikithis allows you to check wiki of selected item/npc ingame!
 Works for every vanilla item, npc! Also will work with most modded items/npcs.
 
-Supports multiple different languages. (all languages Terraria supports)
+Supports multiple different languages.
 
 If you want to add support for this mod, then check lower!
 
@@ -43,6 +43,7 @@ public override void Load() // You can use any other loading method, doesn't mat
 [h1]Translation Credits[/h1]
 Lin and Listentowind - chinese translation
 Project tRu - russian translation
+Taco - polish translation
 Henrykado - old brazilian portuguese translation
 ppiece of cat - old russian translation
 TheBrutalSkull ^-^ - old french translation

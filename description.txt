@@ -1,5 +1,5 @@
 Wikithis allows you to check wiki of selected item/npc ingame!
 
-Supports multiple different languages. (all languages Terraria supports)
+Supports multiple different languages.
 
 (Doesn't supports mods initially, check Steam Workshop page if you want to know how to add support for your mod)
