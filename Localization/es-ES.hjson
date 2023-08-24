@@ -1,0 +1,33 @@
+Mods: {
+	Wikithis: {
+		Configs: {
+			WikithisConfig: {
+				OpenSteamBrowser: {
+					Label: Abre el Overlay de Steam en vez del navegador
+					Tooltip:
+						'''
+						Cuando se abra una wiki, se mostrará en el Overlay de Steam.
+						Si Steam no está disponible, se abrirá el navegador. (Por defecto: Sí)
+						'''
+				}
+
+				TooltipsEnabled: {
+					Label: Mostrar en las descripciones
+					Tooltip: Muestra información de wikis en las descripciones de objetos. (Por defecto: Sí)
+				}
+
+				CanWikiNPCs: {
+					Label: Mostrar wiki para PNJs
+					Tooltip: Permite abrir wikis al presionar en PNJs. (Por defecto: No)
+				}
+
+				DisplayName: Configuración de Wikithis
+			}
+		}
+
+		Keybinds.WikiKeybind.DisplayName: Abre la wiki para un objeto/PNJ
+		TextFormatting: "    {0}"
+		Click: Presiona {0} para abrir la wiki
+		NoWiki: No hay una wiki disponible
+	}
+}
