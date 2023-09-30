@@ -29,7 +29,11 @@ public interface IWikiEntry<out TKey> {
 }
 
 public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
-	private static readonly Stopwatch watch = Stopwatch.StartNew();
+	private static readonly Stopwatch watch = new();
+
+	static WikiEntry() {
+		watch.Start();
+	}
 
 	public TKey Key { get; }
 	public string Search { get; }
@@ -39,7 +43,9 @@ public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
 		Search = search;
 	}
 
-	public bool IsValid() => !string.IsNullOrEmpty(Search);
+	public bool IsValid() {
+		return !string.IsNullOrEmpty(Search);
+	}
 
 	public void OpenWikiPage(bool checkForKeybind = true) {
 		if (!IsValid()) {
