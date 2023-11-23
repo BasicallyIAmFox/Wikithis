@@ -84,7 +84,7 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 		return _entries[key];
 	}
 
-	protected static string DefaultSearchStr(string name, Mod mod) {
+	protected string DefaultSearchStr(string name, Mod mod) {
 		name = name.Replace(' ', '_').Replace("'", "%27");
 
 		if (mod == null) {
@@ -94,7 +94,7 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 			if (Wikithis.CurrentCulture == GameCulture.CultureName.Italian)
 				url += "/it";
 			else if (Wikithis.CurrentCulture != GameCulture.CultureName.English)
-				url = url.Insert(l, Language.ActiveCulture.Name[..2] + '/');
+				url = url.Insert(l, LanguageManager.ActiveCulture.Name[..2] + '/');
 
 			return url;
 		}

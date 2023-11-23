@@ -17,6 +17,7 @@
 using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -72,7 +73,7 @@ public sealed partial class Wikithis : Mod {
 		// I don't like this at all... but do I really have other choice?
 		var languageManager = LanguageManager.Instance;
 		
-		if (WikithisConfig.Config.AlwaysOpenEnglishWiki && CurrentCulture != GameCulture.CultureName.English) {
+		if (WikithisConfig.Config.AlwaysOpenEnglishWiki) {
 			if (_englishLanguageManager == null) {
 				_englishLanguageManager =
 					typeof(LanguageManager)
@@ -80,15 +81,20 @@ public sealed partial class Wikithis : Mod {
 						.Invoke(null) as LanguageManager;
 				
 				Debug.Assert(_englishLanguageManager != null);
-				
-				_englishLanguageManager!.SetLanguage(GameCulture.DefaultCulture);
 			}
 
+			_englishLanguageManager!.SetLanguage(GameCulture.DefaultCulture);
 			languageManager = _englishLanguageManager;
+
+			Thread.CurrentThread.CurrentCulture = _englishLanguageManager.ActiveCulture.CultureInfo;
+			Thread.CurrentThread.CurrentUICulture = _englishLanguageManager.ActiveCulture.CultureInfo;
 		}
 
 		foreach (var wiki in ModContent.GetContent<IWiki>())
 			wiki.Initialize(languageManager);
+
+		Thread.CurrentThread.CurrentCulture = Language.ActiveCulture.CultureInfo;
+		Thread.CurrentThread.CurrentUICulture = Language.ActiveCulture.CultureInfo;
 	}
 
 	public override void Unload() {
