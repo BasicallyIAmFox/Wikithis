@@ -1,4 +1,4 @@
-Wikithis allows you to check wiki of selected item/npc ingame!
+Wikithis allows you to check wiki of selected item/npc in game!
 
 Supports multiple different languages.
 

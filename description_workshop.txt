@@ -1,14 +1,14 @@
 ﻿[h1][url=https://discord.gg/rrxE78cyjm]Discord[/url][/h1]
 [h1][url=https://github.com/TheLuxure/Wikithis]Github[/url][/h1]
 
-Wikithis allows you to check wiki of selected item/npc ingame!
-Works for every vanilla item, npc! Also will work with most modded items/npcs.
+Wikithis allows you to check wiki of selected item/npc in game!
+Works for every vanilla item, npc! Also will work with most modded items/NPCs.
 
 Supports multiple different languages.
 
 If you want to add support for this mod, then check lower!
 
-[h1]Adding crossmod support[/h1]
+[h1]Adding cross-mod support[/h1]
 It's fairly simple to add cross-mod support!
 
 First you SHOULD have wiki for your own mod, that's important!

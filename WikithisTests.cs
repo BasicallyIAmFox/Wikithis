@@ -27,29 +27,30 @@ using Terraria.ModLoader;
 
 namespace Wikithis;
 
-public static class WikithisTests {
+internal static class WikithisTests {
 	private sealed class TestManager {
-		private readonly ImmutableList<AbstractTest>.Builder values;
+		private readonly ImmutableList<AbstractTest>.Builder _values;
 
 		public TestManager() {
-			values = ImmutableList.CreateBuilder<AbstractTest>();
+			_values = ImmutableList.CreateBuilder<AbstractTest>();
 		}
 
 		public void Add(AbstractTest test) {
-			test.Id = values.Count;
-			values.Add(test);
+			test.Id = _values.Count;
+			_values.Add(test);
 		}
 
 		public void RunTests() {
 			int success = 0;
 			int total = 0;
 
-			values.ToImmutable().ForEach(i => {
+			_values.ToImmutable().ForEach(i => {
 				try {
 					if (i.Run() == AbstractTest.SuccessValue)
 						success++;
 				}
 				catch {
+					// ignored
 				}
 
 				total++;
@@ -80,7 +81,7 @@ public static class WikithisTests {
 		public SuccessfulTest(Action action) : base(action) {
 		}
 
-		public sealed override int Run() {
+		public override int Run() {
 			try {
 				Action();
 				return SuccessValue;
@@ -99,7 +100,7 @@ public static class WikithisTests {
 			ExceptionType = exceptionType;
 		}
 
-		public sealed override int Run() {
+		public override int Run() {
 			try {
 				Action();
 				goto Fail;
@@ -119,11 +120,11 @@ public static class WikithisTests {
 	}
 
 	public static void TestModCalls() {
-		const string Divider = "==========";
+		const string divider = "==========";
 
 		using var disableFirstChanceExceptions = new Hook(
-			typeof(Logging).FindMethod("FirstChanceExceptionHandler"),
-			(Action<object, FirstChanceExceptionEventArgs> orig, object sender, FirstChanceExceptionEventArgs args) => {
+			typeof(Logging).FindMethod("FirstChanceExceptionHandler")!,
+			(Action<object, FirstChanceExceptionEventArgs> _, object _, FirstChanceExceptionEventArgs _) => {
 			}
 		);
 		disableFirstChanceExceptions.Apply();
@@ -132,13 +133,15 @@ public static class WikithisTests {
 			TestAddModUrl();
 			TestReplaceIDs();
 			TestAddWikiTexture();
-			mod.Logger.Info(Divider);
+			mod.Logger.Info(divider);
 		}
 		else {
 			Wikithis.Instance.Logger.Error("Failed to run all tests somehow. How did this happened?");
 		}
 
 		disableFirstChanceExceptions.Undo();
+		
+		return;
 
 		void TestAddModUrl() {
 			const string url = "https://terrariamods.wiki.gg/wiki/Confection_Rebaked";
@@ -152,9 +155,9 @@ public static class WikithisTests {
 			manager.Add(new SuccessfulTest(() => mod.Call("0", mod, url, GameCulture.CultureName.Polish)));
 			manager.Add(new SuccessfulTest(() => mod.Call("0", mod, url)));
 
-			mod.Logger.Info(Divider);
+			mod.Logger.Info(divider);
 			mod.Logger.Info("Testing AddModUrl mod call");
-			mod.Logger.Info(Divider);
+			mod.Logger.Info(divider);
 			manager.RunTests();
 		}
 
@@ -163,20 +166,20 @@ public static class WikithisTests {
 
 			var manager = new TestManager();
 			for (int i = 1; i <= 2; i++) {
-				int a = i;
-				manager.Add(new ThrowExceptionTest(() => mod.Call(a, 1))); // Too little args
-				manager.Add(new ThrowExceptionTest(() => mod.Call(a, 1, url, GameCulture.CultureName.English, null))); // Too many args
-				manager.Add(new ThrowExceptionTest(() => mod.Call(a, "1", url))); // 2nd argument supposed to be an Identifier
-				manager.Add(new ThrowExceptionTest(() => mod.Call(a, 1, new List<string> { url }))); // 3rd argument supposed to be a string aka wiki page URL
-				manager.Add(new ThrowExceptionTest(() => mod.Call(a, new List<int>(), new List<string> { url }))); // Lengths of collections are supposed to be same
-				manager.Add(new SuccessfulTest(() => mod.Call(a, 1, url)));
-				manager.Add(new SuccessfulTest(() => mod.Call(a, new List<int> { 1 }, url)));
-				manager.Add(new SuccessfulTest(() => mod.Call(a, new List<int> { 1 }, new List<string> { url })));
+				int capturedI = i;
+				manager.Add(new ThrowExceptionTest(() => mod.Call(capturedI, 1))); // Too little args
+				manager.Add(new ThrowExceptionTest(() => mod.Call(capturedI, 1, url, GameCulture.CultureName.English, null))); // Too many args
+				manager.Add(new ThrowExceptionTest(() => mod.Call(capturedI, "1", url))); // 2nd argument supposed to be an Identifier
+				manager.Add(new ThrowExceptionTest(() => mod.Call(capturedI, 1, new List<string> { url }))); // 3rd argument supposed to be a string aka wiki page URL
+				manager.Add(new ThrowExceptionTest(() => mod.Call(capturedI, new List<int>(), new List<string> { url }))); // Lengths of collections are supposed to be same
+				manager.Add(new SuccessfulTest(() => mod.Call(capturedI, 1, url)));
+				manager.Add(new SuccessfulTest(() => mod.Call(capturedI, new List<int> { 1 }, url)));
+				manager.Add(new SuccessfulTest(() => mod.Call(capturedI, new List<int> { 1 }, new List<string> { url })));
 			}
 
-			mod.Logger.Info(Divider);
+			mod.Logger.Info(divider);
 			mod.Logger.Info("Testing ReplaceItemID and ReplaceNPCId mod calls");
-			mod.Logger.Info(Divider);
+			mod.Logger.Info(divider);
 			manager.RunTests();
 		}
 
@@ -187,9 +190,9 @@ public static class WikithisTests {
 			manager.Add(new ThrowExceptionTest(() => mod.Call("3", mod, ModContent.Request<Texture2D>("Wikithis/icon").Value))); // 3rd argument supposed to be Asset<Texture2D>
 			manager.Add(new SuccessfulTest(() => mod.Call("3", mod, ModContent.Request<Texture2D>("Wikithis/icon"))));
 
-			mod.Logger.Info(Divider);
+			mod.Logger.Info(divider);
 			mod.Logger.Info("Testing AddWikiTexture mod call");
-			mod.Logger.Info(Divider);
+			mod.Logger.Info(divider);
 			manager.RunTests();
 		}
 	}

@@ -25,13 +25,17 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Wikithis.Data;
 
+// ReSharper disable StringLiteralTypo
+
 namespace Wikithis;
 
 partial class Wikithis {
 	private static string _callMessageCache;
 
-	internal static Dictionary<(short, GameCulture.CultureName), string> itemReplacements = new();
-	internal static Dictionary<(short, GameCulture.CultureName), string> npcReplacements = new();
+	// ReSharper disable once InconsistentNaming
+	private static Dictionary<(short, GameCulture.CultureName), string> itemReplacements = new();
+	// ReSharper disable once InconsistentNaming
+	private static Dictionary<(short, GameCulture.CultureName), string> npcReplacements = new();
 
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> ItemUrlReplacements => itemReplacements;
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> NpcUrlReplacements => npcReplacements;
@@ -40,7 +44,7 @@ partial class Wikithis {
 
 	private static object CallInternal(params object[] args) {
 		string message = (args[0] as string)?.ToLower();
-		message ??= (args[0] as int?).Value.ToString();
+		message ??= ((int?)args[0]).Value.ToString();
 
 		_callMessageCache = message;
 
@@ -56,8 +60,8 @@ partial class Wikithis {
 					if (args[2] is not string url)
 						throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
 
-					var data = ModData.GetOrCreateValue(mod);
-					data.URLs ??= new();
+					var data = ModData.GetOrCreateValue(mod)!;
+					data.URLs ??= new Dictionary<GameCulture.CultureName, string>();
 
 					if (args.Length >= 4 && args[3] is GameCulture.CultureName language) {
 						if (language is GameCulture.CultureName.English) {
@@ -96,36 +100,38 @@ partial class Wikithis {
 						language = (args[3] as GameCulture.CultureName?) ?? GameCulture.CultureName.English;
 					}
 
-					if (args[1] is int id) {
-						if (args[2] is not string url) {
-							throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
-						}
+					switch (args[1])
+					{
+						case int id:
+						{
+							if (args[2] is not string url)
+								throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
 
-						itemReplacements.TryAdd(((short)id, language), url);
-					}
-					else if (args[1] is IEnumerable<int> ids) {
-						if (args[2] is string url) {
-							foreach (int i in ids) {
-								itemReplacements.TryAdd(((short)i, language), url);
-							}
+							itemReplacements.TryAdd(((short)id, language), url);
+							break;
 						}
-						else if (args[2] is IEnumerable<string> urls) {
+						case IEnumerable<int> ids when args[2] is string url: {
+							foreach (int i in ids)
+								itemReplacements.TryAdd(((short)i, language), url);
+
+							break;
+						}
+						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls:
+						{
 							int[] asArrayIds = ids.ToArray();
 							string[] asArrayUrls = urls.ToArray();
-							if (asArrayIds.Length != asArrayUrls.Length) {
-								throw new IndexOutOfRangeException("Arrays at index 1 and 2 don't match length of each other");
-							}
+							if (asArrayIds.Length != asArrayUrls.Length)
+								throw new IndexOutOfRangeException("Arrays at index 1 and 2 must match length of each other");
 
-							for (int i = 0; i < asArrayIds.Length; i++) {
+							for (int i = 0; i < asArrayIds.Length; i++)
 								itemReplacements.TryAdd(((short)asArrayIds[i], language), asArrayUrls[i]);
-							}
+
+							break;
 						}
-						else {
+						case IEnumerable<int>:
 							throw new ArgumentException($"Argument at index 2 doesn't matches type: {typeof(string).FullName} or {typeof(IEnumerable<string>).FullName}");
-						}
-					}
-					else {
-						throw new ArgumentException($"Argument at index 1 doesn't matches type: {typeof(int).FullName} or {typeof(IEnumerable<int>).FullName}");
+						default:
+							throw new ArgumentException($"Argument at index 1 doesn't matches type: {typeof(int).FullName} or {typeof(IEnumerable<int>).FullName}");
 					}
 
 					return true;
@@ -146,24 +152,29 @@ partial class Wikithis {
 						throw new ArgumentOutOfRangeException(GetArgumentExceptionReason(3));
 
 					var language = GameCulture.CultureName.English;
-					if (args.Length == 4) {
-						language = (args[3] as GameCulture.CultureName?).Value;
-					}
+					if (args.Length == 4)
+						language = ((GameCulture.CultureName?)args[3]).Value;
 
-					if (args[1] is int id) {
-						if (args[2] is not string url) {
-							throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
+					switch (args[1])
+					{
+						case int id:
+						{
+							if (args[2] is not string url) {
+								throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
+							}
+
+							npcReplacements.TryAdd(((short)id, language), url);
+							break;
 						}
-
-						npcReplacements.TryAdd(((short)id, language), url);
-					}
-					else if (args[1] is IEnumerable<int> ids) {
-						if (args[2] is string url) {
+						case IEnumerable<int> ids when args[2] is string url: {
 							foreach (int cid in ids) {
 								npcReplacements.TryAdd(((short)cid, language), url);
 							}
+
+							break;
 						}
-						else if (args[2] is IEnumerable<string> urls) {
+						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls:
+						{
 							int[] asArrayIds = ids.ToArray();
 							string[] asArrayUrls = urls.ToArray();
 							if (asArrayIds.Length != asArrayUrls.Length) {
@@ -173,13 +184,13 @@ partial class Wikithis {
 							for (int i = 0; i < asArrayIds.Length; i++) {
 								npcReplacements.TryAdd(((short)asArrayIds[i], language), asArrayUrls[i]);
 							}
+
+							break;
 						}
-						else {
+						case IEnumerable<int>:
 							throw new ArgumentException($"Argument at index 1 doesn't matches type: {typeof(string).FullName} or {typeof(IEnumerable<string>).FullName}");
-						}
-					}
-					else {
-						throw new ArgumentException($"Argument at index 1 doesn't matches type: {typeof(int).FullName} or {typeof(IEnumerable<int>).FullName}");
+						default:
+							throw new ArgumentException($"Argument at index 1 doesn't matches type: {typeof(int).FullName} or {typeof(IEnumerable<int>).FullName}");
 					}
 
 					return true;
@@ -195,7 +206,7 @@ partial class Wikithis {
 					if (args[2] is not Asset<Texture2D> asset)
 						throw new ArgumentException(GetArgumentNotMatchingTypeReason<Asset<Texture2D>>(2));
 
-					ModData.GetOrCreateValue(mod).PersonalAsset = asset;
+					ModData.GetOrCreateValue(mod)!.PersonalAsset = asset;
 					return true;
 				}
 			case "4":
@@ -223,6 +234,7 @@ partial class Wikithis {
 	}
 
 	public override object Call(params object[] args) {
+		// ReSharper disable once ConvertIfStatementToReturnStatement
 		if (Main.dedServ)
 			return "Got called on server-side!";
 

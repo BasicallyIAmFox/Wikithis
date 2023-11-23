@@ -2,26 +2,45 @@ Mods: {
 	Wikithis: {
 		Configs: {
 			WikithisConfig: {
+				DisplayName: Wikithis配置
+				DefaultEnabled: （默认：启用）
+				DefaultDisabled: （默认：禁用）
+
 				OpenSteamBrowser: {
 					Label: 打开Steam Overlay而非浏览器
 					Tooltip:
 						'''
 						打开物品的维基页面时，打开Steam Overlay。
-						如果Steam不可用，打开浏览器。（默认：启用）
+						如果Steam不可用，打开浏览器。{$DefaultEnabled}
 						'''
+				}
+
+				AlwaysOpenEnglishWiki: {
+					// Label: Always open English wikis
+					/* Tooltip:
+						'''
+						When enabled, will always open english wiki-page instead of whatever-translation.
+						{$DefaultDisabled}
+						''' */
 				}
 
 				TooltipsEnabled: {
 					Label: 显示工具提示
-					Tooltip: 如果禁用，则禁用维基的工具提示。（默认：启用）
+					Tooltip:
+						'''
+						如果禁用，则禁用维基的工具提示。
+						{$DefaultEnabled}
+						'''
 				}
 
 				CanWikiNPCs: {
 					Label: 显示NPC维基
-					Tooltip: 启用后，允许在对着NPC按下按键时打开维基（默认：禁用）
+					Tooltip:
+						'''
+						启用后，允许在对着NPC按下按键时打开维基
+						{$DefaultDisabled}
+						'''
 				}
-
-				DisplayName: Wikithis配置
 			}
 		}
 

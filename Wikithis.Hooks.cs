@@ -14,7 +14,6 @@
 //    limitations under the License.
 //
 
-using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Reflection;
@@ -81,31 +80,34 @@ partial class Wikithis {
 		IL_026f: br.s IL_0272
 	 */
 	#endregion
-	private static void NPCURL(ILContext il) {
-		ILCursor c = new(il);
+	// ReSharper disable once InconsistentNaming
+	private static void ClickableNPCsWithMouse(ILContext il) {
+		var c = new ILCursor(il);
 		try {
 			int npcIndex = 0;
-			int hovers = 0;
+			int hoversIndex = 0;
 
 			// Goto #1
-			c.GotoNext(i => i.MatchLdloc(out npcIndex),
+			c.GotoNext(
+				i => i.MatchLdloc(out npcIndex),
 				i => i.MatchLdloca(out _),
-				i => i.MatchCall(typeof(NPCLoader).GetMethod(nameof(NPCLoader.ModifyHoverBoundingBox), BindingFlags.Public | BindingFlags.Static)));
+				i => i.MatchCall(typeof(NPCLoader).GetMethod(nameof(NPCLoader.ModifyHoverBoundingBox), BindingFlags.Public | BindingFlags.Static)!));
 
 			// Goto #2
 			c.GotoNext(MoveType.After,
 				i => i.MatchLdcI4(1),
-				i => i.MatchStloc(out hovers),
-				i => i.MatchLdloc(hovers),
+				i => i.MatchStloc(out hoversIndex),
+				i => i.MatchLdloc(hoversIndex),
 				i => i.MatchBrfalse(out _));
 
 			// Goto #3
-			c.GotoNext(i => i.MatchLdsfld<Main>(nameof(Main.SmartInteractShowingGenuine)),
+			c.GotoNext(
+				i => i.MatchLdsfld<Main>(nameof(Main.SmartInteractShowingGenuine)),
 				i => i.MatchBrfalse(out _));
 
-			c.Emit(OpCodes.Ldloc, npcIndex);
-			c.Emit(OpCodes.Ldloc, hovers);
-			c.EmitDelegate<Action<NPC, bool>>((npc, hovers) => {
+			c.EmitLdloc(npcIndex);
+			c.EmitLdloc(hoversIndex);
+			c.EmitDelegate<Action<NPC, bool>>(static (npc, hovers) => {
 				if (WikithisConfig.Config.CanWikiNPCs && hovers && WikithisSystem.WikiKeybind.JustPressed && GetWiki<NPCWiki>().Entries.TryGetValue((short)npc.netID, out var entry)) {
 					entry.OpenWikiPage(false);
 				}

@@ -2,26 +2,45 @@ Mods: {
 	Wikithis: {
 		Configs: {
 			WikithisConfig: {
+				DisplayName: Конфигурация Wikithis
+				DefaultEnabled: (По умолчанию: Включено)
+				DefaultDisabled: (По умолчанию: Выключено)
+
 				OpenSteamBrowser: {
 					Label: Открытие Overlay Steam вместо браузера
 					Tooltip:
 						'''
 						Когда вы открываете вики-страницу предмета, она открывается в Steam Overlay.
-						Если Steam недоступен, страница открывается в браузере. (По умолчанию: Включено)
+						Если Steam недоступен, страница открывается в браузере. {$DefaultEnabled}
 						'''
+				}
+
+				AlwaysOpenEnglishWiki: {
+					// Label: Always open English wikis
+					/* Tooltip:
+						'''
+						When enabled, will always open english wiki-page instead of whatever-translation.
+						{$DefaultDisabled}
+						''' */
 				}
 
 				TooltipsEnabled: {
 					Label: Отображение вики-подсказки
-					Tooltip: Отключает вики-подсказоки на предметах, если эта настройка выключена. (По умолчанию: Включено)
+					Tooltip:
+						'''
+						Отключает вики-подсказоки на предметах, если эта настройка выключена.
+						{$DefaultEnabled}
+						'''
 				}
 
 				CanWikiNPCs: {
 					Label: Отображение вики для НИПа
-					Tooltip: При включении позволяет открывать вики-страницу при нажатии на НИПа (По умолчанию: Выключено)
+					Tooltip:
+						'''
+						При включении позволяет открывать вики-страницу при нажатии на НИПа
+						{$DefaultDisabled}
+						'''
 				}
-
-				DisplayName: Конфигурация Wikithis
 			}
 		}
 

@@ -14,12 +14,14 @@
 //    limitations under the License.
 //
 
+using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Wikithis.Wikis;
+using BindingFlags = System.Reflection.BindingFlags;
 
 namespace Wikithis;
 
@@ -31,11 +33,13 @@ public sealed partial class Wikithis : Mod {
 
 	public static Wikithis Instance { get; private set; }
 
+	private static LanguageManager _englishLanguageManager;
+
 	public Wikithis() {
 		Instance = this;
 	}
 
-	public sealed override void Load() {
+	public override void Load() {
 		CurrentCulture = Language.ActiveCulture.Name switch {
 			"de-DE" => GameCulture.CultureName.German,
 			"es-ES" => GameCulture.CultureName.Spanish,
@@ -47,12 +51,14 @@ public sealed partial class Wikithis : Mod {
 			"zh-Hans" => GameCulture.CultureName.Chinese,
 			_ => GameCulture.CultureName.English
 		};
-
-		if (Main.dedServ) {
+		
+		if (Main.dedServ)
 			return;
-		}
 
-		IL_Main.HoverOverNPCs += NPCURL;
+		if (WikithisConfig.Config.AlwaysOpenEnglishWiki)
+			CurrentCulture = GameCulture.CultureName.English;
+
+		IL_Main.HoverOverNPCs += ClickableNPCsWithMouse;
 
 #if DEBUG
 		WikithisTests.TestModCalls();
@@ -60,18 +66,32 @@ public sealed partial class Wikithis : Mod {
 	}
 
 	internal static void SetupWikiPages() {
-		if (Main.dedServ) {
+		if (Main.dedServ)
 			return;
+
+		// I don't like this at all... but do I really have other choice?
+		var languageManager = LanguageManager.Instance;
+		
+		if (WikithisConfig.Config.AlwaysOpenEnglishWiki && CurrentCulture != GameCulture.CultureName.English) {
+			if (_englishLanguageManager == null) {
+				_englishLanguageManager =
+					typeof(LanguageManager)
+						.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, Array.Empty<Type>())!
+						.Invoke(null) as LanguageManager;
+				
+				Debug.Assert(_englishLanguageManager != null);
+				
+				_englishLanguageManager!.SetLanguage(GameCulture.DefaultCulture);
+			}
+
+			languageManager = _englishLanguageManager;
 		}
 
-		Task.Run(() => {
-			foreach (var wiki in ModContent.GetContent<IWiki>()) {
-				wiki.Initialize();
-			}
-		});
+		foreach (var wiki in ModContent.GetContent<IWiki>())
+			wiki.Initialize(languageManager);
 	}
 
-	public sealed override void Unload() {
+	public override void Unload() {
 		Instance = null;
 
 		WikiUrlRegex = null;
@@ -89,12 +109,13 @@ public sealed partial class Wikithis : Mod {
 		CurrentCulture = 0;
 		_callMessageCache = null;
 
-		if (Main.dedServ) {
+		if (Main.dedServ)
 			return;
-		}
 
-		IL_Main.HoverOverNPCs -= NPCURL;
+		IL_Main.HoverOverNPCs -= ClickableNPCsWithMouse;
 	}
 
-	public static T GetWiki<T>() where T : class, IWiki => ModContent.GetInstance<T>();
+	public static T GetWiki<T>() where T : class, IWiki {
+		return ModContent.GetInstance<T>();
+	}
 }

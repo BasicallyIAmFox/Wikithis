@@ -15,6 +15,7 @@
 //
 
 using Steamworks;
+using System;
 using System.Diagnostics;
 using Terraria;
 
@@ -22,19 +23,35 @@ namespace Wikithis.Wikis;
 
 public interface IWikiEntry<out TKey> {
 	TKey Key { get; }
+	
+	string Search { get; }
 
 	bool IsValid();
 
 	void OpenWikiPage(bool checkForKeybind = true);
 }
 
-public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
-	private static readonly Stopwatch watch = new();
-
-	static WikiEntry() {
-		watch.Start();
+internal static class WikiEntry {
+	private static readonly Stopwatch Watch = new();
+	
+	public static void StartTicking() {
+		Watch.Start();
+	}
+	
+	public static void RestartTicking() {
+		Watch.Restart();
 	}
 
+	public static TimeSpan GetElapsedTime() {
+		return Watch.Elapsed;
+	}
+}
+
+public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
+	static WikiEntry() {
+		WikiEntry.StartTicking();
+	}
+	
 	public TKey Key { get; }
 	public string Search { get; }
 
@@ -52,20 +69,19 @@ public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
 			return;
 		}
 
-		if ((!checkForKeybind || WikithisSystem.WikiKeybind.JustReleased) && watch.Elapsed.TotalSeconds >= 0.1) {
-			watch.Restart();
+		if (checkForKeybind && !WikithisSystem.WikiKeybind.JustReleased || WikiEntry.GetElapsedTime().TotalSeconds < 0.1)
+			return;
+		
+		WikiEntry.RestartTicking();
 
-			if (WikithisConfig.Config.OpenSteamBrowser) {
-				try {
-					SteamFriends.ActivateGameOverlayToWebPage(Search);
-				}
-				catch {
-					Utils.OpenToURL(Search);
-				}
+		if (WikithisConfig.Config.OpenSteamBrowser)
+			try {
+				SteamFriends.ActivateGameOverlayToWebPage(Search);
 			}
-			else {
+			catch {
 				Utils.OpenToURL(Search);
 			}
-		}
+		else
+			Utils.OpenToURL(Search);
 	}
 }

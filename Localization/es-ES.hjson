@@ -2,26 +2,45 @@ Mods: {
 	Wikithis: {
 		Configs: {
 			WikithisConfig: {
+				DisplayName: Configuración de Wikithis
+				DefaultEnabled: (Por defecto: Sí)
+				DefaultDisabled: (Por defecto: No)
+
 				OpenSteamBrowser: {
 					Label: Abre el Overlay de Steam en vez del navegador
 					Tooltip:
 						'''
 						Cuando se abra una wiki, se mostrará en el Overlay de Steam.
-						Si Steam no está disponible, se abrirá el navegador. (Por defecto: Sí)
+						Si Steam no está disponible, se abrirá el navegador. {$DefaultEnabled}
 						'''
+				}
+
+				AlwaysOpenEnglishWiki: {
+					// Label: Always open English wikis
+					/* Tooltip:
+						'''
+						When enabled, will always open english wiki-page instead of whatever-translation.
+						{$DefaultDisabled}
+						''' */
 				}
 
 				TooltipsEnabled: {
 					Label: Mostrar en las descripciones
-					Tooltip: Muestra información de wikis en las descripciones de objetos. (Por defecto: Sí)
+					Tooltip:
+						'''
+						Muestra información de wikis en las descripciones de objetos.
+						{$DefaultEnabled}
+						'''
 				}
 
 				CanWikiNPCs: {
 					Label: Mostrar wiki para PNJs
-					Tooltip: Permite abrir wikis al presionar en PNJs. (Por defecto: No)
+					Tooltip:
+						'''
+						Permite abrir wikis al presionar en PNJs.
+						{$DefaultDisabled}
+						'''
 				}
-
-				DisplayName: Configuración de Wikithis
 			}
 		}
 

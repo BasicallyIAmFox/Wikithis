@@ -27,8 +27,9 @@ using Wikithis.Wikis;
 
 namespace Wikithis;
 
-internal sealed class WikithisItem : GlobalItem {
-	private const float scaleValue = 2f / 3f;
+// ReSharper disable once UnusedType.Local
+public sealed class WikithisItem : GlobalItem {
+	private const float ScaleValue = 2f / 3f;
 
 	public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset) {
 		bool isAvailable = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out var wikiEntry) && wikiEntry.IsValid();
@@ -39,16 +40,18 @@ internal sealed class WikithisItem : GlobalItem {
 				Main.instance.LoadItem(ItemID.WireCutter);
 				texture = TextureAssets.Item[ItemID.WireCutter];
 			}
-			else if (item.ModItem?.Mod != null && Wikithis.ModData.GetOrCreateValue(item.ModItem.Mod).PersonalAsset != null) {
-				texture = Wikithis.ModData.GetOrCreateValue(item.ModItem.Mod).PersonalAsset;
+			else if (item.ModItem?.Mod != null && Wikithis.ModData.GetOrCreateValue(item.ModItem.Mod)!.PersonalAsset != null) {
+				texture = Wikithis.ModData.GetOrCreateValue(item.ModItem.Mod)!.PersonalAsset;
 			}
 			else {
 				texture = TextureAssets.BestiaryMenuButton;
 				defaultTexture = true;
 			}
 
-			Vector2 scale = new(scaleValue, scaleValue);
-			Vector2 origin = new(defaultTexture ? 0f : -((30f - texture.Width()) / 2f), defaultTexture ? 0f : -((TextureAssets.BestiaryMenuButton.Height() - texture.Height()) / 2f));
+			var scale = new Vector2(ScaleValue, ScaleValue);
+			var origin = new Vector2(
+				defaultTexture ? 0f : -((30f - texture.Width()) / 2f),
+				defaultTexture ? 0f : -((TextureAssets.BestiaryMenuButton.Height() - texture.Height()) / 2f));
 
 			Main.spriteBatch.Draw(texture.Value, new Vector2(line.X, line.Y), new Rectangle(0, 0, defaultTexture ? 30 : texture.Width(), texture.Height()), Color.White, 0f, origin, scale, 0, 0f);
 			Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.MouseText.Value, line.Text, line.X, line.Y, line.OverrideColor ?? line.Color, Color.Black, line.Origin);
@@ -68,11 +71,16 @@ internal sealed class WikithisItem : GlobalItem {
 
 		bool tryGet = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out var wikiEntry) && wikiEntry.IsValid();
 		string text = tryGet
-			? Language.GetTextValue($"Mods.Wikithis.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind))
-			: Language.GetTextValue($"Mods.Wikithis.NoWiki");
+			? Language.GetTextValue("Mods.Wikithis.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind))
+			: Language.GetTextValue("Mods.Wikithis.NoWiki");
 
-		tooltips.Add(new(Mod, "Wikithis:Wiki", Language.GetTextValue("Mods.Wikithis.TextFormatting", text)) {
-			OverrideColor = !tryGet ? Color.Lerp(Color.LightGray, Color.Pink, 0.5f) : Color.LightGray
+		tooltips.Add(new TooltipLine(
+				Mod,
+				"Wikithis:Wiki",
+				Language.GetTextValue("Mods.Wikithis.TextFormatting", text)) {
+			OverrideColor = !tryGet
+				? Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
+				: Color.LightGray
 		});
 	}
 
