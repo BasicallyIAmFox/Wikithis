@@ -14,6 +14,8 @@
 //    limitations under the License.
 //
 
+using Terraria.ModLoader;
+
 namespace Wikithis;
 
 public sealed class Wikithis : Mod {
