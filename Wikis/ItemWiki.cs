@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023 BasicallyIAmFox
+//    Copyright 2023-2024 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public sealed class ItemWiki : AbstractWiki<short, WikiEntry<short>> {
 
 		AddBrainScramblerReplacements(replacements);
 	}
-	
+
 	// ReSharper disable StringLiteralTypo
 	private static void AddBrainScramblerReplacements(IDictionary<(short, GameCulture.CultureName), string> replacements) {
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.English), "https://terraria.wiki.gg/wiki/Brain_Scrambler_(item)");
@@ -54,7 +54,7 @@ public sealed class ItemWiki : AbstractWiki<short, WikiEntry<short>> {
 				string key = item.ModItem is null
 					? $"ItemName.{ItemID.Search.GetName(item.type)}"
 					: item.ModItem.DisplayName.Key;
-			
+
 				string name = LanguageManager.GetTextValue(key);
 
 				string url = null;

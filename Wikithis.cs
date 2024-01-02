@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023 BasicallyIAmFox
+//    Copyright 2023-2024 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public sealed partial class Wikithis : Mod {
 			"zh-Hans" => GameCulture.CultureName.Chinese,
 			_ => GameCulture.CultureName.English
 		};
-		
+
 		if (Main.dedServ)
 			return;
 
@@ -72,14 +72,14 @@ public sealed partial class Wikithis : Mod {
 
 		// I don't like this at all... but do I really have other choice?
 		var languageManager = LanguageManager.Instance;
-		
+
 		if (WikithisConfig.Config.AlwaysOpenEnglishWiki) {
 			if (_englishLanguageManager == null) {
 				_englishLanguageManager =
 					typeof(LanguageManager)
 						.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, Array.Empty<Type>())!
 						.Invoke(null) as LanguageManager;
-				
+
 				Debug.Assert(_englishLanguageManager != null);
 			}
 

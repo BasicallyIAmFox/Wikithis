@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023 BasicallyIAmFox
+//    Copyright 2023-2024 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -59,21 +59,21 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 	private ImmutableDictionary<TKey, TEntry> _entries;
 
 	public IReadOnlyDictionary<TKey, TEntry> Entries => _entries;
-	
+
 	IEnumerable<KeyValuePair<TKey, TEntry>> IWiki<TKey, TEntry>.Entries => Entries;
-	
+
 	public LanguageManager LanguageManager { get; private set; }
 
 	void IWiki.Initialize(LanguageManager languageManager) {
 		LanguageManager = languageManager;
-		
+
 		Initialize();
 
 		_entries = _entriesBuilder.ToImmutable();
 		_entriesBuilder.Clear();
 		_entriesBuilder = null;
 	}
-	
+
 	public abstract void Initialize();
 
 	public void AddEntry(TKey key, TEntry value) {
@@ -111,7 +111,7 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 
 		if (!modData.URLs.TryGetValue(culture, out string value))
 			return string.Empty;
-		
+
 		if (Wikithis.WikiUrlRegex.IsMatch(value))
 			return Wikithis.WikiStrRegex.Replace(value, name);
 

@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023 BasicallyIAmFox
+//    Copyright 2023-2024 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ namespace Wikithis.Wikis;
 
 public interface IWikiEntry<out TKey> {
 	TKey Key { get; }
-	
+
 	string Search { get; }
 
 	bool IsValid();
@@ -33,11 +33,11 @@ public interface IWikiEntry<out TKey> {
 
 internal static class WikiEntry {
 	private static readonly Stopwatch Watch = new();
-	
+
 	public static void StartTicking() {
 		Watch.Start();
 	}
-	
+
 	public static void RestartTicking() {
 		Watch.Restart();
 	}
@@ -51,7 +51,7 @@ public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
 	static WikiEntry() {
 		WikiEntry.StartTicking();
 	}
-	
+
 	public TKey Key { get; }
 	public string Search { get; }
 
@@ -71,7 +71,7 @@ public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
 
 		if (checkForKeybind && !WikithisSystem.WikiKeybind.JustReleased || WikiEntry.GetElapsedTime().TotalSeconds < 0.1)
 			return;
-		
+
 		WikiEntry.RestartTicking();
 
 		if (WikithisConfig.Config.OpenSteamBrowser)

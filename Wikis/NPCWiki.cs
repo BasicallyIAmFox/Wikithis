@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023 BasicallyIAmFox
+//    Copyright 2023-2024 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public sealed class NPCWiki : AbstractWiki<short, WikiEntry<short>> {
 				string key = npc.ModNPC is null
 					? $"ItemName.{NPCID.Search.GetName(npc.type)}"
 					: npc.ModNPC.DisplayName.Key;
-			
+
 				string name = LanguageManager.GetTextValue(key);
 
 				string url = null;

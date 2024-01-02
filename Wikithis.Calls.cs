@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023 BasicallyIAmFox
+//    Copyright 2023-2024 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -100,34 +100,31 @@ partial class Wikithis {
 						language = (args[3] as GameCulture.CultureName?) ?? GameCulture.CultureName.English;
 					}
 
-					switch (args[1])
-					{
-						case int id:
-						{
-							if (args[2] is not string url)
-								throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
+					switch (args[1]) {
+						case int id: {
+								if (args[2] is not string url)
+									throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
 
-							itemReplacements.TryAdd(((short)id, language), url);
-							break;
-						}
+								itemReplacements.TryAdd(((short)id, language), url);
+								break;
+							}
 						case IEnumerable<int> ids when args[2] is string url: {
-							foreach (int i in ids)
-								itemReplacements.TryAdd(((short)i, language), url);
+								foreach (int i in ids)
+									itemReplacements.TryAdd(((short)i, language), url);
 
-							break;
-						}
-						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls:
-						{
-							int[] asArrayIds = ids.ToArray();
-							string[] asArrayUrls = urls.ToArray();
-							if (asArrayIds.Length != asArrayUrls.Length)
-								throw new IndexOutOfRangeException("Arrays at index 1 and 2 must match length of each other");
+								break;
+							}
+						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls: {
+								int[] asArrayIds = ids.ToArray();
+								string[] asArrayUrls = urls.ToArray();
+								if (asArrayIds.Length != asArrayUrls.Length)
+									throw new IndexOutOfRangeException("Arrays at index 1 and 2 must match length of each other");
 
-							for (int i = 0; i < asArrayIds.Length; i++)
-								itemReplacements.TryAdd(((short)asArrayIds[i], language), asArrayUrls[i]);
+								for (int i = 0; i < asArrayIds.Length; i++)
+									itemReplacements.TryAdd(((short)asArrayIds[i], language), asArrayUrls[i]);
 
-							break;
-						}
+								break;
+							}
 						case IEnumerable<int>:
 							throw new ArgumentException($"Argument at index 2 doesn't matches type: {typeof(string).FullName} or {typeof(IEnumerable<string>).FullName}");
 						default:
@@ -155,38 +152,35 @@ partial class Wikithis {
 					if (args.Length == 4)
 						language = ((GameCulture.CultureName?)args[3]).Value;
 
-					switch (args[1])
-					{
-						case int id:
-						{
-							if (args[2] is not string url) {
-								throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
-							}
+					switch (args[1]) {
+						case int id: {
+								if (args[2] is not string url) {
+									throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
+								}
 
-							npcReplacements.TryAdd(((short)id, language), url);
-							break;
-						}
+								npcReplacements.TryAdd(((short)id, language), url);
+								break;
+							}
 						case IEnumerable<int> ids when args[2] is string url: {
-							foreach (int cid in ids) {
-								npcReplacements.TryAdd(((short)cid, language), url);
-							}
+								foreach (int cid in ids) {
+									npcReplacements.TryAdd(((short)cid, language), url);
+								}
 
-							break;
-						}
-						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls:
-						{
-							int[] asArrayIds = ids.ToArray();
-							string[] asArrayUrls = urls.ToArray();
-							if (asArrayIds.Length != asArrayUrls.Length) {
-								throw new IndexOutOfRangeException("Arrays at index 1 and 2 don't match length of each other");
+								break;
 							}
+						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls: {
+								int[] asArrayIds = ids.ToArray();
+								string[] asArrayUrls = urls.ToArray();
+								if (asArrayIds.Length != asArrayUrls.Length) {
+									throw new IndexOutOfRangeException("Arrays at index 1 and 2 don't match length of each other");
+								}
 
-							for (int i = 0; i < asArrayIds.Length; i++) {
-								npcReplacements.TryAdd(((short)asArrayIds[i], language), asArrayUrls[i]);
+								for (int i = 0; i < asArrayIds.Length; i++) {
+									npcReplacements.TryAdd(((short)asArrayIds[i], language), asArrayUrls[i]);
+								}
+
+								break;
 							}
-
-							break;
-						}
 						case IEnumerable<int>:
 							throw new ArgumentException($"Argument at index 1 doesn't matches type: {typeof(string).FullName} or {typeof(IEnumerable<string>).FullName}");
 						default:

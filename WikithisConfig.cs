@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023 BasicallyIAmFox
+//    Copyright 2023-2024 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public sealed class WikithisConfig : ModConfig {
 
 	[DefaultValue(true)]
 	public bool OpenSteamBrowser;
-	
+
 	[DefaultValue(false)]
 	[ReloadRequired]
 	public bool AlwaysOpenEnglishWiki;
