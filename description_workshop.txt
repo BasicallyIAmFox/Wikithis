@@ -1,5 +1,4 @@
-﻿[h1][url=https://discord.gg/rrxE78cyjm]Discord[/url][/h1]
-[h1][url=https://github.com/TheLuxure/Wikithis]Github[/url][/h1]
+﻿[h1][url=https://github.com/TheLuxure/Wikithis]Github[/url][/h1]
 
 Wikithis allows you to check wiki of selected item/npc in game!
 Works for every vanilla item, npc! Also will work with most modded items/NPCs.
@@ -44,9 +43,8 @@ public override void Load() // You can use any other loading method, doesn't mat
 Lin and Listentowind - chinese translation
 Project tRu - russian translation
 Taco - polish translation
+Sea Noodle - italian translation
 Henrykado - old brazilian portuguese translation
 ppiece of cat - old russian translation
 TheBrutalSkull ^-^ - old french translation
 Naudiz - old german translation
-
-The rest of translation files were translated using Google Translator.
