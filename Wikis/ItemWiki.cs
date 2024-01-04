@@ -16,23 +16,24 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader.Core;
+using Wikithis.Data;
 
 namespace Wikithis.Wikis;
 
 public sealed class ItemWiki : AbstractWiki<short, WikiEntry<short>> {
 	private static void AddReplacements() {
-		// ReSharper disable once SuspiciousTypeConversion.Global
 		var replacements = Wikithis.ItemUrlReplacements as IDictionary<(short, GameCulture.CultureName), string>;
 		Debug.Assert(replacements != null);
 
 		AddBrainScramblerReplacements(replacements);
 	}
 
-	// ReSharper disable StringLiteralTypo
+	[SuppressMessage("ReSharper", "StringLiteralTypo")]
 	private static void AddBrainScramblerReplacements(IDictionary<(short, GameCulture.CultureName), string> replacements) {
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.English), "https://terraria.wiki.gg/wiki/Brain_Scrambler_(item)");
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.German), "https://terraria.wiki.gg/de/wiki/Gehirnverwirrer_(Gegenstand)");
@@ -44,9 +45,8 @@ public sealed class ItemWiki : AbstractWiki<short, WikiEntry<short>> {
 		// Portuguese wiki doesn't has a wiki page for Brain Scrambler.
 		// Polish wiki doesn't has a wiki page for Brain Scrambler.
 	}
-	// ReSharper restore StringLiteralTypo
 
-	public override void Initialize() {
+	protected override void Initialize() {
 		AddReplacements();
 
 		LoaderUtils.ForEachAndAggregateExceptions(ContentSamples.ItemsByType.Values
@@ -58,12 +58,10 @@ public sealed class ItemWiki : AbstractWiki<short, WikiEntry<short>> {
 				string name = LanguageManager.GetTextValue(key);
 
 				string url = null;
-				if (Wikithis.ItemUrlReplacements.TryGetValue(((short)item.type, Wikithis.CurrentCulture), out string urlReplacement)) {
+				if (Wikithis.ItemUrlReplacements.TryGetValue(((short)item.type, Wikithis.CurrentCulture), out string urlReplacement))
 					url = urlReplacement;
-				}
-				else if (Wikithis.ItemUrlReplacements.TryGetValue(((short)item.type, GameCulture.CultureName.English), out urlReplacement)) {
+				else if (Wikithis.ItemUrlReplacements.TryGetValue(((short)item.type, GameCulture.CultureName.English), out urlReplacement))
 					url = urlReplacement;
-				}
 
 				url ??= DefaultSearchStr(name, item.ModItem?.Mod);
 				AddEntry((short)item.type, new WikiEntry<short>((short)item.type, url));

@@ -22,9 +22,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Wikithis.Data;
 
 namespace Wikithis.Wikis;
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public interface IWiki : IModType, ILoadable {
 	IEnumerable<KeyValuePair<object, object>> Entries { get; }
 
@@ -62,7 +64,7 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 
 	IEnumerable<KeyValuePair<TKey, TEntry>> IWiki<TKey, TEntry>.Entries => Entries;
 
-	public LanguageManager LanguageManager { get; private set; }
+	protected LanguageManager LanguageManager { get; private set; }
 
 	void IWiki.Initialize(LanguageManager languageManager) {
 		LanguageManager = languageManager;
@@ -74,7 +76,7 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 		_entriesBuilder = null;
 	}
 
-	public abstract void Initialize();
+	protected abstract void Initialize();
 
 	public void AddEntry(TKey key, TEntry value) {
 		_entriesBuilder.TryAdd(key, value);

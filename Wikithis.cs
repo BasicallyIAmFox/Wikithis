@@ -14,15 +14,11 @@
 //    limitations under the License.
 //
 
-using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Wikithis.Wikis;
-using BindingFlags = System.Reflection.BindingFlags;
 
 namespace Wikithis;
 
@@ -33,8 +29,6 @@ public sealed partial class Wikithis : Mod {
 	public static GameCulture.CultureName CurrentCulture { get; private set; }
 
 	public static Wikithis Instance { get; private set; }
-
-	private static LanguageManager _englishLanguageManager;
 
 	public Wikithis() {
 		Instance = this;
@@ -70,31 +64,17 @@ public sealed partial class Wikithis : Mod {
 		if (Main.dedServ)
 			return;
 
-		// I don't like this at all... but do I really have other choice?
-		var languageManager = LanguageManager.Instance;
+		lock (LanguageManager.Instance) {
+			var oldCulture = LanguageManager.Instance.ActiveCulture;
 
-		if (WikithisConfig.Config.AlwaysOpenEnglishWiki) {
-			if (_englishLanguageManager == null) {
-				_englishLanguageManager =
-					typeof(LanguageManager)
-						.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, Array.Empty<Type>())!
-						.Invoke(null) as LanguageManager;
+			if (WikithisConfig.Config.AlwaysOpenEnglishWiki)
+				LanguageManager.Instance.SetLanguage(GameCulture.DefaultCulture);
 
-				Debug.Assert(_englishLanguageManager != null);
-			}
+			foreach (var wiki in ModContent.GetContent<IWiki>())
+				wiki.Initialize(LanguageManager.Instance);
 
-			_englishLanguageManager!.SetLanguage(GameCulture.DefaultCulture);
-			languageManager = _englishLanguageManager;
-
-			Thread.CurrentThread.CurrentCulture = _englishLanguageManager.ActiveCulture.CultureInfo;
-			Thread.CurrentThread.CurrentUICulture = _englishLanguageManager.ActiveCulture.CultureInfo;
+			LanguageManager.Instance.SetLanguage(oldCulture);
 		}
-
-		foreach (var wiki in ModContent.GetContent<IWiki>())
-			wiki.Initialize(languageManager);
-
-		Thread.CurrentThread.CurrentCulture = Language.ActiveCulture.CultureInfo;
-		Thread.CurrentThread.CurrentUICulture = Language.ActiveCulture.CultureInfo;
 	}
 
 	public override void Unload() {

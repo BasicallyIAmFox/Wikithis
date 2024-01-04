@@ -18,14 +18,13 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Wikithis.Data;
-
-// ReSharper disable StringLiteralTypo
 
 namespace Wikithis;
 
@@ -42,6 +41,7 @@ partial class Wikithis {
 
 	public static ConditionalWeakTable<Mod, ModCallData> ModData { get; private set; } = new();
 
+	[SuppressMessage("ReSharper", "StringLiteralTypo")]
 	private static object CallInternal(params object[] args) {
 		string message = (args[0] as string)?.ToLower();
 		message ??= ((int?)args[0]).Value.ToString();

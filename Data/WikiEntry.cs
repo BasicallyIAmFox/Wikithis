@@ -17,10 +17,12 @@
 using Steamworks;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Terraria;
 
-namespace Wikithis.Wikis;
+namespace Wikithis.Data;
 
+[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
 public interface IWikiEntry<out TKey> {
 	TKey Key { get; }
 
@@ -31,6 +33,8 @@ public interface IWikiEntry<out TKey> {
 	void OpenWikiPage(bool checkForKeybind = true);
 }
 
+// This class really should be 'file', but
+// tML in-game compiler doesn't supports that yet
 internal static class WikiEntry {
 	private static readonly Stopwatch Watch = new();
 
@@ -64,24 +68,26 @@ public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
 		return !string.IsNullOrEmpty(Search);
 	}
 
+	[SuppressMessage("ReSharper", "RemoveRedundantBraces")]
 	public void OpenWikiPage(bool checkForKeybind = true) {
-		if (!IsValid()) {
+		if (!IsValid())
 			return;
-		}
 
 		if (checkForKeybind && !WikithisSystem.WikiKeybind.JustReleased || WikiEntry.GetElapsedTime().TotalSeconds < 0.1)
 			return;
 
 		WikiEntry.RestartTicking();
 
-		if (WikithisConfig.Config.OpenSteamBrowser)
+		if (WikithisConfig.Config.OpenSteamBrowser) {
 			try {
 				SteamFriends.ActivateGameOverlayToWebPage(Search);
 			}
 			catch {
 				Utils.OpenToURL(Search);
 			}
-		else
+		}
+		else {
 			Utils.OpenToURL(Search);
+		}
 	}
 }

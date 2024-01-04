@@ -29,11 +29,7 @@ namespace Wikithis;
 
 internal static class WikithisTests {
 	private sealed class TestManager {
-		private readonly ImmutableList<AbstractTest>.Builder _values;
-
-		public TestManager() {
-			_values = ImmutableList.CreateBuilder<AbstractTest>();
-		}
+		private readonly ImmutableList<AbstractTest>.Builder _values = ImmutableList.CreateBuilder<AbstractTest>();
 
 		public void Add(AbstractTest test) {
 			test.Id = _values.Count;
@@ -185,7 +181,7 @@ internal static class WikithisTests {
 
 		void TestAddWikiTexture() {
 			var manager = new TestManager();
-			manager.Add(new ThrowExceptionTest(() => mod.Call("3"))); // There should be atleast 3 arguments
+			manager.Add(new ThrowExceptionTest(() => mod.Call("3"))); // There should be at least 3 arguments
 			manager.Add(new ThrowExceptionTest(() => mod.Call("3", "mod"))); // 2nd argument supposed to be Mod instance
 			manager.Add(new ThrowExceptionTest(() => mod.Call("3", mod, ModContent.Request<Texture2D>("Wikithis/icon").Value))); // 3rd argument supposed to be Asset<Texture2D>
 			manager.Add(new SuccessfulTest(() => mod.Call("3", mod, ModContent.Request<Texture2D>("Wikithis/icon"))));

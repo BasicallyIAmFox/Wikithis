@@ -18,12 +18,13 @@ using System.Linq;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader.Core;
+using Wikithis.Data;
 
 namespace Wikithis.Wikis;
 
 // ReSharper disable once InconsistentNaming
 public sealed class NPCWiki : AbstractWiki<short, WikiEntry<short>> {
-	public override void Initialize() {
+	protected override void Initialize() {
 		LoaderUtils.ForEachAndAggregateExceptions(ContentSamples.NpcsByNetId.Values
 			.Where(x => x.netID != NPCID.None),
 			npc => {
@@ -34,12 +35,10 @@ public sealed class NPCWiki : AbstractWiki<short, WikiEntry<short>> {
 				string name = LanguageManager.GetTextValue(key);
 
 				string url = null;
-				if (Wikithis.NpcUrlReplacements.TryGetValue(((short)npc.netID, Wikithis.CurrentCulture), out string urlReplacement)) {
+				if (Wikithis.NpcUrlReplacements.TryGetValue(((short)npc.netID, Wikithis.CurrentCulture), out string urlReplacement))
 					url = urlReplacement;
-				}
-				else if (Wikithis.NpcUrlReplacements.TryGetValue(((short)npc.netID, GameCulture.CultureName.English), out urlReplacement)) {
+				else if (Wikithis.NpcUrlReplacements.TryGetValue(((short)npc.netID, GameCulture.CultureName.English), out urlReplacement))
 					url = urlReplacement;
-				}
 
 				url ??= DefaultSearchStr(name, npc.ModNPC?.Mod);
 				AddEntry((short)npc.netID, new WikiEntry<short>((short)npc.netID, url));

@@ -29,11 +29,12 @@ namespace Wikithis;
 
 // ReSharper disable once UnusedType.Local
 public sealed class WikithisItem : GlobalItem {
+	private const string TooltipName = $"{nameof(Wikithis)}:Wiki";
 	private const float ScaleValue = 2f / 3f;
 
 	public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset) {
 		bool isAvailable = Wikithis.GetWiki<ItemWiki>().Entries.TryGetValue((short)item.netID, out var wikiEntry) && wikiEntry.IsValid();
-		if (line.Mod == Mod.Name && line.Name == $"{nameof(Wikithis)}:Wiki") {
+		if (line.Mod == Mod.Name && line.Name is TooltipName) {
 			Asset<Texture2D> texture;
 			bool defaultTexture = false;
 			if (!isAvailable) {
@@ -48,7 +49,7 @@ public sealed class WikithisItem : GlobalItem {
 				defaultTexture = true;
 			}
 
-			var scale = new Vector2(ScaleValue, ScaleValue);
+			var scale = new Vector2(ScaleValue);
 			var origin = new Vector2(
 				defaultTexture ? 0f : -((30f - texture.Width()) / 2f),
 				defaultTexture ? 0f : -((TextureAssets.BestiaryMenuButton.Height() - texture.Height()) / 2f));
@@ -74,10 +75,7 @@ public sealed class WikithisItem : GlobalItem {
 			? Language.GetTextValue("Mods.Wikithis.Click", TooltipHotkeyString(WikithisSystem.WikiKeybind))
 			: Language.GetTextValue("Mods.Wikithis.NoWiki");
 
-		tooltips.Add(new TooltipLine(
-				Mod,
-				"Wikithis:Wiki",
-				Language.GetTextValue("Mods.Wikithis.TextFormatting", text)) {
+		tooltips.Add(new TooltipLine(Mod, TooltipName, Language.GetTextValue("Mods.Wikithis.TextFormatting", text)) {
 			OverrideColor = !tryGet
 				? Color.Lerp(Color.LightGray, Color.Pink, 0.5f)
 				: Color.LightGray
