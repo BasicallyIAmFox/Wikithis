@@ -1,0 +1,52 @@
+Mods: {
+	Wikithis: {
+		Configs: {
+			WikithisConfig: {
+				DisplayName: Wikithis Yapılandırması
+				DefaultEnabled: (Varsayılan: Etkin)
+				DefaultDisabled: (Varsayılan: Devre Dışı)
+
+				OpenSteamBrowser: {
+					Label: Tarayıcı yerine Steam Arayüzünü açın
+					Tooltip:
+						'''
+						Öğe için bir wiki sayfası açıldığında Steam Arayüzü açılır.
+ 						Steam kullanılamıyorsa tarayıcı açılacaktır. {$DefaultEnabled}
+						'''
+				}
+
+				AlwaysOpenEnglishWiki: {
+					Label: Her zaman İngilizce wikileri aç
+					Tooltip:
+						'''
+						Etkinleştirildiğinde, çeviri ne olursa olsun yerine her zaman İngilizce wiki sayfası açılır.
+						{$DefaultDisabled}
+						'''
+				}
+
+				TooltipsEnabled: {
+					Label: Araç ipuçlarını göster
+					Tooltip:
+						'''
+						Wiki araç ipuçlarını devre dışı bırakır.
+						{$DefaultEnabled}
+						'''
+				}
+
+				CanWikiNPCs: {
+					Label: NPC Wikisini Göster
+					Tooltip:
+						'''
+						Etkinleştirildiğinde, NPC'lerde basıldığında wiki sayfalarının açılmasını sağlar.
+						{$DefaultDisabled}
+						'''
+				}
+			}
+		}
+
+		Keybinds.WikiKeybind.DisplayName: Eşya/NPC'nin wiki sayfasını kontrol edin
+		TextFormatting: "    {0}"
+		Click: Wiki sayfasını açmak için {0} tuşuna basın!
+		NoWiki: Kullanılabilir wiki sayfası yok!
+	}
+}
