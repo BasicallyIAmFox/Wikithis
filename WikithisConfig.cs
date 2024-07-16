@@ -29,9 +29,11 @@ public sealed class WikithisConfig : ModConfig {
 	[DefaultValue(true)]
 	public bool OpenSteamBrowser;
 
+	/* Temporarily disabled
 	[DefaultValue(false)]
 	[ReloadRequired]
 	public bool AlwaysOpenEnglishWiki;
+	*/
 
 	[DefaultValue(true)]
 	public bool TooltipsEnabled;

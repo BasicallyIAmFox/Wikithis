@@ -23,10 +23,16 @@ using Wikithis.Wikis;
 namespace Wikithis;
 
 public sealed partial class Wikithis : Mod {
-	public static Regex WikiUrlRegex { get; private set; } = new(@".*\/\{.*\}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-	public static Regex WikiStrRegex { get; private set; } = new(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+	public static Regex WikiUrlRegex { get; private set; } = _WikiUrlRegex();
+	public static Regex WikiStrRegex { get; private set; } = _WikiStrRegex();
+
+	[GeneratedRegex(@".*\/\{.*\}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+	private static partial Regex _WikiUrlRegex();
+	[GeneratedRegex(@"\{.*\}", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+	private static partial Regex _WikiStrRegex();
 
 	public static GameCulture.CultureName CurrentCulture { get; private set; }
+	//private static Lazy<EnglishLanguageManager> EnglishLanguageManager { get; } = new();
 
 	public static Wikithis Instance { get; private set; }
 
@@ -50,8 +56,8 @@ public sealed partial class Wikithis : Mod {
 		if (Main.dedServ)
 			return;
 
-		if (WikithisConfig.Config.AlwaysOpenEnglishWiki)
-			CurrentCulture = GameCulture.CultureName.English;
+		//if (WikithisConfig.Config.AlwaysOpenEnglishWiki)
+		//	CurrentCulture = GameCulture.CultureName.English;
 
 		IL_Main.HoverOverNPCs += ClickableNPCsWithMouse;
 
@@ -64,17 +70,13 @@ public sealed partial class Wikithis : Mod {
 		if (Main.dedServ)
 			return;
 
-		lock (LanguageManager.Instance) {
-			var oldCulture = LanguageManager.Instance.ActiveCulture;
+		var languageManager = LanguageManager.Instance;
 
-			if (WikithisConfig.Config.AlwaysOpenEnglishWiki)
-				LanguageManager.Instance.SetLanguage(GameCulture.DefaultCulture);
+		//if (WikithisConfig.Config.AlwaysOpenEnglishWiki)
+		//	languageManager = EnglishLanguageManager.Value;
 
-			foreach (var wiki in ModContent.GetContent<IWiki>())
-				wiki.Initialize(LanguageManager.Instance);
-
-			LanguageManager.Instance.SetLanguage(oldCulture);
-		}
+		foreach (var wiki in ModContent.GetContent<IWiki>())
+			wiki.Initialize(languageManager);
 	}
 
 	public override void Unload() {

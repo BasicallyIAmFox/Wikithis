@@ -55,15 +55,11 @@ internal static class WikithisTests {
 			Wikithis.Instance.Logger.Info($"{success}/{total} tests succeeded!");
 		}
 	}
-	private abstract class AbstractTest {
+	private abstract class AbstractTest(Action action) {
 		public const int SuccessValue = 0;
 		public const int FailureValue = 1;
 
-		protected Action Action { get; }
-
-		protected AbstractTest(Action action) {
-			Action = action;
-		}
+		protected Action Action { get; } = action;
 
 		public int Id { get; set; }
 
@@ -73,10 +69,7 @@ internal static class WikithisTests {
 			Wikithis.Instance.Logger.Error($"Failed test #{Id + 1}!");
 		}
 	}
-	private sealed class SuccessfulTest : AbstractTest {
-		public SuccessfulTest(Action action) : base(action) {
-		}
-
+	private sealed class SuccessfulTest(Action action) : AbstractTest(action) {
 		public override int Run() {
 			try {
 				Action();
@@ -89,12 +82,8 @@ internal static class WikithisTests {
 			return FailureValue;
 		}
 	}
-	private sealed class ThrowExceptionTest : AbstractTest {
-		private Type ExceptionType { get; }
-
-		public ThrowExceptionTest(Action action, Type exceptionType = null) : base(action) {
-			ExceptionType = exceptionType;
-		}
+	private sealed class ThrowExceptionTest(Action action, Type exceptionType = null) : AbstractTest(action) {
+		private Type ExceptionType { get; } = exceptionType;
 
 		public override int Run() {
 			try {

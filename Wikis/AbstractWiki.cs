@@ -86,6 +86,10 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 		return _entries[key];
 	}
 
+	public bool HasValidEntry(TKey key) {
+		return _entries.TryGetValue(key, out var entry) && entry.IsValid();
+	}
+
 	protected string DefaultSearchStr(string name, Mod mod) {
 		name = name.Replace(' ', '_').Replace("'", "%27");
 
