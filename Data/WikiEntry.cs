@@ -51,18 +51,13 @@ internal static class WikiEntry {
 	}
 }
 
-public readonly struct WikiEntry<TKey> : IWikiEntry<TKey> {
+public readonly struct WikiEntry<TKey>(TKey key, string search) : IWikiEntry<TKey> {
 	static WikiEntry() {
 		WikiEntry.StartTicking();
 	}
 
-	public TKey Key { get; }
-	public string Search { get; }
-
-	public WikiEntry(TKey key, string search) {
-		Key = key;
-		Search = search;
-	}
+	public TKey Key { get; } = key;
+	public string Search { get; } = search;
 
 	public bool IsValid() {
 		return !string.IsNullOrEmpty(Search);

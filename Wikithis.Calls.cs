@@ -32,14 +32,14 @@ partial class Wikithis {
 	private static string _callMessageCache;
 
 	// ReSharper disable once InconsistentNaming
-	private static Dictionary<(short, GameCulture.CultureName), string> itemReplacements = new();
+	private static Dictionary<(short, GameCulture.CultureName), string> itemReplacements = [];
 	// ReSharper disable once InconsistentNaming
-	private static Dictionary<(short, GameCulture.CultureName), string> npcReplacements = new();
+	private static Dictionary<(short, GameCulture.CultureName), string> npcReplacements = [];
 
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> ItemUrlReplacements => itemReplacements;
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> NpcUrlReplacements => npcReplacements;
 
-	public static ConditionalWeakTable<Mod, ModCallData> ModData { get; private set; } = new();
+	public static ConditionalWeakTable<Mod, ModCallData> ModData { get; private set; } = [];
 
 	[SuppressMessage("ReSharper", "StringLiteralTypo")]
 	private static object CallInternal(params object[] args) {
@@ -61,7 +61,7 @@ partial class Wikithis {
 						throw new ArgumentException(GetArgumentNotMatchingTypeReason<string>(2));
 
 					var data = ModData.GetOrCreateValue(mod)!;
-					data.URLs ??= new Dictionary<GameCulture.CultureName, string>();
+					data.URLs ??= [];
 
 					if (args.Length >= 4 && args[3] is GameCulture.CultureName language) {
 						if (language is GameCulture.CultureName.English) {

@@ -15,15 +15,17 @@ Mods: {
 						'''
 				}
 
+				/*
 				AlwaysOpenEnglishWiki: {
-					// Label: Always open English wikis
-					/* Tooltip:
-						'''
-						When enabled, will always open english wiki-page instead of whatever-translation.
-						{$DefaultDisabled}
-						''' */
+				Label: Always open English wikis
+				Tooltip:
+				'''
+				When enabled, will always open english wiki-page instead of whatever-translation.
+				{$DefaultDisabled}
+				'''
 				}
-
+				*/
+				
 				TooltipsEnabled: {
 					Label: Pokaż podpowiedzi
 					Tooltip:
