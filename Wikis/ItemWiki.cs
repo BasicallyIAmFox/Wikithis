@@ -37,13 +37,13 @@ public sealed class ItemWiki : AbstractWiki<short, WikiEntry<short>> {
 	private static void AddBrainScramblerReplacements(IDictionary<(short, GameCulture.CultureName), string> replacements) {
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.English), "https://terraria.wiki.gg/wiki/Brain_Scrambler_(item)");
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.German), "https://terraria.wiki.gg/de/wiki/Gehirnverwirrer_(Gegenstand)");
-		// Italian wiki doesn't has a wiki page for Brain Scrambler.
+		// Italian wiki doesn't have a wiki page for Brain Scrambler.
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.French), "https://terraria.wiki.gg/fr/wiki/Embrouilleur_(objet)");
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.Spanish), "https://terraria.wiki.gg/es/wiki/Destrozacerebros_(objeto)");
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.Russian), "https://terraria.wiki.gg/ru/wiki/Запутыватель_мозгов_(предмет)");
 		replacements.TryAdd((ItemID.BrainScrambler, GameCulture.CultureName.Chinese), "https://terraria.wiki.gg/zh/wiki/%E6%89%B0%E8%84%91%E5%99%A8");
-		// Portuguese wiki doesn't has a wiki page for Brain Scrambler.
-		// Polish wiki doesn't has a wiki page for Brain Scrambler.
+		// Portuguese wiki doesn't have a wiki page for Brain Scrambler.
+		// Polish wiki doesn't have a wiki page for Brain Scrambler.
 	}
 
 	protected override void Initialize() {
