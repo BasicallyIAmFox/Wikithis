@@ -1,5 +1,5 @@
 ﻿//
-//    Copyright 2023-2024 BasicallyIAmFox
+//    Copyright 2023-2025 BasicallyIAmFox
 //
 //    Licensed under the Apache License, Version 2.0 (the "License")
 //    you may not use this file except in compliance with the License.
@@ -59,8 +59,6 @@ public sealed partial class Wikithis : Mod {
 		//if (WikithisConfig.Config.AlwaysOpenEnglishWiki)
 		//	CurrentCulture = GameCulture.CultureName.English;
 
-		IL_Main.HoverOverNPCs += ClickableNPCsWithMouse;
-
 #if DEBUG
 		WikithisTests.TestModCalls();
 #endif
@@ -96,11 +94,6 @@ public sealed partial class Wikithis : Mod {
 
 		CurrentCulture = 0;
 		_callMessageCache = null;
-
-		if (Main.dedServ)
-			return;
-
-		IL_Main.HoverOverNPCs -= ClickableNPCsWithMouse;
 	}
 
 	public static T GetWiki<T>() where T : class, IWiki {
