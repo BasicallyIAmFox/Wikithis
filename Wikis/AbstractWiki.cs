@@ -26,7 +26,6 @@ using Wikithis.Data;
 
 namespace Wikithis.Wikis;
 
-[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public interface IWiki : IModType, ILoadable {
 	IEnumerable<KeyValuePair<object, object>> Entries { get; }
 
@@ -94,13 +93,13 @@ public abstract class AbstractWiki<TKey, TEntry> : ModType, IWiki<TKey, TEntry> 
 		name = name.Replace(' ', '_').Replace("'", "%27");
 
 		if (mod == null) {
-			const int l = 25; // length of "https://terraria.wiki.gg/wiki/"
+			const string terrariaWiki = "https://terraria.wiki.gg/";
 
-			string url = $"https://terraria.wiki.gg/wiki/{name}";
+			string url = $"{terrariaWiki}wiki/{name}";
 			if (Wikithis.CurrentCulture == GameCulture.CultureName.Italian)
 				url += "/it";
 			else if (Wikithis.CurrentCulture != GameCulture.CultureName.English)
-				url = url.Insert(l, LanguageManager.ActiveCulture.Name[..2] + '/');
+				url = url.Insert(terrariaWiki.Length, LanguageManager.ActiveCulture.Name[..2] + '/');
 
 			return url;
 		}

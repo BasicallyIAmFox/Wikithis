@@ -22,14 +22,13 @@ using Wikithis.Data;
 
 namespace Wikithis.Wikis;
 
-// ReSharper disable once InconsistentNaming
 public sealed class NPCWiki : AbstractWiki<short, WikiEntry<short>> {
 	protected override void Initialize() {
 		LoaderUtils.ForEachAndAggregateExceptions(ContentSamples.NpcsByNetId.Values
 			.Where(x => x.netID != NPCID.None),
 			npc => {
 				string key = npc.ModNPC is null
-					? $"ItemName.{NPCID.Search.GetName(npc.type)}"
+					? $"NPCName.{NPCID.Search.GetName(npc.type)}"
 					: npc.ModNPC.DisplayName.Key;
 
 				string name = LanguageManager.GetTextValue(key);

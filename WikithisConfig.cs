@@ -18,8 +18,6 @@ using System.ComponentModel;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-// ReSharper disable UnassignedField.Global
-
 namespace Wikithis;
 
 public sealed class WikithisConfig : ModConfig {
@@ -39,6 +37,5 @@ public sealed class WikithisConfig : ModConfig {
 	public bool TooltipsEnabled;
 
 	[DefaultValue(false)]
-	// ReSharper disable once InconsistentNaming
 	public bool CanWikiNPCs;
 }

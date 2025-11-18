@@ -25,7 +25,6 @@ using Wikithis.Wikis;
 
 namespace Wikithis;
 
-// ReSharper disable once UnusedType.Local
 public sealed class WikithisItem : GlobalItem {
 	private const string TooltipName = $"{nameof(Wikithis)}:Wiki"; // Do not change.
 

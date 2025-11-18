@@ -17,12 +17,10 @@
 using Steamworks;
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Terraria;
 
 namespace Wikithis.Data;
 
-[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
 public interface IWikiEntry<out TKey> {
 	TKey Key { get; }
 
@@ -33,9 +31,7 @@ public interface IWikiEntry<out TKey> {
 	void OpenWikiPage(bool checkForKeybind = true);
 }
 
-// This class really should be 'file', but
-// tML in-game compiler doesn't supports that yet
-internal static class WikiEntry {
+file static class WikiEntry {
 	private static readonly Stopwatch Watch = new();
 
 	public static void StartTicking() {
@@ -63,7 +59,6 @@ public readonly struct WikiEntry<TKey>(TKey key, string search) : IWikiEntry<TKe
 		return !string.IsNullOrEmpty(Search);
 	}
 
-	[SuppressMessage("ReSharper", "RemoveRedundantBraces")]
 	public void OpenWikiPage(bool checkForKeybind = true) {
 		if (!IsValid())
 			return;

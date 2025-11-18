@@ -22,7 +22,6 @@ using Terraria.Localization;
 namespace Wikithis.Data;
 
 public sealed class ModCallData {
-	// ReSharper disable once InconsistentNaming
 	public Dictionary<GameCulture.CultureName, string> URLs { get; set; }
 	public Asset<Texture2D> PersonalAsset { get; set; }
 }

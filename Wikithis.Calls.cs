@@ -18,8 +18,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.Localization;
@@ -31,9 +29,7 @@ namespace Wikithis;
 partial class Wikithis {
 	private static string _callMessageCache;
 
-	// ReSharper disable once InconsistentNaming
 	private static Dictionary<(short, GameCulture.CultureName), string> itemReplacements = [];
-	// ReSharper disable once InconsistentNaming
 	private static Dictionary<(short, GameCulture.CultureName), string> npcReplacements = [];
 
 	public static IReadOnlyDictionary<(short, GameCulture.CultureName), string> ItemUrlReplacements => itemReplacements;
@@ -41,8 +37,7 @@ partial class Wikithis {
 
 	public static ConditionalWeakTable<Mod, ModCallData> ModData { get; private set; } = [];
 
-	[SuppressMessage("ReSharper", "StringLiteralTypo")]
-	private static object CallInternal(params object[] args) {
+	private static bool CallInternal(params object[] args) {
 		string message = (args[0] as string)?.ToLower();
 		message ??= ((int?)args[0]).Value.ToString();
 
@@ -115,8 +110,8 @@ partial class Wikithis {
 								break;
 							}
 						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls: {
-								int[] asArrayIds = ids.ToArray();
-								string[] asArrayUrls = urls.ToArray();
+								int[] asArrayIds = [.. ids];
+								string[] asArrayUrls = [.. urls];
 								if (asArrayIds.Length != asArrayUrls.Length)
 									throw new IndexOutOfRangeException("Arrays at index 1 and 2 must match length of each other");
 
@@ -169,8 +164,8 @@ partial class Wikithis {
 								break;
 							}
 						case IEnumerable<int> ids when args[2] is IEnumerable<string> urls: {
-								int[] asArrayIds = ids.ToArray();
-								string[] asArrayUrls = urls.ToArray();
+								int[] asArrayIds = [.. ids];
+								string[] asArrayUrls = [.. urls];
 								if (asArrayIds.Length != asArrayUrls.Length) {
 									throw new IndexOutOfRangeException("Arrays at index 1 and 2 don't match length of each other");
 								}
@@ -220,11 +215,17 @@ partial class Wikithis {
 
 		throw new KeyNotFoundException($"There no calls matching key \"{_callMessageCache}\"");
 
-		string GetArgumentExceptionReason(int expected) => $"Arguments length isn't equal to {expected}. Got: {args.Length}";
+		string GetArgumentExceptionReason(int expected) {
+			return $"Arguments length isn't equal to {expected}. Got: {args.Length}";
+		}
 
-		string GetArgumentNotMatchingTypeReason<T>(int index) => $"Argument at index {index} doesn't matches type: {typeof(T).FullName}";
+		string GetArgumentNotMatchingTypeReason<T>(int index) {
+			return $"Argument at index {index} doesn't matches type: {typeof(T).FullName}";
+		}
 
-		string GetArgumentCannotHaveValueReason<T>(int index, T value) => $"Argument at index {index} cannot be: {value}";
+		string GetArgumentCannotHaveValueReason<T>(int index, T value) {
+			return $"Argument at index {index} cannot be: {value}";
+		}
 	}
 
 	public override object Call(params object[] args) {
