@@ -7,7 +7,7 @@ Mods: {
 				DefaultDisabled: (Inicialmente: Desativado)
 
 				OpenSteamBrowser: {
-					Label: Abra o Steam Overlay em vez do navegador
+					Label: Abrir o Steam Overlay em vez do navegador
 					Tooltip:
 						'''
 						Quando uma página da wiki for aberta para um item, o Steam Overlay será aberto no lugar.
@@ -46,7 +46,7 @@ Mods: {
 			}
 		}
 
-		Keybinds.WikiKeybind.DisplayName: Check wiki page on item/NPC
+		Keybinds.WikiKeybind.DisplayName: Verificar página da wiki para o item/NPC
 		TextFormatting: "    {0}"
 		Click: Pressione {0} para abrir a página da wiki!
 		NoWiki: Sem páginas wiki disponíveis!
